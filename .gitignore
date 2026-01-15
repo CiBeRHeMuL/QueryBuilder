@@ -1,0 +1,16 @@
+# PhpStorm
+/.idea
+
+# Composer
+/vendor
+/composer.lock
+
+# PHPUnit
+/.phpunit.cache
+/.phpunit.result.cache
+/.phpunit.coverage
+/coverage.xml
+
+# PHP-CS-Fixer
+/.php-cs-fixer.php
+/.php-cs-fixer.cache

@@ -1,0 +1,48 @@
+{
+    "type": "library",
+    "name": "andrew-gos/query-builder",
+    "description": "QueryBuilder",
+    "homepage": "https://github.com/CiBeRHeMuL/QueryBuilder",
+    "authors": [
+        {
+            "name": "Andrey Gostev",
+            "email": "Gostev71@outlook.com"
+        }
+    ],
+    "license": "MIT",
+    "keywords": [
+        "andrew-gos",
+        "php",
+        "query-builder",
+        "db"
+    ],
+    "minimum-stability": "stable",
+    "require": {
+        "php": "^8.5",
+        "andrew-gos/helpers": "^1.0"
+    },
+    "suggest": {
+    },
+    "require-dev": {
+        "friendsofphp/php-cs-fixer": "^3.87",
+        "phpunit/phpunit": "^12"
+    },
+    "config": {
+        "sort-packages": true,
+        "prefer-stable": true
+    },
+    "scripts": {
+        "php-cs-fix": "php-cs-fixer fix",
+        "php-cs-check": "php-cs-fixer check"
+    },
+    "autoload": {
+        "psr-4": {
+            "AndrewGos\\QueryBuilder\\": "src"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "AndrewGos\\QueryBuilder\\Tests\\": "tests"
+        }
+    }
+}
