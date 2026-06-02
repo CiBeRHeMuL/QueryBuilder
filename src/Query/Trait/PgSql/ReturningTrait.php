@@ -59,5 +59,16 @@ trait ReturningTrait
         return $this;
     }
     // endregion METHOD_addReturning
+
+    // region METHOD_isReturnable [DOMAIN(8): Returning; TECH(8): Compatibility]
+    /**
+     * @inheritDoc
+     * @purpose Determine if this query type produces result rows (true if RETURNING clause is specified).
+     */
+    public function isReturnable(): bool
+    {
+        return $this->returningColumns !== null;
+    }
+    // endregion METHOD_isReturnable
 }
 // endregion TRAIT_ReturningTrait

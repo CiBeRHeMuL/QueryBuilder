@@ -8,7 +8,6 @@ use AndrewGos\QueryBuilder\Expr\Table\SelectTable;
 use AndrewGos\QueryBuilder\Helper\HExpr;
 use AndrewGos\QueryBuilder\Query\Delete\DeleteQuery;
 use AndrewGos\QueryBuilder\Query\Interface\JoinInterface;
-use AndrewGos\QueryBuilder\Query\Interface\MaybeReturnableQueryInterface;
 use AndrewGos\QueryBuilder\Query\Interface\PgSql\ReturningInterface;
 use AndrewGos\QueryBuilder\Query\Select\SelectQueryInterface;
 use AndrewGos\QueryBuilder\Query\Trait\JoinTrait;
@@ -50,7 +49,7 @@ use UnitEnum;
  * @template TOrderBy of array<string, int|string>|array<int, string|ExprInterface|OrderColumn> column => order, expression or OrderColumn
  * @purpose PostgreSQL DELETE query extending DeleteQuery with USING, JOIN, RETURNING clauses and MaybeReturnableQueryInterface implementation.
  */
-class PgSqlDeleteQuery extends DeleteQuery implements JoinInterface, ReturningInterface, MaybeReturnableQueryInterface
+class PgSqlDeleteQuery extends DeleteQuery implements JoinInterface, ReturningInterface
 {
     use ReturningTrait;
     use JoinTrait;
@@ -91,18 +90,5 @@ class PgSqlDeleteQuery extends DeleteQuery implements JoinInterface, ReturningIn
         return $this;
     }
     // endregion METHOD_addUsing
-
-    // region METHOD_isReturnable [DOMAIN(8): Delete; TECH(8): Returning]
-    /**
-     * For PostgreSQL we can use result of DELETE statement only if RETURNING clause is specified
-     *
-     * @return bool
-     * @purpose Check if DELETE query is returnable (has RETURNING clause).
-     */
-    public function isReturnable(): bool
-    {
-        return $this->returningColumns !== null;
-    }
-    // endregion METHOD_isReturnable
 }
 // endregion CLASS_PgSqlDeleteQuery

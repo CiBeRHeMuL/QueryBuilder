@@ -3,6 +3,7 @@
 namespace AndrewGos\QueryBuilder\Query\Interface\PgSql;
 
 use AndrewGos\QueryBuilder\Expr\ExprInterface;
+use AndrewGos\QueryBuilder\Query\Interface\MaybeReturnableQueryInterface;
 use AndrewGos\QueryBuilder\Query\Select\SelectQueryInterface;
 use AndrewGos\QueryBuilder\Query\Values\ValuesQueryInterface;
 use UnitEnum;
@@ -32,7 +33,7 @@ use UnitEnum;
  *
  * @purpose Contract for queries supporting PostgreSQL RETURNING clause with column selection and OLD/NEW alias support.
  */
-interface ReturningInterface
+interface ReturningInterface extends MaybeReturnableQueryInterface
 {
     public ?string $returningOldAlias {
         get;

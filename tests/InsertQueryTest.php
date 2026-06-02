@@ -8,12 +8,15 @@ use AndrewGos\QueryBuilder\Expr\Conflict\PgSql\PgSqlConflictActionDoNothing;
 use AndrewGos\QueryBuilder\Expr\Conflict\PgSql\PgSqlConflictActionDoUpdate;
 use AndrewGos\QueryBuilder\Expr\Conflict\PgSql\PgSqlConflictTargetColumns;
 use AndrewGos\QueryBuilder\Expr\Conflict\PgSql\PgSqlConflictTargetConstraint;
+use AndrewGos\QueryBuilder\Expr\Cte\WithQuery;
 use AndrewGos\QueryBuilder\Expr\Expr;
 use AndrewGos\QueryBuilder\Grammar\AbstractGrammar;
 use AndrewGos\QueryBuilder\Grammar\MySql\MySqlGrammar;
 use AndrewGos\QueryBuilder\Grammar\PgSql\PgSqlGrammar;
 use AndrewGos\QueryBuilder\Query\Insert\MySql\MySqlInsertQuery;
 use AndrewGos\QueryBuilder\Query\Insert\PgSql\PgSqlInsertQuery;
+use AndrewGos\QueryBuilder\Query\Interface\MaybeReturnableQueryInterface;
+use AndrewGos\QueryBuilder\Query\Select\SelectQuery;
 use AndrewGos\QueryBuilder\Query\Values\ValuesQuery;
 use PHPUnit\Framework\TestCase;
 
@@ -261,6 +264,122 @@ class InsertQueryTest extends TestCase
         self::assertStringContainsString('RETURNING "id"', $built->sql);
     }
     // endregion METHOD_testPgSqlOnConflictWithReturning
+
+    // region METHOD_testPgSqlInsertIsReturnable [DOMAIN(9): Testing; CONCEPT(9): Insert; TECH(9): Returnable]
+    /**
+     * @purpose Verify PgSqlInsertQuery implements MaybeReturnableQueryInterface and isReturnable() returns true only when RETURNING is set.
+     */
+    public function testPgSqlInsertIsReturnable(): void
+    {
+        $query = new PgSqlInsertQuery();
+        self::assertInstanceOf(MaybeReturnableQueryInterface::class, $query);
+        self::assertFalse($query->isReturnable());
+
+        $query->returning(['id']);
+        self::assertTrue($query->isReturnable());
+    }
+    // endregion METHOD_testPgSqlInsertIsReturnable
+
+    // region METHOD_testPgSqlInsertAddReturning [DOMAIN(9): Testing; CONCEPT(9): Insert; TECH(9): Returning]
+    /**
+     * @purpose Verify PgSqlInsertQuery::addReturning() merges columns and keeps isReturnable true.
+     */
+    public function testPgSqlInsertAddReturning(): void
+    {
+        $query = new PgSqlInsertQuery();
+        $query->returning(['id']);
+        $query->addReturning(['name']);
+
+        self::assertTrue($query->isReturnable());
+        self::assertNotNull($query->returningColumns);
+        self::assertCount(2, $query->returningColumns);
+        self::assertSame(['id', 'name'], $query->returningColumns);
+    }
+    // endregion METHOD_testPgSqlInsertAddReturning
+
+    // region METHOD_testPgSqlInsertWithReturningAndWith [DOMAIN(9): Testing; CONCEPT(9): Insert; TECH(9): CteReturning]
+    /**
+     * @purpose Verify PgSqlGrammar builds WITH + INSERT ... RETURNING correctly.
+     */
+    public function testPgSqlInsertWithReturningAndWith(): void
+    {
+        $grammar = new PgSqlGrammar();
+
+        $cteQuery = new SelectQuery();
+        $cteQuery->select(['id', 'name'])->from(['pending_users'])->where(['status' => 'active']);
+
+        $values = new ValuesQuery();
+        $values->values([[1, 'Alice'], [2, 'Bob']]);
+
+        $query = new PgSqlInsertQuery();
+        $query->into('users', ['id', 'name']);
+        $query->source($values);
+        $query->with(['pending' => new WithQuery($cteQuery)]);
+        $query->returning(['id']);
+
+        $built = $grammar->buildInsertQuery($query);
+
+        self::assertStringContainsString('WITH "pending" AS', $built->sql);
+        self::assertStringContainsString('INSERT INTO "users"', $built->sql);
+        self::assertStringContainsString('RETURNING "id"', $built->sql);
+    }
+    // endregion METHOD_testPgSqlInsertWithReturningAndWith
+
+    // region METHOD_testPgSqlInsertWithSelectReturning [DOMAIN(9): Testing; CONCEPT(9): Insert; TECH(9): SelectSourceReturning]
+    /**
+     * @purpose Verify PgSqlGrammar builds INSERT ... SELECT ... RETURNING correctly.
+     */
+    public function testPgSqlInsertWithSelectReturning(): void
+    {
+        $grammar = new PgSqlGrammar();
+
+        $source = new SelectQuery();
+        $source->select(['id', 'name'])->from(['tmp_users']);
+
+        $query = new PgSqlInsertQuery();
+        $query->into('users', ['id', 'name']);
+        $query->source($source);
+        $query->returning(['id', 'name']);
+
+        $built = $grammar->buildInsertQuery($query);
+
+        self::assertStringContainsString('INSERT INTO "users" ("id", "name")', $built->sql);
+        self::assertStringContainsString('SELECT "id", "name" FROM "tmp_users"', $built->sql);
+        self::assertStringContainsString('RETURNING "id", "name"', $built->sql);
+    }
+    // endregion METHOD_testPgSqlInsertWithSelectReturning
+
+    // region METHOD_testPgSqlInsertOnConflictWithReturningAndWith [DOMAIN(9): Testing; CONCEPT(9): Insert; TECH(9): FullPipeline]
+    /**
+     * @purpose Verify PgSqlGrammar builds WITH + INSERT ... ON CONFLICT DO UPDATE ... RETURNING — full PostgreSQL pipeline.
+     */
+    public function testPgSqlInsertOnConflictWithReturningAndWith(): void
+    {
+        $grammar = new PgSqlGrammar();
+
+        $cteQuery = new SelectQuery();
+        $cteQuery->select(['id', 'name'])->from(['staging_users']);
+
+        $values = new ValuesQuery();
+        $values->values([[1, 'Alice']]);
+
+        $query = new PgSqlInsertQuery();
+        $query->into('users', ['id', 'name']);
+        $query->source($values);
+        $query->with(['staging' => new WithQuery($cteQuery)]);
+        $query->onConflict(
+            new PgSqlConflictActionDoUpdate(['name' => new Expr('EXCLUDED.name')]),
+            new PgSqlConflictTargetColumns(['id']),
+        );
+        $query->returning(['id', 'name']);
+
+        $built = $grammar->buildInsertQuery($query);
+
+        self::assertStringContainsString('WITH "staging" AS', $built->sql);
+        self::assertStringContainsString('ON CONFLICT ("id") DO UPDATE SET "name" = EXCLUDED.name', $built->sql);
+        self::assertStringContainsString('RETURNING "id", "name"', $built->sql);
+    }
+    // endregion METHOD_testPgSqlInsertOnConflictWithReturningAndWith
 
     // region METHOD_testMySqlLowPriority [DOMAIN(9): Testing; CONCEPT(9): Insert; TECH(9): MySQLModifier]
     /**

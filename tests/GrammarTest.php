@@ -8,6 +8,8 @@ use AndrewGos\QueryBuilder\Exception\QueryBuilderException;
 use AndrewGos\QueryBuilder\Grammar\AbstractGrammar;
 use AndrewGos\QueryBuilder\Grammar\MySql\MySqlGrammar;
 use AndrewGos\QueryBuilder\Grammar\PgSql\PgSqlGrammar;
+use AndrewGos\QueryBuilder\Query\Delete\PgSql\PgSqlDeleteQuery;
+use AndrewGos\QueryBuilder\Query\Insert\PgSql\PgSqlInsertQuery;
 use AndrewGos\QueryBuilder\Query\Select\SelectQuery;
 use AndrewGos\QueryBuilder\Query\Values\ValuesQuery;
 use PHPUnit\Framework\TestCase;
@@ -198,6 +200,56 @@ class GrammarTest extends TestCase
         $grammar->buildMaybeReturnableQuery($query);
     }
     // endregion METHOD_testBuildMaybeReturnableThrows
+
+    // region METHOD_testBuildMaybeReturnablePgSqlDeleteWithReturning [DOMAIN(9): Testing; CONCEPT(9): Grammar; TECH(9): Returnable]
+    /**
+     * @purpose Verify PgSqlGrammar::buildMaybeReturnableQuery succeeds for PgSqlDeleteQuery with RETURNING set.
+     */
+    public function testBuildMaybeReturnablePgSqlDeleteWithReturning(): void
+    {
+        $grammar = new PgSqlGrammar();
+
+        $query = new PgSqlDeleteQuery();
+        $query->from(['users'])->where(['active' => false]);
+        $query->returning(['id']);
+
+        $built = $grammar->buildMaybeReturnableQuery($query);
+        self::assertStringContainsString('DELETE FROM "users"', $built->sql);
+        self::assertStringContainsString('RETURNING "id"', $built->sql);
+    }
+    // endregion METHOD_testBuildMaybeReturnablePgSqlDeleteWithReturning
+
+    // region METHOD_testBuildMaybeReturnablePgSqlInsertWithoutReturning [DOMAIN(9): Testing; CONCEPT(9): Grammar; TECH(9): Returnable]
+    /**
+     * @purpose Verify PgSqlGrammar::buildMaybeReturnableQuery throws for PgSqlInsertQuery without RETURNING.
+     */
+    public function testBuildMaybeReturnablePgSqlInsertWithoutReturning(): void
+    {
+        $grammar = new PgSqlGrammar();
+        $query = new PgSqlInsertQuery();
+        $query->into('users', ['id']);
+
+        $this->expectException(QueryBuilderException::class);
+        $grammar->buildMaybeReturnableQuery($query);
+    }
+    // endregion METHOD_testBuildMaybeReturnablePgSqlInsertWithoutReturning
+
+    // region METHOD_testBuildMaybeReturnablePgSqlInsertWithReturning [DOMAIN(9): Testing; CONCEPT(9): Grammar; TECH(9): Returnable]
+    /**
+     * @purpose Verify PgSqlGrammar::buildMaybeReturnableQuery for PgSqlInsertQuery with RETURNING — documents that INSERT is not yet routed through buildMaybeReturnableQuery.
+     */
+    public function testBuildMaybeReturnablePgSqlInsertWithReturning(): void
+    {
+        $grammar = new PgSqlGrammar();
+        $query = new PgSqlInsertQuery();
+        $query->into('users', ['id']);
+        $query->returning(['id']);
+
+        self::assertTrue($query->isReturnable());
+        $this->expectException(QueryBuilderException::class);
+        $grammar->buildMaybeReturnableQuery($query);
+    }
+    // endregion METHOD_testBuildMaybeReturnablePgSqlInsertWithReturning
 
     // region METHOD_testAbstractGrammarBuildSelect [DOMAIN(9): Testing; CONCEPT(9): Grammar; TECH(9): BasicSelect]
     /**

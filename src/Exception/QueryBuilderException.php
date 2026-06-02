@@ -290,7 +290,7 @@ class QueryBuilderException extends RuntimeException
         return new self(
             sprintf(
                 <<<'TEXT'
-                    Maybe returnable query "%s" cannot be built by grammar "%"
+                    Maybe returnable query "%s" cannot be built by grammar "%s"
                     TEXT,
                 $query::class,
                 $grammar::class,

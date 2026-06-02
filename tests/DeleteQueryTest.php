@@ -4,12 +4,14 @@ declare(strict_types=1);
 
 namespace AndrewGos\QueryBuilder\Tests;
 
+use AndrewGos\QueryBuilder\Expr\Cte\WithQuery;
 use AndrewGos\QueryBuilder\Grammar\AbstractGrammar;
 use AndrewGos\QueryBuilder\Grammar\MySql\MySqlGrammar;
 use AndrewGos\QueryBuilder\Grammar\PgSql\PgSqlGrammar;
 use AndrewGos\QueryBuilder\Query\Delete\DeleteQuery;
 use AndrewGos\QueryBuilder\Query\Delete\MySql\MySqlDeleteQuery;
 use AndrewGos\QueryBuilder\Query\Delete\PgSql\PgSqlDeleteQuery;
+use AndrewGos\QueryBuilder\Query\Select\SelectQuery;
 use PHPUnit\Framework\TestCase;
 
 // region CLASS_DeleteQueryTest [DOMAIN(9): Testing; CONCEPT(9): DeleteQuery; TECH(9): SQLGeneration]
@@ -154,6 +156,84 @@ class DeleteQueryTest extends TestCase
         self::assertTrue($query->isReturnable());
     }
     // endregion METHOD_testPgSqlIsReturnable
+
+    // region METHOD_testPgSqlDeleteAddReturning [DOMAIN(9): Testing; CONCEPT(9): Delete; TECH(9): Returning]
+    /**
+     * @purpose Verify PgSqlDeleteQuery::addReturning() merges columns and keeps isReturnable true.
+     */
+    public function testPgSqlDeleteAddReturning(): void
+    {
+        $query = new PgSqlDeleteQuery();
+        $query->returning(['id']);
+        $query->addReturning(['name']);
+
+        self::assertTrue($query->isReturnable());
+        self::assertNotNull($query->returningColumns);
+        self::assertCount(2, $query->returningColumns);
+        self::assertSame(['id', 'name'], $query->returningColumns);
+    }
+    // endregion METHOD_testPgSqlDeleteAddReturning
+
+    // region METHOD_testPgSqlDeleteWithReturningAndWith [DOMAIN(9): Testing; CONCEPT(9): Delete; TECH(9): CteReturning]
+    /**
+     * @purpose Verify PgSqlGrammar builds WITH + DELETE ... RETURNING correctly.
+     */
+    public function testPgSqlDeleteWithReturningAndWith(): void
+    {
+        $grammar = new PgSqlGrammar();
+
+        $cteQuery = new SelectQuery();
+        $cteQuery->select(['id'])->from(['inactive_users']);
+
+        $query = new PgSqlDeleteQuery();
+        $query->from(['users'])->where(['active' => false]);
+        $query->with(['inactive' => new WithQuery($cteQuery)]);
+        $query->returning(['id', 'name']);
+
+        $built = $grammar->buildDeleteQuery($query);
+
+        self::assertStringContainsString('WITH "inactive" AS', $built->sql);
+        self::assertStringContainsString('DELETE FROM "users"', $built->sql);
+        self::assertStringContainsString('RETURNING "id", "name"', $built->sql);
+    }
+    // endregion METHOD_testPgSqlDeleteWithReturningAndWith
+
+    // region METHOD_testPgSqlDeleteReturningWithAliasesGetSet [DOMAIN(9): Testing; CONCEPT(9): Delete; TECH(9): ReturningAlias)
+    /**
+     * @purpose Verify PgSqlDeleteQuery returningOldAlias and returningNewAlias property hooks work correctly.
+     */
+    public function testPgSqlDeleteReturningWithAliasesGetSet(): void
+    {
+        $query = new PgSqlDeleteQuery();
+        $query->returning(['id'], 'old', 'new');
+
+        self::assertSame('old', $query->returningOldAlias);
+        self::assertSame('new', $query->returningNewAlias);
+    }
+    // endregion METHOD_testPgSqlDeleteReturningWithAliasesGetSet
+
+    // region METHOD_testPgSqlDeleteUsingWithReturning [DOMAIN(9): Testing; CONCEPT(9): Delete; TECH(9): FullPipeline]
+    /**
+     * @purpose Verify PgSqlGrammar builds DELETE with USING + JOIN + RETURNING — full PgSql DELETE pipeline.
+     */
+    public function testPgSqlDeleteUsingWithReturning(): void
+    {
+        $grammar = new PgSqlGrammar();
+
+        $query = new PgSqlDeleteQuery();
+        $query->from(['users'])->using(['deleted_log']);
+        $query->innerJoin('profiles', ['users.id' => new \AndrewGos\QueryBuilder\Expr\Expr('profiles.user_id')]);
+        $query->where(['users.active' => false]);
+        $query->returning(['users.id', 'users.name']);
+
+        $built = $grammar->buildDeleteQuery($query);
+
+        self::assertStringContainsString('DELETE FROM "users"', $built->sql);
+        self::assertStringContainsString('USING', $built->sql);
+        self::assertStringContainsString('INNER JOIN', $built->sql);
+        self::assertStringContainsString('RETURNING', $built->sql);
+    }
+    // endregion METHOD_testPgSqlDeleteUsingWithReturning
 
     // region METHOD_testMySqlModifiers [DOMAIN(9): Testing; CONCEPT(9): Delete; TECH(9): MySqlModifiers]
     /**
