@@ -15,6 +15,8 @@ use AndrewGos\QueryBuilder\Grammar\AbstractGrammar;
 use AndrewGos\QueryBuilder\Grammar\BuiltQuery;
 use AndrewGos\QueryBuilder\Helper\HExpr;
 use AndrewGos\QueryBuilder\Query\Delete\DeleteQueryInterface;
+use AndrewGos\QueryBuilder\Query\Insert\InsertQueryInterface;
+use AndrewGos\QueryBuilder\Query\Insert\PgSql\PgSqlInsertQuery;
 use AndrewGos\QueryBuilder\Query\Interface\MaybeReturnableQueryInterface;
 use AndrewGos\QueryBuilder\Query\Interface\PgSql\ReturningInterface;
 use AndrewGos\QueryBuilder\Query\Select\PgSql\PgSqlSelectQuery;
@@ -67,6 +69,75 @@ class PgSqlGrammar extends AbstractGrammar
         );
     }
     // endregion METHOD_buildDeleteQuery
+
+    // region METHOD_buildInsertQuery [DOMAIN(8): Grammar; TECH(8): Insert]
+    /**
+     * @purpose Build PostgreSQL INSERT query with OVERRIDING, ON CONFLICT, and RETURNING clause support.
+     * STRUCTURE: ▶ ┌WITH, 'INSERT INTO', table, alias, columns, OVERRIDING, source, ON CONFLICT, RETURNING┐ → ● HExpr::merge → ∑ BuiltQuery
+     */
+    public function buildInsertQuery(InsertQueryInterface $query): BuiltQuery
+    {
+        $parts = [
+            $this->buildWithClause($query),
+            'INSERT INTO',
+            $this->escapeIdentifierDotted($query->into),
+            $query->alias !== null ? 'AS ' . $this->escapeTableAlias($query->alias) : null,
+        ];
+
+        if ($query->columnNames) {
+            $parts[] = new Expr(
+                '(' . implode(', ', array_map($this->escapeIdentifier(...), $query->columnNames)) . ')',
+            );
+        }
+
+        if ($query instanceof PgSqlInsertQuery && $query->overrideValueMethod !== null) {
+            $parts[] = new Expr('OVERRIDING ' . strtoupper($query->overrideValueMethod->name) . ' VALUE');
+        }
+
+        $parts[] = $this->buildInsertSource($query);
+
+        if ($query instanceof PgSqlInsertQuery && $query->conflictAction !== null) {
+            $parts[] = $this->buildConflictClause($query);
+        }
+
+        if ($query instanceof ReturningInterface) {
+            $parts[] = $this->buildReturning($query);
+        }
+
+        $expr = HExpr::mergeExpressionParts($parts, $this, ' ');
+
+        return new BuiltQuery(
+            $expr->getExpression($this),
+            $expr->getParams(),
+        );
+    }
+    // endregion METHOD_buildInsertQuery
+
+    // region METHOD_buildConflictClause [DOMAIN(8): Grammar; TECH(8): Conflict]
+    /**
+     * @purpose Build the ON CONFLICT clause: ON CONFLICT [target] action.
+     * STRUCTURE: ┌'ON CONFLICT', conflictTarget->getSql, conflictAction->getSql┐ → ∑ Expr(implode(' '), params)
+     */
+    protected function buildConflictClause(PgSqlInsertQuery $query): ExprInterface
+    {
+        $targetSql = $query->conflictTarget?->getSql($this);
+        $actionSql = $query->conflictAction->getSql($this);
+
+        $parts = ['ON CONFLICT'];
+        if ($targetSql !== null) {
+            $parts[] = $targetSql;
+        }
+        $parts[] = $actionSql;
+
+        $params = [];
+        if ($query->conflictTarget !== null) {
+            $params = HExpr::mergeParams($params, $query->conflictTarget->getParams());
+        }
+        $params = HExpr::mergeParams($params, $query->conflictAction->getParams());
+
+        return new Expr(implode(' ', $parts), $params);
+    }
+    // endregion METHOD_buildConflictClause
 
     // region METHOD_buildMaybeReturnableQuery [DOMAIN(8): Grammar; TECH(8): QueryBuilding]
     /**

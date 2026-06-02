@@ -161,18 +161,63 @@ abstract class AbstractGrammar implements GrammarInterface
     }
     // endregion METHOD_buildDeleteQuery
 
-    // region METHOD_buildInsertQuery [DOMAIN(9): Grammar; CONCEPT(8): INSERT; TECH(8): STUB]
+    // region METHOD_buildInsertQuery [DOMAIN(9): Grammar; CONCEPT(9): INSERT; TECH(9): Pipeline]
     /**
-     * @purpose STUB — Not yet implemented. Build an INSERT query.
+     * @purpose Build a complete INSERT query: [WITH] INSERT INTO table [(columns)] {VALUES|SELECT|DEFAULT VALUES}.
      * @io InsertQueryInterface -> BuiltQuery
-     * @complexity 0
-     * @throws RuntimeException always — TODO stub
+     * @complexity 5
+     * @uses HExpr::mergeExpressionParts, buildWithClause, buildInsertSource
+     * STRUCTURE: ▶ ┌WITH, 'INSERT INTO', table, alias, columns, source┐ → ● HExpr::merge(parts, ' ') → ∑ BuiltQuery
      */
     public function buildInsertQuery(InsertQueryInterface $query): BuiltQuery
     {
-        // TODO: Implement buildInsertQuery() method.
+        $parts = [
+            $this->buildWithClause($query),
+            'INSERT INTO',
+            $this->escapeIdentifierDotted($query->into),
+            $query->alias !== null ? 'AS ' . $this->escapeTableAlias($query->alias) : null,
+        ];
+
+        if ($query->columnNames) {
+            $parts[] = new Expr(
+                '(' . implode(', ', array_map($this->escapeIdentifier(...), $query->columnNames)) . ')',
+            );
+        }
+
+        $parts[] = $this->buildInsertSource($query);
+
+        $expr = HExpr::mergeExpressionParts($parts, $this, ' ');
+
+        return new BuiltQuery(
+            $expr->getExpression($this),
+            $expr->getParams(),
+        );
     }
     // endregion METHOD_buildInsertQuery
+
+    // region METHOD_buildInsertSource [DOMAIN(9): Grammar; CONCEPT(9): INSERT; TECH(9): SourceBuilding]
+    /**
+     * @purpose Build the source part of INSERT: DEFAULT VALUES, VALUES (query), or (SELECT query).
+     * @io InsertQueryInterface -> ExprInterface
+     * @complexity 4
+     * STRUCTURE: ◇ source === null → 'DEFAULT VALUES' | ◇ source instanceof ValuesQuery → buildValuesQuery | ◇ source instanceof SelectQuery → '(' + buildSelectQuery + ')'
+     */
+    protected function buildInsertSource(InsertQueryInterface $query): ExprInterface
+    {
+        if ($query->source === null) {
+            return new Expr('DEFAULT VALUES');
+        }
+
+        if ($query->source instanceof ValuesQueryInterface) {
+            $bq = $this->buildValuesQuery($query->source);
+            return new Expr($bq->sql, $bq->params);
+        }
+
+        // SelectQueryInterface
+        $bq = $this->buildSelectQuery($query->source);
+        return new Expr('(' . $bq->sql . ')', $bq->params);
+    }
+    // endregion METHOD_buildInsertSource
 
     // region METHOD_buildUpdateQuery [DOMAIN(9): Grammar; CONCEPT(8): UPDATE; TECH(8): STUB]
     /**

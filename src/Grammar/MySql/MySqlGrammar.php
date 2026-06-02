@@ -10,6 +10,8 @@ use AndrewGos\QueryBuilder\Grammar\BuiltQuery;
 use AndrewGos\QueryBuilder\Helper\HExpr;
 use AndrewGos\QueryBuilder\Query\Delete\DeleteQueryInterface;
 use AndrewGos\QueryBuilder\Query\Delete\MySql\MySqlDeleteQuery;
+use AndrewGos\QueryBuilder\Query\Insert\InsertQueryInterface;
+use AndrewGos\QueryBuilder\Query\Insert\MySql\MySqlInsertQuery;
 use AndrewGos\QueryBuilder\Query\Interface\LimitInterface;
 use AndrewGos\QueryBuilder\Query\Interface\MySql\PartitionInterface;
 use AndrewGos\QueryBuilder\Query\Select\MySql\MySqlSelectQuery;
@@ -82,6 +84,52 @@ class MySqlGrammar extends AbstractGrammar
         );
     }
     // endregion METHOD_buildDeleteQuery
+
+    // region METHOD_buildInsertQuery [DOMAIN(8): Grammar; TECH(8): Insert]
+    /**
+     * @purpose Build MySQL INSERT query with LOW_PRIORITY, DELAYED, HIGH_PRIORITY, IGNORE modifiers and PARTITION support.
+     * STRUCTURE: ▶ ┌WITH, 'INSERT', modifiers, 'INTO', table, alias, columns, source, PARTITION┐ → ● HExpr::merge → ∑ BuiltQuery
+     */
+    public function buildInsertQuery(InsertQueryInterface $query): BuiltQuery
+    {
+        $parts = [
+            $this->buildWithClause($query),
+            'INSERT',
+        ];
+
+        if ($query instanceof MySqlInsertQuery) {
+            $query->lowPriority && $parts[] = new Expr('LOW_PRIORITY');
+            $query->delayed && $parts[] = new Expr('DELAYED');
+            $query->highPriority && $parts[] = new Expr('HIGH_PRIORITY');
+            $query->ignore && $parts[] = new Expr('IGNORE');
+        }
+
+        $parts[] = new Expr('INTO');
+        $parts[] = $this->escapeIdentifierDotted($query->into);
+        if ($query->alias !== null) {
+            $parts[] = 'AS ' . $this->escapeTableAlias($query->alias);
+        }
+
+        if ($query->columnNames) {
+            $parts[] = new Expr(
+                '(' . implode(', ', array_map($this->escapeIdentifier(...), $query->columnNames)) . ')',
+            );
+        }
+
+        $parts[] = $this->buildInsertSource($query);
+
+        if ($query instanceof PartitionInterface) {
+            $parts[] = $this->buildPartition($query);
+        }
+
+        $expr = HExpr::mergeExpressionParts($parts, $this, ' ');
+
+        return new BuiltQuery(
+            $expr->getExpression($this),
+            $expr->getParams(),
+        );
+    }
+    // endregion METHOD_buildInsertQuery
 
     // region METHOD_buildSelectClause [DOMAIN(8): Grammar; TECH(8): Select]
     /**
