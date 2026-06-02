@@ -11,10 +11,27 @@ use AndrewGos\QueryBuilder\Helper\HExpr;
 use AndrewGos\QueryBuilder\Query\Select\SelectQueryInterface;
 use AndrewGos\QueryBuilder\Query\Values\ValuesQueryInterface;
 
+// region MODULE_CONTRACT [DOMAIN(8): Query; CONCEPT(9): Trait; TECH(8): SQL]
+/**
+ * @moduleContract
+ * @purpose Implement JoinInterface for full JOIN clause support via reusable trait.
+ * @scope Handles all join types (INNER, LEFT, RIGHT, CROSS, FULL, NATURAL variants).
+ * @input Join type, table reference, conditions, optional alias.
+ * @output Normalized JOIN clause state via JoinInterface contract.
+ * @modulemap
+ * TRAIT JoinTrait => JoinInterface implementation
+ */
+// endregion MODULE_CONTRACT
+// GREP_SUMMARY: JOIN, trait, SQL, INNER, LEFT, RIGHT, CROSS, FULL, NATURAL
+
 /**
  * This trait provides functionality of JoinInterface
  *
  * @see \AndrewGos\QueryBuilder\Query\Interface\JoinInterface
+ */
+// region TRAIT_JoinTrait [DOMAIN(8): Query; CONCEPT(9): Trait; TECH(8): SQL]
+/**
+ * @purpose Implement JoinInterface for queries requiring JOIN support.
  */
 trait JoinTrait
 {
@@ -23,7 +40,12 @@ trait JoinTrait
      */
     protected(set) array $joinTables = [];
 
+    // region METHOD_join [DOMAIN(8): Query; CONCEPT(9): Trait; TECH(8): SQL]
     /**
+     * @purpose Create a JOIN of the specified type with HExpr::normalizeTable, optionally keyed by alias.
+     * @io JoinTypeEnum $type, TTable $table, array $conditions, ?string $alias -> static
+     * @complexity 3
+     *
      * @inheritDoc
      */
     public function join(
@@ -48,7 +70,14 @@ trait JoinTrait
         return $this;
     }
 
+    // endregion METHOD_join
+
+    // region METHOD_innerJoin [DOMAIN(8): Query; CONCEPT(9): Trait; TECH(8): SQL]
     /**
+     * @purpose Create an INNER JOIN, delegating to join() with InnerJoin type.
+     * @io TTable $table, array $conditions, ?string $alias -> static
+     * @complexity 2
+     *
      * @inheritDoc
      */
     public function innerJoin(
@@ -63,8 +92,14 @@ trait JoinTrait
             $alias,
         );
     }
+    // endregion METHOD_innerJoin
 
+    // region METHOD_leftJoin [DOMAIN(8): Query; CONCEPT(9): Trait; TECH(8): SQL]
     /**
+     * @purpose Create a LEFT OUTER JOIN, delegating to join() with LeftOuterJoin type.
+     * @io TTable $table, array $conditions, ?string $alias -> static
+     * @complexity 2
+     *
      * @inheritDoc
      */
     public function leftJoin(
@@ -79,8 +114,14 @@ trait JoinTrait
             $alias,
         );
     }
+    // endregion METHOD_leftJoin
 
+    // region METHOD_rightJoin [DOMAIN(8): Query; CONCEPT(9): Trait; TECH(8): SQL]
     /**
+     * @purpose Create a RIGHT OUTER JOIN, delegating to join() with RightOuterJoin type.
+     * @io TTable $table, array $conditions, ?string $alias -> static
+     * @complexity 2
+     *
      * @inheritDoc
      */
     public function rightJoin(
@@ -95,8 +136,14 @@ trait JoinTrait
             $alias,
         );
     }
+    // endregion METHOD_rightJoin
 
+    // region METHOD_crossJoin [DOMAIN(8): Query; CONCEPT(9): Trait; TECH(8): SQL]
     /**
+     * @purpose Create a CROSS JOIN, delegating to join() with CrossJoin type.
+     * @io TTable $table, array $conditions, ?string $alias -> static
+     * @complexity 2
+     *
      * @inheritDoc
      */
     public function crossJoin(
@@ -111,8 +158,14 @@ trait JoinTrait
             $alias,
         );
     }
+    // endregion METHOD_crossJoin
 
+    // region METHOD_fullJoin [DOMAIN(8): Query; CONCEPT(9): Trait; TECH(8): SQL]
     /**
+     * @purpose Create a FULL OUTER JOIN, delegating to join() with FullOuterJoin type.
+     * @io TTable $table, array $conditions, ?string $alias -> static
+     * @complexity 2
+     *
      * @inheritDoc
      */
     public function fullJoin(
@@ -127,8 +180,14 @@ trait JoinTrait
             $alias,
         );
     }
+    // endregion METHOD_fullJoin
 
+    // region METHOD_naturalJoin [DOMAIN(8): Query; CONCEPT(9): Trait; TECH(8): SQL]
     /**
+     * @purpose Create a NATURAL JOIN, validating that cross join is not used with natural.
+     * @io JoinTypeEnum $type, TTable $table, ?string $alias -> static
+     * @complexity 3
+     *
      * @inheritDoc
      */
     public function naturalJoin(
@@ -154,8 +213,14 @@ trait JoinTrait
 
         return $this;
     }
+    // endregion METHOD_naturalJoin
 
+    // region METHOD_naturalInnerJoin [DOMAIN(8): Query; CONCEPT(9): Trait; TECH(8): SQL]
     /**
+     * @purpose Create a NATURAL INNER JOIN via naturalJoin().
+     * @io TTable $table, ?string $alias -> static
+     * @complexity 2
+     *
      * @inheritDoc
      */
     public function naturalInnerJoin(
@@ -168,8 +233,14 @@ trait JoinTrait
             $alias,
         );
     }
+    // endregion METHOD_naturalInnerJoin
 
+    // region METHOD_naturalLeftJoin [DOMAIN(8): Query; CONCEPT(9): Trait; TECH(8): SQL]
     /**
+     * @purpose Create a NATURAL LEFT OUTER JOIN via naturalJoin().
+     * @io TTable $table, ?string $alias -> static
+     * @complexity 2
+     *
      * @inheritDoc
      */
     public function naturalLeftJoin(
@@ -182,8 +253,14 @@ trait JoinTrait
             $alias,
         );
     }
+    // endregion METHOD_naturalLeftJoin
 
+    // region METHOD_naturalRightJoin [DOMAIN(8): Query; CONCEPT(9): Trait; TECH(8): SQL]
     /**
+     * @purpose Create a NATURAL RIGHT OUTER JOIN via naturalJoin().
+     * @io TTable $table, ?string $alias -> static
+     * @complexity 2
+     *
      * @inheritDoc
      */
     public function naturalRightJoin(
@@ -196,8 +273,14 @@ trait JoinTrait
             $alias,
         );
     }
+    // endregion METHOD_naturalRightJoin
 
+    // region METHOD_naturalFullJoin [DOMAIN(8): Query; CONCEPT(9): Trait; TECH(8): SQL]
     /**
+     * @purpose Create a NATURAL FULL OUTER JOIN via naturalJoin().
+     * @io TTable $table, ?string $alias -> static
+     * @complexity 2
+     *
      * @inheritDoc
      */
     public function naturalFullJoin(
@@ -210,4 +293,6 @@ trait JoinTrait
             $alias,
         );
     }
+    // endregion METHOD_naturalFullJoin
 }
+// endregion TRAIT_JoinTrait

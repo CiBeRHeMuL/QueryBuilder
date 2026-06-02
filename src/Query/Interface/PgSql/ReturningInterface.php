@@ -7,13 +7,25 @@ use AndrewGos\QueryBuilder\Query\Select\SelectQueryInterface;
 use AndrewGos\QueryBuilder\Query\Values\ValuesQueryInterface;
 use UnitEnum;
 
+// region MODULE_CONTRACT [DOMAIN(8): Interface; CONCEPT(8): ReturningInterface; TECH(8): Dialect]
 /**
- * This interface provides methods for working with RETURNING clause
- *
- * @template TValue of bool|int|float|string|UnitEnum|ExprInterface|SelectQueryInterface|ValuesQueryInterface|null
- * @template TExpression of TValue|array<TExpression>
- *
- * @template TSelectExpression of TExpression
+ * @moduleContract
+ * @purpose Defines the contract for PostgreSQL RETURNING clause support in INSERT/UPDATE/DELETE queries.
+ * @scope PostgreSQL RETURNING clause for DML statements.
+ * @input array $columns, ?string $oldAlias, ?string $newAlias
+ * @output Interface for RETURNING clause
+ * @invariants
+ * - $returningColumns null means no RETURNING clause
+ * - Supports OLD AS / NEW AS aliases for trigger-based scenarios
+ * @modulemap
+ * ReturningInterface => PostgreSQL RETURNING clause interface
+ */
+// endregion MODULE_CONTRACT
+// GREP_SUMMARY: PostgreSQL, RETURNING, OLD, NEW, interface, dialect
+
+// region INTERFACE_ReturningInterface [DOMAIN(8): Interface; CONCEPT(8): ReturningInterface; TECH(8): Dialect]
+/**
+ * @purpose Contract for queries supporting PostgreSQL RETURNING clause with column selection and OLD/NEW alias support.
  */
 interface ReturningInterface
 {
@@ -48,3 +60,4 @@ interface ReturningInterface
      */
     public function addReturning(array $columns, ?string $oldAlias = null, ?string $newAlias = null): static;
 }
+// endregion INTERFACE_ReturningInterface

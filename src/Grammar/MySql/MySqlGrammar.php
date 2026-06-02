@@ -15,8 +15,32 @@ use AndrewGos\QueryBuilder\Query\Interface\MySql\PartitionInterface;
 use AndrewGos\QueryBuilder\Query\Select\MySql\MySqlSelectQuery;
 use AndrewGos\QueryBuilder\Query\Select\SelectQueryInterface;
 
+// region MODULE_CONTRACT [DOMAIN(8): Grammar; CONCEPT(8): MySqlGrammar; TECH(8): Dialect]
+/**
+ * @moduleContract
+ * @purpose MySQL-specific SQL grammar implementing identifier escaping (backtick), DELETE/SELECT query building with MySQL extensions (LOW_PRIORITY, QUICK, IGNORE, HIGH_PRIORITY, SQL_* hints, LIMIT offset,syntax, PARTITION, FOR UPDATE/SHARE).
+ * @scope MySQL SQL dialect query building.
+ * @input Various query objects (SelectQueryInterface, DeleteQueryInterface, etc.)
+ * @output BuiltQuery with MySQL dialect SQL and parameters
+ * @invariants
+ * - Identifiers are escaped with backticks
+ * - LIMIT clause uses MySQL offset, count syntax
+ * @modulemap
+ * MySqlGrammar => MySQL SQL grammar implementation
+ */
+// endregion MODULE_CONTRACT
+// GREP_SUMMARY: MySQL, grammar, SQL, dialect, identifier escaping, LIMIT, PARTITION, lock
+
+// region CLASS_MySqlGrammar [DOMAIN(8): Grammar; CONCEPT(8): MySqlGrammar; TECH(8): Dialect]
+/**
+ * @purpose MySQL dialect grammar extending AbstractGrammar with backtick escaping, MySQL-specific DELETE/SELECT options, and PARTITION clause support.
+ */
 class MySqlGrammar extends AbstractGrammar
 {
+    // region METHOD_escapeIdentifier [DOMAIN(8): Grammar; TECH(8): IdentifierEscaping]
+    /**
+     * @purpose Escape identifier with MySQL backticks.
+     */
     public function escapeIdentifier(string $identifier): string
     {
         if ($identifier === '*') {
@@ -25,7 +49,12 @@ class MySqlGrammar extends AbstractGrammar
         $identifier = trim($identifier, " \n\r\t\v\0`");
         return '`' . strtr($identifier, ['`' => '``']) . '`';
     }
+    // endregion METHOD_escapeIdentifier
 
+    // region METHOD_buildDeleteQuery [DOMAIN(8): Grammar; TECH(8): Delete]
+    /**
+     * @purpose Build MySQL-specific DELETE query with LOW_PRIORITY, QUICK, IGNORE, and PARTITION support.
+     */
     public function buildDeleteQuery(DeleteQueryInterface $query): BuiltQuery
     {
         $parts = [
@@ -52,7 +81,12 @@ class MySqlGrammar extends AbstractGrammar
             $expr->getParams(),
         );
     }
+    // endregion METHOD_buildDeleteQuery
 
+    // region METHOD_buildSelectClause [DOMAIN(8): Grammar; TECH(8): Select]
+    /**
+     * @purpose Build MySQL-specific SELECT clause with HIGH_PRIORITY, STRAIGHT_JOIN, SQL_* hints.
+     */
     protected function buildSelectClause(SelectQueryInterface $query): ExprInterface
     {
         if ($query instanceof MySqlSelectQuery) {
@@ -74,7 +108,12 @@ class MySqlGrammar extends AbstractGrammar
             return parent::buildSelectClause($query);
         }
     }
+    // endregion METHOD_buildSelectClause
 
+    // region METHOD_buildLimitClause [DOMAIN(8): Grammar; TECH(8): Limit]
+    /**
+     * @purpose Build MySQL-specific LIMIT clause using offset, count syntax.
+     */
     protected function buildLimitClause(LimitInterface $query): ?ExprInterface
     {
         if ($query->offset || $query->limit !== null) {
@@ -85,7 +124,12 @@ class MySqlGrammar extends AbstractGrammar
         }
         return null;
     }
+    // endregion METHOD_buildLimitClause
 
+    // region METHOD_buildLockClause [DOMAIN(8): Grammar; TECH(8): Lock]
+    /**
+     * @purpose Build MySQL FOR UPDATE / FOR SHARE lock clause.
+     */
     protected function buildLockClause(SelectQueryInterface $query): ?ExprInterface
     {
         if ($query instanceof MySqlSelectQuery && $query->lockModes) {
@@ -102,7 +146,12 @@ class MySqlGrammar extends AbstractGrammar
 
         return parent::buildLockClause($query);
     }
+    // endregion METHOD_buildLockClause
 
+    // region METHOD_buildPartition [DOMAIN(8): Grammar; TECH(8): Partition]
+    /**
+     * @purpose Build MySQL PARTITION clause for partition pruning.
+     */
     protected function buildPartition(PartitionInterface $query): ?ExprInterface
     {
         if ($query->partitions) {
@@ -120,4 +169,6 @@ class MySqlGrammar extends AbstractGrammar
         }
         return null;
     }
+    // endregion METHOD_buildPartition
 }
+// endregion CLASS_MySqlGrammar

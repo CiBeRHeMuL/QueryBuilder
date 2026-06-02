@@ -29,8 +29,39 @@ use AndrewGos\QueryBuilder\Query\Values\ValuesQueryInterface;
 use BackedEnum;
 use UnitEnum;
 
+// region MODULE_CONTRACT [DOMAIN(10): Grammar; CONCEPT(10): SQLBuilding; TECH(10): QueryCompilation]
+/**
+ * @moduleContract
+ * @purpose Abstract base for SQL dialect grammars. Provides the standard query-building pipeline: decomposes query interfaces into SQL clauses and merges them into a BuiltQuery.
+ * @scope SELECT, VALUES, DELETE, INSERT, UPDATE query building; WITH/CTE, JOIN, WHERE, GROUP BY, HAVING, WINDOW, SET operations, ORDER BY, LIMIT/OFFSET, LOCK clause building; identifier and table alias escaping.
+ * @input Query interfaces (SelectQueryInterface, ValuesQueryInterface, DeleteQueryInterface, InsertQueryInterface, UpdateQueryInterface)
+ * @output BuiltQuery (SQL string + params)
+ * @invariants
+ * - Each build* method corresponds to exactly one SQL clause or sub-clause.
+ * - TODO stub methods (buildInsertQuery, buildUpdateQuery) throw RuntimeException when called.
+ * - All escaping methods are public and can be used standalone.
+ * @rationale
+ * Q: Why is this abstract rather than an interface with default methods?
+ * A: Template Method pattern — concrete grammars override specific clause builders (e.g., buildSelectClause) while reusing the pipeline.
+ * @modulemap
+ * AbstractGrammar => Abstract SQL grammar base class
+ * @usecases
+ * - [AbstractGrammar]: Grammar implementation → Build SELECT query → BuiltQuery
+ */
+// endregion MODULE_CONTRACT
+// GREP_SUMMARY: AbstractGrammar, grammar, SQL building, query compilation, SELECT, VALUES, CTE, JOIN, WHERE
+
+// region CLASS_AbstractGrammar [DOMAIN(10): Grammar; CONCEPT(10): SQLBuilding; TECH(10): QueryCompilation]
 abstract class AbstractGrammar implements GrammarInterface
 {
+    // region METHOD_buildSelectQuery [DOMAIN(10): Grammar; CONCEPT(10): SELECT; TECH(10): Pipeline]
+    /**
+     * @purpose Build a complete SELECT query by assembling all clauses (WITH, SELECT, FROM, JOIN, WHERE, GROUP BY, HAVING, WINDOW, SET ops, ORDER BY, LIMIT, LOCK) in order.
+     * @io SelectQueryInterface -> BuiltQuery
+     * @complexity 7
+     * @uses HExpr::mergeExpressionParts
+     * STRUCTURE: ▶ ┌WITH, SELECT, FROM, JOIN, WHERE, GROUP BY, HAVING, WINDOW, OPS, ORDER BY, LIMIT, LOCK┐ → ● HExpr::merge(parts, ' ') → ∑ BuiltQuery(expr, params)
+     */
     public function buildSelectQuery(SelectQueryInterface $query): BuiltQuery
     {
         $parts = [
@@ -55,7 +86,15 @@ abstract class AbstractGrammar implements GrammarInterface
             $expr->getParams(),
         );
     }
+    // endregion METHOD_buildSelectQuery
 
+    // region METHOD_buildValuesQuery [DOMAIN(9): Grammar; CONCEPT(9): VALUES; TECH(9): Pipeline]
+    /**
+     * @purpose Build a VALUES query: VALUES keyword + value list + optional SET ops + ORDER BY + LIMIT.
+     * @io ValuesQueryInterface -> BuiltQuery
+     * @complexity 5
+     * STRUCTURE: ▶ ┌'VALUES', buildValuesList, buildOperationClauses, buildOrderByClause, buildLimitClause┐ → ● merge → ∑ BuiltQuery
+     */
     public function buildValuesQuery(ValuesQueryInterface $query): BuiltQuery
     {
         $parts = [
@@ -73,7 +112,16 @@ abstract class AbstractGrammar implements GrammarInterface
             $expr->getParams(),
         );
     }
+    // endregion METHOD_buildValuesQuery
 
+    // region METHOD_buildMaybeReturnableQuery [DOMAIN(9): Grammar; CONCEPT(8): Dispatch; TECH(8): Returnable]
+    /**
+     * @purpose Dispatch a MaybeReturnableQueryInterface to the appropriate build method (SELECT or VALUES) or throw if not returnable.
+     * @io MaybeReturnableQueryInterface -> BuiltQuery
+     * @complexity 4
+     * @throws QueryBuilderException
+     * STRUCTURE: ◇ isReturnable()? → N: ✗ throw | Y: ◇ instanceof Select → buildSelectQuery | ◇ instanceof Values → buildValuesQuery | ✗ throw
+     */
     public function buildMaybeReturnableQuery(MaybeReturnableQueryInterface $query): BuiltQuery
     {
         if (!$query->isReturnable()) {
@@ -86,7 +134,15 @@ abstract class AbstractGrammar implements GrammarInterface
             default => throw QueryBuilderException::returnableQueryCannotBeBuilt($query, $this),
         };
     }
+    // endregion METHOD_buildMaybeReturnableQuery
 
+    // region METHOD_buildDeleteQuery [DOMAIN(9): Grammar; CONCEPT(9): DELETE; TECH(9): Pipeline]
+    /**
+     * @purpose Build a DELETE query: WITH + DELETE + FROM + WHERE.
+     * @io DeleteQueryInterface -> BuiltQuery
+     * @complexity 4
+     * STRUCTURE: ▶ ┌WITH, 'DELETE', FROM, WHERE┐ → ● merge → ∑ BuiltQuery
+     */
     public function buildDeleteQuery(DeleteQueryInterface $query): BuiltQuery
     {
         $parts = [
@@ -103,17 +159,41 @@ abstract class AbstractGrammar implements GrammarInterface
             $expr->getParams(),
         );
     }
+    // endregion METHOD_buildDeleteQuery
 
+    // region METHOD_buildInsertQuery [DOMAIN(9): Grammar; CONCEPT(8): INSERT; TECH(8): STUB]
+    /**
+     * @purpose STUB — Not yet implemented. Build an INSERT query.
+     * @io InsertQueryInterface -> BuiltQuery
+     * @complexity 0
+     * @throws RuntimeException always — TODO stub
+     */
     public function buildInsertQuery(InsertQueryInterface $query): BuiltQuery
     {
         // TODO: Implement buildInsertQuery() method.
     }
+    // endregion METHOD_buildInsertQuery
 
+    // region METHOD_buildUpdateQuery [DOMAIN(9): Grammar; CONCEPT(8): UPDATE; TECH(8): STUB]
+    /**
+     * @purpose STUB — Not yet implemented. Build an UPDATE query.
+     * @io UpdateQueryInterface -> BuiltQuery
+     * @complexity 0
+     * @throws RuntimeException always — TODO stub
+     */
     public function buildUpdateQuery(UpdateQueryInterface $query): BuiltQuery
     {
         // TODO: Implement buildUpdateQuery() method.
     }
+    // endregion METHOD_buildUpdateQuery
 
+    // region METHOD_escapeIdentifierDotted [DOMAIN(8): Grammar; CONCEPT(8): Escaping; TECH(8): Identifier]
+    /**
+     * @purpose Escape a dotted identifier (e.g., `table.column`) by splitting on `.` and escaping each part.
+     * @io string -> string
+     * @complexity 3
+     * STRUCTURE: explode('.', identifier) → array_map(escapeIdentifier) → implode('.')
+     */
     public function escapeIdentifierDotted(string $identifier): string
     {
         $parts = explode('.', $identifier);
@@ -125,7 +205,15 @@ abstract class AbstractGrammar implements GrammarInterface
             ),
         );
     }
+    // endregion METHOD_escapeIdentifierDotted
 
+    // region METHOD_escapeTableAlias [DOMAIN(8): Grammar; CONCEPT(8): Escaping; TECH(8): Alias]
+    /**
+     * @purpose Escape a table alias with optional column list, e.g., `table(col1, col2)`.
+     * @io string -> string
+     * @complexity 6
+     * STRUCTURE: preg_match('table(columns)') → escapeIdentifier(tableAlias) → ┌columns?┐ → Y: escapeIdentifier each → implode(', ') wrap in () | N: → ∑ result
+     */
     public function escapeTableAlias(string $alias): string
     {
         preg_match('/^([^(]+)(?:\(([^)]+)\))?$/ui', $alias, $matches);
@@ -151,6 +239,15 @@ abstract class AbstractGrammar implements GrammarInterface
         );
     }
 
+    // endregion METHOD_escapeTableAlias
+
+    // region METHOD_buildWithClause [DOMAIN(9): Grammar; CONCEPT(9): CTE; TECH(9): WITH]
+    /**
+     * @purpose Build the WITH clause — iterate CTE aliases, build each WithQuery, merge, and prefix with WITH (optionally RECURSIVE).
+     * @io WithInterface -> ?ExprInterface (null if no CTEs)
+     * @complexity 6
+     * STRUCTURE: ◇ with? → N: null | Y: ○ foreach alias → buildWithQuery ⊕ parts → 'WITH' + (Recursive?) + merge(parts) → ∑ Expr
+     */
     protected function buildWithClause(WithInterface $query): ?ExprInterface
     {
         if ($query->with) {
@@ -170,7 +267,15 @@ abstract class AbstractGrammar implements GrammarInterface
         }
         return null;
     }
+    // endregion METHOD_buildWithClause
 
+    // region METHOD_buildWithQuery [DOMAIN(9): Grammar; CONCEPT(9): CTE; TECH(9): WithQuery]
+    /**
+     * @purpose Build a single CTE: alias AS (modifiers) (query) [SEARCH] [CYCLE].
+     * @io string alias, WithQuery -> ExprInterface
+     * @complexity 5
+     * STRUCTURE: ┌alias, 'AS', modifiers, '(', buildMaybeReturnableQuery, ')', SEARCH?, CYCLE?┐ → ● merge
+     */
     protected function buildWithQuery(string $alias, WithQuery $withQuery): ExprInterface
     {
         $parts = [
@@ -186,12 +291,26 @@ abstract class AbstractGrammar implements GrammarInterface
 
         return HExpr::mergeExpressionParts($parts, $this, ' ');
     }
+    // endregion METHOD_buildWithQuery
 
+    // region METHOD_buildWithQueryModifiers [DOMAIN(8): Grammar; CONCEPT(8): CTE; TECH(8): Hook]
+    /**
+     * @purpose Hook for subclasses to add CTE modifiers (e.g., MATERIALIZED, NOT MATERIALIZED). Default returns null.
+     * @io string alias, WithQuery -> ?ExprInterface
+     * @complexity 1
+     */
     protected function buildWithQueryModifiers(string $alias, WithQuery $withQuery): ?ExprInterface
     {
         return null;
     }
+    // endregion METHOD_buildWithQueryModifiers
 
+    // region METHOD_buildWithSearch [DOMAIN(9): Grammar; CONCEPT(8): CTE; TECH(9): SEARCH]
+    /**
+     * @purpose Build the SEARCH clause for recursive CTEs: `SEARCH {BREADTH|DEPTH} FIRST BY columns SET seq_column`.
+     * @io Search -> ExprInterface
+     * @complexity 4
+     */
     protected function buildWithSearch(Search $search): ExprInterface
     {
         return new Expr(
@@ -209,7 +328,15 @@ abstract class AbstractGrammar implements GrammarInterface
             ),
         );
     }
+    // endregion METHOD_buildWithSearch
 
+    // region METHOD_buildWithCycle [DOMAIN(9): Grammar; CONCEPT(8): CTE; TECH(9): CYCLE]
+    /**
+     * @purpose Build the CYCLE clause for recursive CTEs: `CYCLE columns SET mark_col TO value DEFAULT default_val USING mark_col`.
+     * @io Cycle -> ExprInterface
+     * @complexity 6
+     * STRUCTURE: build cycleMarkValue + cycleMarkDefault → sprintf template → ∑ Expr with params
+     */
     protected function buildWithCycle(Cycle $cycle): ExprInterface
     {
         $params = [];
@@ -237,7 +364,15 @@ abstract class AbstractGrammar implements GrammarInterface
             $params,
         );
     }
+    // endregion METHOD_buildWithCycle
 
+    // region METHOD_buildSelectClause [DOMAIN(10): Grammar; CONCEPT(9): SELECT; TECH(9): Clause]
+    /**
+     * @purpose Build the SELECT clause: SELECT keyword + DISTINCT + columns.
+     * @io SelectQueryInterface -> ExprInterface
+     * @complexity 3
+     * STRUCTURE: ┌'SELECT', buildDistinctClause, buildSelectColumns┐ → ● merge
+     */
     protected function buildSelectClause(SelectQueryInterface $query): ExprInterface
     {
         $parts = [
@@ -248,7 +383,15 @@ abstract class AbstractGrammar implements GrammarInterface
 
         return HExpr::mergeExpressionParts($parts, $this, ' ');
     }
+    // endregion METHOD_buildSelectClause
 
+    // region METHOD_buildSelectColumns [DOMAIN(10): Grammar; CONCEPT(9): SELECT; TECH(9): ColumnList]
+    /**
+     * @purpose Build the comma-separated list of SELECT columns with optional aliases. Defaults to '*' if empty.
+     * @io array -> ExprInterface
+     * @complexity 7
+     * STRUCTURE: ┌columns?┐ → N: '*' | Y: ○ foreach: 〈is_string? T: escapeIdentifier | F: ValueBuilder.build〉+ alias → ⊕ parts → ∑ Expr(implode(', '), params)
+     */
     protected function buildSelectColumns(array $selectColumns): ExprInterface
     {
         $parts = [];
@@ -277,12 +420,26 @@ abstract class AbstractGrammar implements GrammarInterface
             $params,
         );
     }
+    // endregion METHOD_buildSelectColumns
 
+    // region METHOD_buildDistinctClause [DOMAIN(8): Grammar; CONCEPT(7): SELECT; TECH(7): DISTINCT]
+    /**
+     * @purpose Build the DISTINCT clause — returns the DISTINCT expression or null.
+     * @io SelectQueryInterface -> ?ExprInterface
+     * @complexity 2
+     */
     protected function buildDistinctClause(SelectQueryInterface $query): ?ExprInterface
     {
         return $query->distinct ? new Expr($query->distinct) : null;
     }
+    // endregion METHOD_buildDistinctClause
 
+    // region METHOD_buildFromClause [DOMAIN(9): Grammar; CONCEPT(9): FROM; TECH(9): Clause]
+    /**
+     * @purpose Build the FROM clause with table list. Returns null if no FROM tables.
+     * @io FromInterface -> ?ExprInterface
+     * @complexity 3
+     */
     protected function buildFromClause(FromInterface $query): ?ExprInterface
     {
         if ($query->from) {
@@ -294,7 +451,15 @@ abstract class AbstractGrammar implements GrammarInterface
         }
         return null;
     }
+    // endregion METHOD_buildFromClause
 
+    // region METHOD_buildTables [DOMAIN(9): Grammar; CONCEPT(9): FROM; TECH(9): TableList]
+    /**
+     * @purpose Build a comma-separated list of tables for FROM clause.
+     * @io array -> ExprInterface
+     * @complexity 4
+     * STRUCTURE: ○ foreach table → buildTable ⊕ parts → merge(', ')
+     */
     protected function buildTables(array $tables): ExprInterface
     {
         $parts = [];
@@ -305,7 +470,15 @@ abstract class AbstractGrammar implements GrammarInterface
 
         return HExpr::mergeExpressionParts($parts, $this, ', ');
     }
+    // endregion METHOD_buildTables
 
+    // region METHOD_buildJoinClause [DOMAIN(9): Grammar; CONCEPT(9): JOIN; TECH(9): Clause]
+    /**
+     * @purpose Build JOIN clauses — iterate join tables, handle NATURAL joins, build conditions per join.
+     * @io JoinInterface -> ?ExprInterface
+     * @complexity 8
+     * STRUCTURE: ◇ joinTables? → N: null | Y: ○ foreach table → buildTable + conditions → sprintf('JOIN_TYPE table ON condition') ⊕ parts → ∑ Expr(implode(' '), params)
+     */
     protected function buildJoinClause(JoinInterface $query): ?ExprInterface
     {
         if ($query->joinTables) {
@@ -352,7 +525,15 @@ abstract class AbstractGrammar implements GrammarInterface
         }
         return null;
     }
+    // endregion METHOD_buildJoinClause
 
+    // region METHOD_buildWhereClause [DOMAIN(9): Grammar; CONCEPT(9): WHERE; TECH(9): Clause]
+    /**
+     * @purpose Build the WHERE clause from conditions array.
+     * @io WhereInterface -> ?ExprInterface
+     * @complexity 3
+     * STRUCTURE: ◇ where? → N: null | Y: buildConditions → 'WHERE ' + expr → ∑ Expr
+     */
     protected function buildWhereClause(WhereInterface $query): ?ExprInterface
     {
         if ($query->where) {
@@ -365,7 +546,15 @@ abstract class AbstractGrammar implements GrammarInterface
         }
         return null;
     }
+    // endregion METHOD_buildWhereClause
 
+    // region METHOD_buildTable [DOMAIN(9): Grammar; CONCEPT(9): Table; TECH(9): Building]
+    /**
+     * @purpose Build a table reference with optional alias and before/after modifiers.
+     * @io int|string alias, table -> ExprInterface
+     * @complexity 6
+     * STRUCTURE: ┌beforeModifiers, build(table), 'AS alias', afterModifiers┐ → ● merge
+     */
     protected function buildTable(int|string $alias, SelectTable|ExprInterface|ValuesQueryInterface|SelectQueryInterface $table): ExprInterface
     {
         $vb = new ValueBuilder();
@@ -386,26 +575,55 @@ abstract class AbstractGrammar implements GrammarInterface
 
         return HExpr::mergeExpressionParts($parts, $this, ' ');
     }
+    // endregion METHOD_buildTable
 
+    // region METHOD_buildBeforeTableModifiers [DOMAIN(8): Grammar; CONCEPT(8): Table; TECH(8): Hook]
+    /**
+     * @purpose Hook for subclasses to add modifiers before table reference (e.g., ONLY for PostgreSQL). Default null.
+     * @io int|string alias, table -> ?ExprInterface
+     * @complexity 1
+     */
     protected function buildBeforeTableModifiers(
         int|string $alias,
         SelectTable|ExprInterface|SelectQueryInterface|ValuesQueryInterface $table,
     ): ?ExprInterface {
         return null;
     }
+    // endregion METHOD_buildBeforeTableModifiers
 
+    // region METHOD_buildAfterTableModifiers [DOMAIN(8): Grammar; CONCEPT(8): Table; TECH(8): Hook]
+    /**
+     * @purpose Hook for subclasses to add modifiers after table reference (e.g., WITH CHECK OPTION). Default null.
+     * @io int|string alias, table -> ?ExprInterface
+     * @complexity 1
+     */
     protected function buildAfterTableModifiers(
         int|string $alias,
         SelectTable|ExprInterface|SelectQueryInterface|ValuesQueryInterface $table,
     ): ?ExprInterface {
         return null;
     }
+    // endregion METHOD_buildAfterTableModifiers
 
+    // region METHOD_buildConditions [DOMAIN(9): Grammar; CONCEPT(9): Conditions; TECH(9): AndExpr]
+    /**
+     * @purpose Build conditions array into an AND-joined expression.
+     * @io array -> ExprInterface
+     * @complexity 2
+     */
     protected function buildConditions(array $conditions): ExprInterface
     {
         return new AndExpr($conditions);
     }
+    // endregion METHOD_buildConditions
 
+    // region METHOD_buildGroupByClause [DOMAIN(9): Grammar; CONCEPT(9): GROUP_BY; TECH(9): Clause]
+    /**
+     * @purpose Build the GROUP BY clause with optional DISTINCT modifier.
+     * @io SelectQueryInterface -> ?ExprInterface
+     * @complexity 6
+     * STRUCTURE: ◇ groupBy? → N: null | Y: ○ foreach → string: escapeIdentifier | int: literal | else: ValueBuilder → ⊕ expressions → ∑ 'GROUP BY' + (DISTINCT?) + implode(', ')
+     */
     protected function buildGroupByClause(SelectQueryInterface $query): ?ExprInterface
     {
         if ($query->groupBy) {
@@ -436,7 +654,14 @@ abstract class AbstractGrammar implements GrammarInterface
         }
         return null;
     }
+    // endregion METHOD_buildGroupByClause
 
+    // region METHOD_buildHavingClause [DOMAIN(9): Grammar; CONCEPT(8): HAVING; TECH(9): Clause]
+    /**
+     * @purpose Build the HAVING clause — only rendered when both GROUP BY and HAVING are present.
+     * @io SelectQueryInterface -> ?ExprInterface
+     * @complexity 3
+     */
     protected function buildHavingClause(SelectQueryInterface $query): ?ExprInterface
     {
         if ($query->groupBy && $query->having) {
@@ -449,7 +674,15 @@ abstract class AbstractGrammar implements GrammarInterface
         }
         return null;
     }
+    // endregion METHOD_buildHavingClause
 
+    // region METHOD_buildWindowsClause [DOMAIN(9): Grammar; CONCEPT(8): WINDOW; TECH(9): Clause]
+    /**
+     * @purpose Build the WINDOW clause with named window definitions.
+     * @io SelectQueryInterface -> ?ExprInterface
+     * @complexity 5
+     * STRUCTURE: ◇ windows? → N: null | Y: ○ foreach name → sprintf('%s AS %s', name, window.getExpression) ⊕ parts → ∑ 'WINDOW ' + implode(', ')
+     */
     protected function buildWindowsClause(SelectQueryInterface $query): ?ExprInterface
     {
         if ($query->windows) {
@@ -471,7 +704,15 @@ abstract class AbstractGrammar implements GrammarInterface
         }
         return null;
     }
+    // endregion METHOD_buildWindowsClause
 
+    // region METHOD_buildOperationClauses [DOMAIN(9): Grammar; CONCEPT(8): SET; TECH(9): Operations]
+    /**
+     * @purpose Build SET operation clauses (UNION, INTERSECT, EXCEPT) — map each operation to buildOperation and merge.
+     * @io OperationsInterface -> ?ExprInterface
+     * @complexity 4
+     * STRUCTURE: ◇ operations? → N: null | Y: array_map(buildOperation) → merge(' ')
+     */
     protected function buildOperationClauses(OperationsInterface $query): ?ExprInterface
     {
         if ($query->operations) {
@@ -486,7 +727,14 @@ abstract class AbstractGrammar implements GrammarInterface
         }
         return null;
     }
+    // endregion METHOD_buildOperationClauses
 
+    // region METHOD_buildOperation [DOMAIN(9): Grammar; CONCEPT(8): SET; TECH(9): SingleOperation]
+    /**
+     * @purpose Build a single SET operation: `OPERATION (subquery)`.
+     * @io SetOperation -> ExprInterface
+     * @complexity 4
+     */
     protected function buildOperation(SetOperation $operation): ExprInterface
     {
         $builtQuery = $this->buildSelectQuery($operation->query);
@@ -500,7 +748,15 @@ abstract class AbstractGrammar implements GrammarInterface
             $builtQuery->params,
         );
     }
+    // endregion METHOD_buildOperation
 
+    // region METHOD_buildOrderByClause [DOMAIN(9): Grammar; CONCEPT(9): ORDER_BY; TECH(9): Clause]
+    /**
+     * @purpose Build the ORDER BY clause with sort direction for each column.
+     * @io OrderByInterface -> ?ExprInterface
+     * @complexity 6
+     * STRUCTURE: ◇ orderBy? → N: null | Y: ○ foreach → string: escapeIdentifier | int: literal | else: ValueBuilder → 'expr SORT_TYPE' ⊕ → ∑ 'ORDER BY ' + implode(', ')
+     */
     protected function buildOrderByClause(OrderByInterface $query): ?ExprInterface
     {
         if ($query->orderBy) {
@@ -532,7 +788,15 @@ abstract class AbstractGrammar implements GrammarInterface
         }
         return null;
     }
+    // endregion METHOD_buildOrderByClause
 
+    // region METHOD_buildLimitClause [DOMAIN(9): Grammar; CONCEPT(9): LIMIT; TECH(9): Clause]
+    /**
+     * @purpose Build the LIMIT/OFFSET clause using FETCH {FIRST|NEXT} syntax.
+     * @io LimitInterface -> ?ExprInterface
+     * @complexity 7
+     * STRUCTURE: ┌OFFSET ┤int|expr├┐ + ┌FETCH {NEXT|FIRST} ┤int|(expr)├ {ROW|ROWS} boundType┐ → ∑ Expr(implode(' '), params) | null if empty
+     */
     protected function buildLimitClause(LimitInterface $query): ?ExprInterface
     {
         $parts = [];
@@ -576,7 +840,14 @@ abstract class AbstractGrammar implements GrammarInterface
         }
         return null;
     }
+    // endregion METHOD_buildLimitClause
 
+    // region METHOD_buildLockClause [DOMAIN(9): Grammar; CONCEPT(8): Lock; TECH(9): Clause]
+    /**
+     * @purpose Build the FOR UPDATE / FOR SHARE locking clause.
+     * @io SelectQueryInterface -> ?ExprInterface
+     * @complexity 2
+     */
     protected function buildLockClause(SelectQueryInterface $query): ?ExprInterface
     {
         if ($query->lockMode !== null) {
@@ -586,7 +857,15 @@ abstract class AbstractGrammar implements GrammarInterface
         }
         return null;
     }
+    // endregion METHOD_buildLockClause
 
+    // region METHOD_buildValuesList [DOMAIN(9): Grammar; CONCEPT(9): VALUES; TECH(9): RowList]
+    /**
+     * @purpose Build the VALUES row list — each row value is parenthesized and comma-separated.
+     * @io ValuesQueryInterface -> ExprInterface
+     * @complexity 5
+     * STRUCTURE: ○ foreach value → ValueBuilder.build → '(' + expr + ')' ⊕ parts → ∑ Expr(implode(', '), params)
+     */
     protected function buildValuesList(ValuesQueryInterface $query): ExprInterface
     {
         $parts = [];
@@ -603,4 +882,6 @@ abstract class AbstractGrammar implements GrammarInterface
             $params,
         );
     }
+    // endregion METHOD_buildValuesList
 }
+// endregion CLASS_AbstractGrammar

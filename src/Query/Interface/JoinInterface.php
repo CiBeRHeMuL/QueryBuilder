@@ -10,6 +10,19 @@ use AndrewGos\QueryBuilder\Query\Select\SelectQueryInterface;
 use AndrewGos\QueryBuilder\Query\Values\ValuesQueryInterface;
 use UnitEnum;
 
+// region MODULE_CONTRACT [DOMAIN(8): Query; CONCEPT(9): Join; TECH(8): SQL]
+/**
+ * @moduleContract
+ * @purpose Define the contract for SQL JOIN clause with full type support (INNER, LEFT, RIGHT, CROSS, FULL, NATURAL).
+ * @scope Methods for joining tables with conditions, covering all standard join types.
+ * @input Join type, table reference, conditions, optional alias.
+ * @output Contract for table joining operations.
+ * @modulemap
+ * INTERFACE JoinInterface => JOIN clause contract
+ */
+// endregion MODULE_CONTRACT
+// GREP_SUMMARY: JOIN, SQL, INNER, LEFT, RIGHT, CROSS, FULL, NATURAL, tables
+
 /**
  * This interface provides methods for working with JOIN clause
  *
@@ -21,6 +34,10 @@ use UnitEnum;
  * @template TStandaloneCondition of bool|ExprInterface
  * @template TConditions of array<string, TCondition>|array<int, TStandaloneCondition>
  */
+// region INTERFACE_JoinInterface [DOMAIN(8): Query; CONCEPT(9): Join; TECH(8): SQL]
+/**
+ * @purpose Define methods for working with JOIN clause.
+ */
 interface JoinInterface
 {
     /**
@@ -30,7 +47,12 @@ interface JoinInterface
         get;
     }
 
+    // region METHOD_join [DOMAIN(8): Query; CONCEPT(9): Join; TECH(8): SQL]
     /**
+     * @purpose Create a JOIN of the specified type with conditions, optionally keyed by alias.
+     * @io JoinTypeEnum $type, TTable $table, TConditions $conditions, ?string $alias -> static
+     * @complexity 3
+     *
      * @param JoinTypeEnum $type
      * @param TTable $table
      * @param TConditions $conditions
@@ -44,8 +66,14 @@ interface JoinInterface
         array $conditions,
         ?string $alias = null,
     ): static;
+    // endregion METHOD_join
 
+    // region METHOD_innerJoin [DOMAIN(8): Query; CONCEPT(9): Join; TECH(8): SQL]
     /**
+     * @purpose Create an INNER JOIN with conditions.
+     * @io TTable $table, TConditions $conditions, ?string $alias -> static
+     * @complexity 2
+     *
      * @param TTable $table
      * @param TConditions $conditions
      * @param string|null $alias
@@ -57,8 +85,14 @@ interface JoinInterface
         array $conditions,
         ?string $alias = null,
     ): static;
+    // endregion METHOD_innerJoin
 
+    // region METHOD_leftJoin [DOMAIN(8): Query; CONCEPT(9): Join; TECH(8): SQL]
     /**
+     * @purpose Create a LEFT OUTER JOIN with conditions.
+     * @io TTable $table, TConditions $conditions, ?string $alias -> static
+     * @complexity 2
+     *
      * @param TTable $table
      * @param TConditions $conditions
      * @param string|null $alias
@@ -70,8 +104,14 @@ interface JoinInterface
         array $conditions,
         ?string $alias = null,
     ): static;
+    // endregion METHOD_leftJoin
 
+    // region METHOD_rightJoin [DOMAIN(8): Query; CONCEPT(9): Join; TECH(8): SQL]
     /**
+     * @purpose Create a RIGHT OUTER JOIN with conditions.
+     * @io TTable $table, TConditions $conditions, ?string $alias -> static
+     * @complexity 2
+     *
      * @param TTable $table
      * @param TConditions $conditions
      * @param string|null $alias
@@ -83,8 +123,14 @@ interface JoinInterface
         array $conditions,
         ?string $alias = null,
     ): static;
+    // endregion METHOD_rightJoin
 
+    // region METHOD_crossJoin [DOMAIN(8): Query; CONCEPT(9): Join; TECH(8): SQL]
     /**
+     * @purpose Create a CROSS JOIN with conditions.
+     * @io TTable $table, TConditions $conditions, ?string $alias -> static
+     * @complexity 2
+     *
      * @param TTable $table
      * @param TConditions $conditions
      * @param string|null $alias
@@ -96,8 +142,14 @@ interface JoinInterface
         array $conditions,
         ?string $alias = null,
     ): static;
+    // endregion METHOD_crossJoin
 
+    // region METHOD_fullJoin [DOMAIN(8): Query; CONCEPT(9): Join; TECH(8): SQL]
     /**
+     * @purpose Create a FULL OUTER JOIN with conditions.
+     * @io TTable $table, TConditions $conditions, ?string $alias -> static
+     * @complexity 2
+     *
      * @param TTable $table
      * @param TConditions $conditions
      * @param string|null $alias
@@ -109,8 +161,14 @@ interface JoinInterface
         array $conditions,
         ?string $alias = null,
     ): static;
+    // endregion METHOD_fullJoin
 
+    // region METHOD_naturalJoin [DOMAIN(8): Query; CONCEPT(9): Join; TECH(8): SQL]
     /**
+     * @purpose Create a NATURAL JOIN of the specified type (cross join is invalid for natural).
+     * @io JoinTypeEnum $type, TTable $table, ?string $alias -> static
+     * @complexity 2
+     *
      * @param JoinTypeEnum $type
      * @param TTable $table
      * @param string|null $alias
@@ -122,8 +180,14 @@ interface JoinInterface
         string|ExprInterface|SelectQueryInterface|ValuesQueryInterface|SelectTable $table,
         ?string $alias = null,
     ): static;
+    // endregion METHOD_naturalJoin
 
+    // region METHOD_naturalInnerJoin [DOMAIN(8): Query; CONCEPT(9): Join; TECH(8): SQL]
     /**
+     * @purpose Create a NATURAL INNER JOIN.
+     * @io TTable $table, ?string $alias -> static
+     * @complexity 2
+     *
      * @param TTable $table
      * @param string|null $alias
      *
@@ -133,8 +197,14 @@ interface JoinInterface
         string|ExprInterface|SelectQueryInterface|ValuesQueryInterface|SelectTable $table,
         ?string $alias = null,
     ): static;
+    // endregion METHOD_naturalInnerJoin
 
+    // region METHOD_naturalLeftJoin [DOMAIN(8): Query; CONCEPT(9): Join; TECH(8): SQL]
     /**
+     * @purpose Create a NATURAL LEFT OUTER JOIN.
+     * @io TTable $table, ?string $alias -> static
+     * @complexity 2
+     *
      * @param TTable $table
      * @param string|null $alias
      *
@@ -144,8 +214,14 @@ interface JoinInterface
         string|ExprInterface|SelectQueryInterface|ValuesQueryInterface|SelectTable $table,
         ?string $alias = null,
     ): static;
+    // endregion METHOD_naturalLeftJoin
 
+    // region METHOD_naturalRightJoin [DOMAIN(8): Query; CONCEPT(9): Join; TECH(8): SQL]
     /**
+     * @purpose Create a NATURAL RIGHT OUTER JOIN.
+     * @io TTable $table, ?string $alias -> static
+     * @complexity 2
+     *
      * @param TTable $table
      * @param string|null $alias
      *
@@ -155,8 +231,14 @@ interface JoinInterface
         string|ExprInterface|SelectQueryInterface|ValuesQueryInterface|SelectTable $table,
         ?string $alias = null,
     ): static;
+    // endregion METHOD_naturalRightJoin
 
+    // region METHOD_naturalFullJoin [DOMAIN(8): Query; CONCEPT(9): Join; TECH(8): SQL]
     /**
+     * @purpose Create a NATURAL FULL OUTER JOIN.
+     * @io TTable $table, ?string $alias -> static
+     * @complexity 2
+     *
      * @param TTable $table
      * @param string|null $alias
      *
@@ -166,4 +248,6 @@ interface JoinInterface
         string|ExprInterface|SelectQueryInterface|ValuesQueryInterface|SelectTable $table,
         ?string $alias = null,
     ): static;
+    // endregion METHOD_naturalFullJoin
 }
+// endregion INTERFACE_JoinInterface

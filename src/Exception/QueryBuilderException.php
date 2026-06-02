@@ -14,8 +14,31 @@ use AndrewGos\QueryBuilder\Query\Values\ValuesQueryInterface;
 use RuntimeException;
 use UnitEnum;
 
+// region MODULE_CONTRACT [DOMAIN(9): Exception; CONCEPT(9): ErrorHandling; TECH(9): Exception]
+/**
+ * @moduleContract
+ * @purpose Centralized exception factory for the QueryBuilder domain. Provides static named constructors for all error types.
+ * @scope Error handling, validation failures, domain-specific exceptions.
+ * @input Error context (values, types, objects)
+ * @output QueryBuilderException instances
+ * @invariants
+ * - All exceptions extend RuntimeException.
+ * - Messages contain typed context for debugging.
+ * @modulemap
+ * QueryBuilderException => Domain exception factory
+ */
+// endregion MODULE_CONTRACT
+// GREP_SUMMARY: QueryBuilderException, exception, error handling, validation
+
+// region CLASS_QueryBuilderException [DOMAIN(9): Exception; CONCEPT(9): ErrorHandling; TECH(9): Exception]
 class QueryBuilderException extends RuntimeException
 {
+    // region METHOD_valueIsNotExpr [DOMAIN(9): Exception; CONCEPT(8): Validation; TECH(8): TypeCheck]
+    /**
+     * @purpose Create exception for invalid expression values — value is not of the allowed types.
+     * @io mixed -> self
+     * @complexity 2
+     */
     public static function valueIsNotExpr(mixed $value): self
     {
         return new self(
@@ -32,7 +55,14 @@ class QueryBuilderException extends RuntimeException
             ),
         );
     }
+    // endregion METHOD_valueIsNotExpr
 
+    // region METHOD_valueIsNotTable [DOMAIN(9): Exception; CONCEPT(8): Validation; TECH(8): TypeCheck]
+    /**
+     * @purpose Create exception for invalid table expressions.
+     * @io mixed -> self
+     * @complexity 2
+     */
     public static function valueIsNotTable(mixed $value): self
     {
         return new self(
@@ -49,7 +79,14 @@ class QueryBuilderException extends RuntimeException
             ),
         );
     }
+    // endregion METHOD_valueIsNotTable
 
+    // region METHOD_valueIsNotSelectExpr [DOMAIN(9): Exception; CONCEPT(8): Validation; TECH(8): TypeCheck]
+    /**
+     * @purpose Create exception for invalid SELECT expression values.
+     * @io mixed -> self
+     * @complexity 2
+     */
     public static function valueIsNotSelectExpr(mixed $value): self
     {
         return new self(
@@ -67,7 +104,14 @@ class QueryBuilderException extends RuntimeException
             ),
         );
     }
+    // endregion METHOD_valueIsNotSelectExpr
 
+    // region METHOD_valueIsNotGroupByExpr [DOMAIN(9): Exception; CONCEPT(8): Validation; TECH(8): TypeCheck]
+    /**
+     * @purpose Create exception for invalid GROUP BY expression values.
+     * @io mixed -> self
+     * @complexity 2
+     */
     public static function valueIsNotGroupByExpr(mixed $value): self
     {
         return new self(
@@ -82,7 +126,14 @@ class QueryBuilderException extends RuntimeException
             ),
         );
     }
+    // endregion METHOD_valueIsNotGroupByExpr
 
+    // region METHOD_valueIsNotCondition [DOMAIN(9): Exception; CONCEPT(8): Validation; TECH(8): TypeCheck]
+    /**
+     * @purpose Create exception for invalid condition values.
+     * @io mixed -> self
+     * @complexity 2
+     */
     public static function valueIsNotCondition(mixed $value): self
     {
         return new self(
@@ -99,7 +150,14 @@ class QueryBuilderException extends RuntimeException
             ),
         );
     }
+    // endregion METHOD_valueIsNotCondition
 
+    // region METHOD_valueIsNotStandaloneCondition [DOMAIN(9): Exception; CONCEPT(8): Validation; TECH(8): TypeCheck]
+    /**
+     * @purpose Create exception for invalid standalone condition values (must be bool or ExprInterface).
+     * @io mixed -> self
+     * @complexity 2
+     */
     public static function valueIsNotStandaloneCondition(mixed $value): self
     {
         return new self(
@@ -113,7 +171,14 @@ class QueryBuilderException extends RuntimeException
             ),
         );
     }
+    // endregion METHOD_valueIsNotStandaloneCondition
 
+    // region METHOD_valueIsNotOrderBy [DOMAIN(9): Exception; CONCEPT(8): Validation; TECH(8): TypeCheck]
+    /**
+     * @purpose Create exception for invalid ORDER BY expression values.
+     * @io int|string key, mixed value -> self
+     * @complexity 2
+     */
     public static function valueIsNotOrderBy(int|string $key, mixed $value): self
     {
         return new self(
@@ -130,7 +195,14 @@ class QueryBuilderException extends RuntimeException
             ),
         );
     }
+    // endregion METHOD_valueIsNotOrderBy
 
+    // region METHOD_exprNotBuilt [DOMAIN(9): Exception; CONCEPT(7): Lifecycle; TECH(7): LazyBuild]
+    /**
+     * @purpose Create exception for accessing params on an expression that hasn't been built yet.
+     * @io ExprInterface -> self
+     * @complexity 1
+     */
     public static function exprNotBuilt(ExprInterface $expr): self
     {
         return new self(
@@ -144,7 +216,14 @@ class QueryBuilderException extends RuntimeException
             ),
         );
     }
+    // endregion METHOD_exprNotBuilt
 
+    // region METHOD_invalidIdentifier [DOMAIN(9): Exception; CONCEPT(7): Validation; TECH(8): Grammar]
+    /**
+     * @purpose Create exception for identifiers that don't pass grammar validation.
+     * @io string identifier, GrammarInterface -> self
+     * @complexity 1
+     */
     public static function invalidIdentifier(string $identifier, GrammarInterface $grammar): self
     {
         return new self(
@@ -158,7 +237,14 @@ class QueryBuilderException extends RuntimeException
             ),
         );
     }
+    // endregion METHOD_invalidIdentifier
 
+    // region METHOD_invalidNaturalJoinType [DOMAIN(9): Exception; CONCEPT(7): Validation; TECH(7): Join]
+    /**
+     * @purpose Create exception when a join type is incompatible with NATURAL join.
+     * @io JoinTypeEnum -> self
+     * @complexity 1
+     */
     public static function invalidNaturalJoinType(JoinTypeEnum $type): self
     {
         return new self(
@@ -170,7 +256,14 @@ class QueryBuilderException extends RuntimeException
             ),
         );
     }
+    // endregion METHOD_invalidNaturalJoinType
 
+    // region METHOD_valueIsNotReturnableQuery [DOMAIN(9): Exception; CONCEPT(8): Validation; TECH(8): Query]
+    /**
+     * @purpose Create exception when a query does not implement returnable interface.
+     * @io mixed query -> self
+     * @complexity 1
+     */
     public static function valueIsNotReturnableQuery(mixed $query): self
     {
         return new self(
@@ -184,7 +277,14 @@ class QueryBuilderException extends RuntimeException
             ),
         );
     }
+    // endregion METHOD_valueIsNotReturnableQuery
 
+    // region METHOD_returnableQueryCannotBeBuilt [DOMAIN(9): Exception; CONCEPT(8): Validation; TECH(8): Grammar]
+    /**
+     * @purpose Create exception when a returnable query cannot be built by the given grammar.
+     * @io MaybeReturnableQueryInterface, GrammarInterface -> self
+     * @complexity 1
+     */
     public static function returnableQueryCannotBeBuilt(MaybeReturnableQueryInterface $query, GrammarInterface $grammar): self
     {
         return new self(
@@ -197,4 +297,6 @@ class QueryBuilderException extends RuntimeException
             ),
         );
     }
+    // endregion METHOD_returnableQueryCannotBeBuilt
 }
+// endregion CLASS_QueryBuilderException

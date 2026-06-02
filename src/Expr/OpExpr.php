@@ -8,9 +8,29 @@ use AndrewGos\QueryBuilder\Query\Select\SelectQueryInterface;
 use AndrewGos\QueryBuilder\Builder\ValueBuilder;
 use UnitEnum;
 
+// region MODULE_CONTRACT [DOMAIN(7): Expression; CONCEPT(7): Operator; TECH(7): Binary]
+/**
+ * @moduleContract
+ * @purpose Binary operator expression — builds SQL like `left OPERATOR right` with automatic IS substitution for NULL/boolean equality.
+ * @scope Comparison and arithmetic operations.
+ * @input left, operator string, right
+ * @output Binary operator SQL expression
+ * @invariants
+ * - `= NULL` is automatically converted to `IS NULL`.
+ * - `= TRUE/FALSE` is converted to `IS TRUE/FALSE`.
+ * - Sub-expressions are parenthesized when needed.
+ * @modulemap
+ * OpExpr => Binary operator expression
+ */
+// endregion MODULE_CONTRACT
+// GREP_SUMMARY: OpExpr, binary operator, comparison expression
+
+// region CLASS_OpExpr [DOMAIN(7): Expression; CONCEPT(7): Operator; TECH(7): Binary]
 class OpExpr extends AbstractExpr
 {
+    // region METHOD___construct [DOMAIN(7): Expression; CONCEPT(6): Init; TECH(7): Operator]
     /**
+     * @purpose Store operands and operator. Auto-converts `= NULL` to `IS NULL` and `= TRUE/FALSE` to `IS TRUE/FALSE`.
      * @template TValue of bool|int|float|string|UnitEnum|ExprInterface|SelectQueryInterface|null
      * @phpstan-template TExpression of TValue|array<TExpression>
      *
@@ -29,7 +49,15 @@ class OpExpr extends AbstractExpr
             $this->operator = 'IS';
         }
     }
+    // endregion METHOD___construct
 
+    // region METHOD_doBuild [DOMAIN(7): Expression; CONCEPT(7): Build; TECH(7): Compilation]
+    /**
+     * @purpose Build the binary operator SQL expression with automatic parenthesization of sub-expressions.
+     * @io left, operator, right, GrammarInterface -> [string, array]
+     * @complexity 6
+     * @uses ValueBuilder
+     */
     protected function doBuild(GrammarInterface $grammar): array
     {
         $vb = new ValueBuilder();
@@ -56,4 +84,6 @@ class OpExpr extends AbstractExpr
 
         return [$expr, $params];
     }
+    // endregion METHOD_doBuild
 }
+// endregion CLASS_OpExpr

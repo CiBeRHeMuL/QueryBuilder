@@ -22,8 +22,32 @@ use AndrewGos\QueryBuilder\Query\Delete\PgSql\PgSqlDeleteQuery;
 use AndrewGos\QueryBuilder\Query\Select\SelectQueryInterface;
 use AndrewGos\QueryBuilder\Query\Values\ValuesQueryInterface;
 
+// region MODULE_CONTRACT [DOMAIN(8): Grammar; CONCEPT(8): PgSqlGrammar; TECH(8): Dialect]
+/**
+ * @moduleContract
+ * @purpose PostgreSQL-specific SQL grammar implementing identifier escaping (double-quotes), CTE materialization, DISTINCT ON, ONLY table modifier, RETURNING clause, USING clause, and FOR UPDATE/SHARE lock modes.
+ * @scope PostgreSQL SQL dialect query building.
+ * @input Various query objects (SelectQueryInterface, DeleteQueryInterface, MaybeReturnableQueryInterface, etc.)
+ * @output BuiltQuery with PostgreSQL dialect SQL and parameters
+ * @invariants
+ * - Identifiers are escaped with double quotes
+ * - RETURNING clause only for queries implementing ReturningInterface
+ * @modulemap
+ * PgSqlGrammar => PostgreSQL SQL grammar implementation
+ */
+// endregion MODULE_CONTRACT
+// GREP_SUMMARY: PostgreSQL, grammar, SQL, dialect, identifier escaping, DISTINCT ON, RETURNING, ONLY, USING, CTE, lock
+
+// region CLASS_PgSqlGrammar [DOMAIN(8): Grammar; CONCEPT(8): PgSqlGrammar; TECH(8): Dialect]
+/**
+ * @purpose PostgreSQL dialect grammar extending AbstractGrammar with double-quote escaping, DISTINCT ON, ONLY modifier, RETURNING, USING clauses, and CTE materialization support.
+ */
 class PgSqlGrammar extends AbstractGrammar
 {
+    // region METHOD_buildDeleteQuery [DOMAIN(8): Grammar; TECH(8): Delete]
+    /**
+     * @purpose Build PostgreSQL-specific DELETE query with USING, JOIN, and RETURNING clause support.
+     */
     public function buildDeleteQuery(DeleteQueryInterface $query): BuiltQuery
     {
         $parts = [
@@ -42,7 +66,12 @@ class PgSqlGrammar extends AbstractGrammar
             $expr->getParams(),
         );
     }
+    // endregion METHOD_buildDeleteQuery
 
+    // region METHOD_buildMaybeReturnableQuery [DOMAIN(8): Grammar; TECH(8): QueryBuilding]
+    /**
+     * @purpose Route returnable query types (SELECT, VALUES, DELETE) to their respective builder methods.
+     */
     public function buildMaybeReturnableQuery(MaybeReturnableQueryInterface $query): BuiltQuery
     {
         if (!$query->isReturnable()) {
@@ -56,7 +85,12 @@ class PgSqlGrammar extends AbstractGrammar
             default => throw QueryBuilderException::returnableQueryCannotBeBuilt($query, $this),
         };
     }
+    // endregion METHOD_buildMaybeReturnableQuery
 
+    // region METHOD_escapeIdentifier [DOMAIN(8): Grammar; TECH(8): IdentifierEscaping]
+    /**
+     * @purpose Escape identifier with PostgreSQL double quotes.
+     */
     public function escapeIdentifier(string $identifier): string
     {
         if ($identifier === '*') {
@@ -65,7 +99,12 @@ class PgSqlGrammar extends AbstractGrammar
         $identifier = trim($identifier, " \n\r\t\v\0\"");
         return '"' . strtr($identifier, ['"' => '""']) . '"';
     }
+    // endregion METHOD_escapeIdentifier
 
+    // region METHOD_buildWithQueryModifiers [DOMAIN(8): Grammar; TECH(8): CTE]
+    /**
+     * @purpose Build PostgreSQL CTE modifiers: MATERIALIZED / NOT MATERIALIZED.
+     */
     protected function buildWithQueryModifiers(string $alias, WithQuery $withQuery): ?ExprInterface
     {
         if ($withQuery instanceof PgSqlWithQuery) {
@@ -79,7 +118,12 @@ class PgSqlGrammar extends AbstractGrammar
         }
         return parent::buildWithQueryModifiers($alias, $withQuery);
     }
+    // endregion METHOD_buildWithQueryModifiers
 
+    // region METHOD_buildDistinctClause [DOMAIN(8): Grammar; TECH(8): Distinct]
+    /**
+     * @purpose Build PostgreSQL DISTINCT clause, optionally extending with DISTINCT ON.
+     */
     protected function buildDistinctClause(SelectQueryInterface $query): ?ExprInterface
     {
         if ($query->distinct) {
@@ -92,7 +136,12 @@ class PgSqlGrammar extends AbstractGrammar
         }
         return null;
     }
+    // endregion METHOD_buildDistinctClause
 
+    // region METHOD_buildDistinctOn [DOMAIN(8): Grammar; TECH(8): Distinct]
+    /**
+     * @purpose Build PostgreSQL DISTINCT ON (columns) clause.
+     */
     protected function buildDistinctOn(PgSqlSelectQuery $query): ?ExprInterface
     {
         if ($query->distinctOn) {
@@ -118,7 +167,12 @@ class PgSqlGrammar extends AbstractGrammar
         }
         return null;
     }
+    // endregion METHOD_buildDistinctOn
 
+    // region METHOD_buildBeforeTableModifiers [DOMAIN(8): Grammar; TECH(8): Table]
+    /**
+     * @purpose Build PostgreSQL ONLY modifier before table references for inheritance support.
+     */
     protected function buildBeforeTableModifiers(
         int|string $alias,
         SelectTable|ExprInterface|SelectQueryInterface|ValuesQueryInterface $table,
@@ -128,7 +182,12 @@ class PgSqlGrammar extends AbstractGrammar
         }
         return parent::buildBeforeTableModifiers($alias, $table);
     }
+    // endregion METHOD_buildBeforeTableModifiers
 
+    // region METHOD_buildLockClause [DOMAIN(8): Grammar; TECH(8): Lock]
+    /**
+     * @purpose Build PostgreSQL FOR UPDATE / FOR NO KEY UPDATE / FOR SHARE / FOR KEY SHARE lock clause.
+     */
     protected function buildLockClause(SelectQueryInterface $query): ?ExprInterface
     {
         if ($query instanceof PgSqlSelectQuery && $query->lockModes) {
@@ -146,7 +205,12 @@ class PgSqlGrammar extends AbstractGrammar
 
         return parent::buildLockClause($query);
     }
+    // endregion METHOD_buildLockClause
 
+    // region METHOD_buildReturning [DOMAIN(8): Grammar; TECH(8): Returning]
+    /**
+     * @purpose Build PostgreSQL RETURNING clause with optional OLD AS / NEW AS aliases.
+     */
     protected function buildReturning(ReturningInterface $query): ?ExprInterface
     {
         if ($query->returningColumns !== null) {
@@ -169,7 +233,12 @@ class PgSqlGrammar extends AbstractGrammar
         }
         return null;
     }
+    // endregion METHOD_buildReturning
 
+    // region METHOD_buildUsingClause [DOMAIN(8): Grammar; TECH(8): Using]
+    /**
+     * @purpose Build PostgreSQL USING clause for DELETE queries with additional table references.
+     */
     protected function buildUsingClause(DeleteQueryInterface $query): ?ExprInterface
     {
         if ($query instanceof PgSqlDeleteQuery && $query->using) {
@@ -183,4 +252,6 @@ class PgSqlGrammar extends AbstractGrammar
         }
         return null;
     }
+    // endregion METHOD_buildUsingClause
 }
+// endregion CLASS_PgSqlGrammar

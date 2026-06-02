@@ -5,6 +5,22 @@ namespace AndrewGos\QueryBuilder\Expr;
 use AndrewGos\QueryBuilder\Grammar\GrammarInterface;
 use UnitEnum;
 
+// region MODULE_CONTRACT [DOMAIN(7): Expression; CONCEPT(6): SimpleExpr; TECH(7): DTO]
+/**
+ * @moduleContract
+ * @purpose A simple immutable expression node holding a pre-built SQL fragment and its params.
+ * @scope Direct SQL expression values, parameterized fragments.
+ * @input string $expression, array $params
+ * @output string (SQL fragment), array (params)
+ * @invariants
+ * - Once constructed, the expression string and params are immutable.
+ * @modulemap
+ * Expr => Simple immutable expression node
+ */
+// endregion MODULE_CONTRACT
+// GREP_SUMMARY: Expr, simple expression, immutable, SQL fragment
+
+// region CLASS_Expr [DOMAIN(7): Expression; CONCEPT(6): SimpleExpr; TECH(7): DTO]
 final class Expr implements ExprInterface
 {
     /**
@@ -34,3 +50,4 @@ final class Expr implements ExprInterface
         return $this->params;
     }
 }
+// endregion CLASS_Expr

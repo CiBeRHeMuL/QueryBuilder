@@ -8,6 +8,23 @@ use AndrewGos\QueryBuilder\Helper\HExpr;
 use AndrewGos\QueryBuilder\Query\Select\SelectQueryInterface;
 use UnitEnum;
 
+// region MODULE_CONTRACT [DOMAIN(7): Expression; CONCEPT(7): Boolean; TECH(7): Abstract]
+/**
+ * @moduleContract
+ * @purpose Abstract base for boolean operator expressions (AND, OR) with condition normalization.
+ * @scope Boolean condition grouping.
+ * @input array of conditions, string operator
+ * @output Operator-joined SQL expressions
+ * @invariants
+ * - Multiple conditions are parenthesized when joined.
+ * - Single condition is rendered without parentheses.
+ * @modulemap
+ * BoolOpsExpr => Abstract boolean expression base
+ */
+// endregion MODULE_CONTRACT
+// GREP_SUMMARY: BoolOpsExpr, boolean expression, AND OR base
+
+// region CLASS_BoolOpsExpr [DOMAIN(7): Expression; CONCEPT(7): Boolean; TECH(7): Abstract]
 /**
  * @template TValue of bool|int|float|string|UnitEnum|ExprInterface|SelectQueryInterface|null
  * @phpstan-template TCondition of TValue|array<TCondition>
@@ -16,7 +33,9 @@ use UnitEnum;
  */
 class BoolOpsExpr extends AbstractExpr
 {
+    // region METHOD___construct [DOMAIN(7): Expression; CONCEPT(6): Init; TECH(6): Constructor]
     /**
+     * @purpose Store conditions and operator for later building.
      * @param TConditions $conditions
      * @param string $operator
      */
@@ -24,7 +43,14 @@ class BoolOpsExpr extends AbstractExpr
         private array $conditions,
         private string $operator,
     ) {}
+    // endregion METHOD___construct
 
+    // region METHOD_doBuild [DOMAIN(7): Expression; CONCEPT(7): Build; TECH(7): Normalization]
+    /**
+     * @purpose Normalize conditions and join them with the boolean operator. Multiple conditions are parenthesized.
+     * @io array conditions, GrammarInterface -> [string, array]
+     * @complexity 5
+     */
     protected function doBuild(GrammarInterface $grammar): array
     {
         $conditions = HExpr::normalizeConditions($this->conditions, $grammar);
@@ -47,4 +73,6 @@ class BoolOpsExpr extends AbstractExpr
 
         return [implode(" $this->operator ", $expressions), $params];
     }
+    // endregion METHOD_doBuild
 }
+// endregion CLASS_BoolOpsExpr

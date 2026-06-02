@@ -9,6 +9,22 @@ use AndrewGos\QueryBuilder\Query\Update\UpdateQueryInterface;
 use AndrewGos\QueryBuilder\Query\Insert\InsertQueryInterface;
 use AndrewGos\QueryBuilder\Query\Values\ValuesQueryInterface;
 
+// region MODULE_CONTRACT [DOMAIN(9): Grammar; CONCEPT(9): Contract; TECH(9): Interface]
+/**
+ * @moduleContract
+ * @purpose Defines the contract for all SQL grammar implementations (MySQL, PostgreSQL, SQLite, etc.).
+ * @scope Query building API, identifier escaping.
+ * @input Query interfaces (Select, Insert, Update, Delete, Values)
+ * @output BuiltQuery instances
+ * @invariants
+ * - All implementations must support the same method signatures.
+ * @modulemap
+ * GrammarInterface => Contract for SQL dialect grammars
+ */
+// endregion MODULE_CONTRACT
+// GREP_SUMMARY: GrammarInterface, SQL dialect, grammar contract, query building
+
+// region INTERFACE_GrammarInterface [DOMAIN(9): Grammar; CONCEPT(9): Contract; TECH(9): Interface]
 interface GrammarInterface
 {
     public function buildSelectQuery(SelectQueryInterface $query): BuiltQuery;
@@ -43,3 +59,4 @@ interface GrammarInterface
      */
     public function escapeTableAlias(string $alias): string;
 }
+// endregion INTERFACE_GrammarInterface

@@ -16,6 +16,27 @@ use AndrewGos\QueryBuilder\Query\Select\SelectQueryInterface as SelectQueryInter
 use AndrewGos\QueryBuilder\Query\Values\ValuesQueryInterface;
 use UnitEnum;
 
+// region MODULE_CONTRACT [DOMAIN(9): Helper; CONCEPT(9): ExpressionUtilities; TECH(9): StaticHelpers]
+/**
+ * @moduleContract
+ * @purpose Static utility class providing validation, normalization, and merging operations for SQL expression nodes.
+ * @scope Type validation, condition/order-by normalization, params merging, expression part merging.
+ * @input Mixed values, arrays, GrammarInterface
+ * @output Validated/normalized expressions, merged params, ExprInterface
+ * @invariants
+ * - All test* methods throw QueryBuilderException on invalid input.
+ * - All normalize* methods preserve the original input structure.
+ * - mergeParams supports both numeric and associative arrays.
+ * @rationale
+ * Q: Why are all methods static?
+ * A: HExpr is a stateless utility namespace. Its methods are pure functions operating on input data.
+ * @modulemap
+ * HExpr => Expression utility class
+ */
+// endregion MODULE_CONTRACT
+// GREP_SUMMARY: HExpr, helper, expression utilities, validation, normalization
+
+// region CLASS_HExpr [DOMAIN(9): Helper; CONCEPT(9): ExpressionUtilities; TECH(9): StaticHelpers]
 /**
  * @template TValue of bool|int|float|string|UnitEnum|ExprInterface|SelectQueryInterface|ValuesQueryInterface|null
  * @template TExpression of TValue|array<TExpression>
@@ -39,12 +60,13 @@ use UnitEnum;
  */
 class HExpr
 {
+    // region METHOD_testExpr [DOMAIN(9): Helper; CONCEPT(8): Validation; TECH(8): TypeCheck]
     /**
-     * Checks that value can be used as an expression
-     *
-     * @param mixed|TExpression $value
-     *
-     * @throws QueryBuilderException
+     * @purpose Checks that value can be used as an expression. Throws on invalid type.
+     * @io mixed -> void (throws on invalid)
+     * @complexity 5
+     * @uses QueryBuilderException::valueIsNotExpr
+     * STRUCTURE: ▼ [value] → ◇ is_null/bool/int/float/string/ExprInterface/SelectQueryInterface/ValuesQueryInterface/UnitEnum/array → ● valid → ∑ return | ✗ throw
      */
     public static function testExpr(mixed $value): void
     {
@@ -61,13 +83,14 @@ class HExpr
 
         $isExpr === false && throw QueryBuilderException::valueIsNotExpr($value);
     }
+    // endregion METHOD_testExpr
 
+    // region METHOD_testSelectExpr [DOMAIN(9): Helper; CONCEPT(8): Validation; TECH(8): TypeCheck]
     /**
-     * Checks that value can be used as a select expression
-     *
-     * @param mixed|TExpression $value
-     *
-     * @throws QueryBuilderException
+     * @purpose Checks that value can be used as a SELECT expression. Throws on invalid type.
+     * @io mixed -> void (throws on invalid)
+     * @complexity 5
+     * @uses QueryBuilderException::valueIsNotSelectExpr
      */
     public static function testSelectExpr(mixed $value): void
     {
@@ -84,13 +107,14 @@ class HExpr
 
         $isExpr === false && throw QueryBuilderException::valueIsNotSelectExpr($value);
     }
+    // endregion METHOD_testSelectExpr
 
+    // region METHOD_testGroupByExpr [DOMAIN(9): Helper; CONCEPT(8): Validation; TECH(8): TypeCheck]
     /**
-     * Checks that value can be used as a group by expression
-     *
-     * @param mixed|TGroupExpression $value
-     *
-     * @throws QueryBuilderException
+     * @purpose Checks that value can be used as a GROUP BY expression. Throws on invalid type.
+     * @io mixed -> void (throws on invalid)
+     * @complexity 5
+     * @uses QueryBuilderException::valueIsNotGroupByExpr
      */
     public static function testGroupByExpr(mixed $value): void
     {
@@ -105,13 +129,14 @@ class HExpr
 
         $isExpr === false && throw QueryBuilderException::valueIsNotGroupByExpr($value);
     }
+    // endregion METHOD_testGroupByExpr
 
+    // region METHOD_testCondition [DOMAIN(9): Helper; CONCEPT(8): Validation; TECH(8): TypeCheck]
     /**
-     * Checks that value can be used as a condition
-     *
-     * @param mixed|TCondition $condition
-     *
-     * @return void
+     * @purpose Checks that value can be used as a condition. Throws on invalid type.
+     * @io mixed -> void (throws on invalid)
+     * @complexity 5
+     * @uses QueryBuilderException::valueIsNotCondition
      */
     public static function testCondition(mixed $condition): void
     {
@@ -128,13 +153,14 @@ class HExpr
 
         $isCondition === false && throw QueryBuilderException::valueIsNotCondition($condition);
     }
+    // endregion METHOD_testCondition
 
+    // region METHOD_testStandaloneCondition [DOMAIN(9): Helper; CONCEPT(8): Validation; TECH(8): TypeCheck]
     /**
-     * Checks that value can be used as a condition
-     *
-     * @param mixed|TStandaloneCondition $condition
-     *
-     * @return void
+     * @purpose Checks that value can be used as a standalone condition (bool or ExprInterface only). Throws on invalid type.
+     * @io mixed -> void (throws on invalid)
+     * @complexity 3
+     * @uses QueryBuilderException::valueIsNotStandaloneCondition
      */
     public static function testStandaloneCondition(mixed $condition): void
     {
@@ -143,11 +169,13 @@ class HExpr
 
         $isCondition === false && throw QueryBuilderException::valueIsNotStandaloneCondition($condition);
     }
+    // endregion METHOD_testStandaloneCondition
 
+    // region METHOD_testConditionsArray [DOMAIN(9): Helper; CONCEPT(8): Validation; TECH(8): TypeCheck]
     /**
-     * @param array|TConditions $conditions
-     *
-     * @return void
+     * @purpose Validate all entries in a conditions array, dispatching by key type (string key -> testCondition, int key -> testStandaloneCondition).
+     * @io array -> void (throws on invalid)
+     * @complexity 4
      */
     public static function testConditionsArray(array $conditions): void
     {
@@ -159,7 +187,14 @@ class HExpr
             }
         }
     }
+    // endregion METHOD_testConditionsArray
 
+    // region METHOD_testOrderByArray [DOMAIN(9): Helper; CONCEPT(8): Validation; TECH(8): TypeCheck]
+    /**
+     * @purpose Validate an ORDER BY array structure — string keys expect int|string values, int keys expect string|ExprInterface|OrderColumn values.
+     * @io array -> void (throws on invalid)
+     * @complexity 5
+     */
     public static function testOrderByArray(array $columns): void
     {
         foreach ($columns as $key => $column) {
@@ -174,13 +209,14 @@ class HExpr
             $isOrderBy === false && throw QueryBuilderException::valueIsNotOrderBy($key, $column);
         }
     }
+    // endregion METHOD_testOrderByArray
 
+    // region METHOD_testTable [DOMAIN(9): Helper; CONCEPT(8): Validation; TECH(8): TypeCheck]
     /**
-     * Checks that value can be used as an expression
-     *
-     * @param mixed|TTable $value
-     *
-     * @throws QueryBuilderException
+     * @purpose Checks that value can be used as a table expression. Throws on invalid type.
+     * @io mixed -> void (throws on invalid)
+     * @complexity 3
+     * @uses QueryBuilderException::valueIsNotTable
      */
     public static function testTable(mixed $value): void
     {
@@ -192,12 +228,17 @@ class HExpr
 
         $isExpr === false && throw QueryBuilderException::valueIsNotTable($value);
     }
+    // endregion METHOD_testTable
 
+    // region METHOD_normalizeConditions [DOMAIN(9): Helper; CONCEPT(9): Normalization; TECH(9): ConditionShortSyntax]
     /**
+     * @purpose Normalize a conditions array: string keys become OpExpr/InExpr, int keys pass through as-is.
+     *          STRUCTURE: ┌conditions┐ → ○ foreach: 〈is_string(key)? T/F〉 → T: ◇ is_array|SelectQuery|ValuesQuery → InExpr | → OpExpr(=) → ⊕ result[] | F: ◇ is_bool → ValueBuilder | → ⊕ result[]
      * @param TConditions $conditions
      * @param GrammarInterface $grammar
      *
      * @return ExprInterface[]
+     * @complexity 7
      */
     public static function normalizeConditions(array $conditions, GrammarInterface $grammar): array
     {
@@ -236,11 +277,16 @@ class HExpr
         }
         return $result;
     }
+    // endregion METHOD_normalizeConditions
 
+    // region METHOD_normalizeOrderBy [DOMAIN(9): Helper; CONCEPT(9): Normalization; TECH(9): OrderByShortSyntax]
     /**
+     * @purpose Normalize an ORDER BY array: string keys + SORT_ASC/SORT_DESC -> OrderColumn, int keys + string/ExprInterface -> OrderColumn.
+     *          STRUCTURE: ┌columns┐ → ○ foreach: 〈is_string(key)? T/F〉 → T: OrderColumn(key, match column) ⊕ result[] | F: ◇ OrderColumn → ⊕ | ◇ ExprInterface → OrderColumn(col, ASC) ⊕ | → OrderColumn(col) ⊕
      * @param TOrderBy $columns
      *
      * @return OrderColumn[]
+     * @complexity 7
      */
     public static function normalizeOrderBy(array $columns): array
     {
@@ -281,7 +327,14 @@ class HExpr
 
         return $orderBy;
     }
+    // endregion METHOD_normalizeOrderBy
 
+    // region METHOD_mergeParams [DOMAIN(8): Helper; CONCEPT(8): Merge; TECH(8): Params]
+    /**
+     * @purpose Merge multiple parameter arrays, handling both numeric and associative keys. Numeric keys append, string keys overwrite.
+     * @io array left, array ...right -> array
+     * @complexity 4
+     */
     public static function mergeParams(array $left, array ...$right): array
     {
         foreach ($right as $params) {
@@ -295,13 +348,13 @@ class HExpr
         }
         return $left;
     }
+    // endregion METHOD_mergeParams
 
+    // region METHOD_normalizeTable [DOMAIN(9): Helper; CONCEPT(8): Normalization; TECH(8): Table]
     /**
-     * @param mixed|TTable $value
-     *
-     * @return TNormalizedTable
-     *
-     * @throws QueryBuilderException
+     * @purpose Normalize a table value: strings become SelectTable, other types pass through.
+     * @io mixed -> SelectTable|ExprInterface|SelectQueryInterface|ValuesQueryInterface
+     * @complexity 2
      */
     public static function normalizeTable(mixed $value): SelectTable|ExprInterface|SelectQueryInterface|ValuesQueryInterface
     {
@@ -309,13 +362,18 @@ class HExpr
 
         return is_string($value) ? new SelectTable($value) : $value;
     }
+    // endregion METHOD_normalizeTable
 
+    // region METHOD_mergeExpressionParts [DOMAIN(9): Helper; CONCEPT(9): Merge; TECH(9): PartJoining]
     /**
+     * @purpose Merge an array of expression parts (ExprInterface, BuiltQuery, or string) into a single ExprInterface joined by a glue string.
+     *          STRUCTURE: ┌expressions┐ → ○ foreach: 〈ExprInterface〉 → getExpression ⊕ params | 〈BuiltQuery〉 → sql ⊕ params | 〈string〉 → ⊕ parts → ∑ Expr(implode(glue, parts), params)
      * @param (string|BuiltQuery|ExprInterface)[] $expressions
      * @param GrammarInterface $grammar
      * @param string $glue
      *
      * @return ExprInterface
+     * @complexity 6
      */
     public static function mergeExpressionParts(
         array $expressions,
@@ -342,4 +400,6 @@ class HExpr
             $params,
         );
     }
+    // endregion METHOD_mergeExpressionParts
 }
+// endregion CLASS_HExpr

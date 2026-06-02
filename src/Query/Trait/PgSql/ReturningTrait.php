@@ -6,10 +6,24 @@ use AndrewGos\QueryBuilder\Expr\AndExpr;
 use AndrewGos\QueryBuilder\Expr\ExprInterface;
 use AndrewGos\QueryBuilder\Expr\OrExpr;
 
+// region MODULE_CONTRACT [DOMAIN(8): Trait; CONCEPT(8): ReturningTrait; TECH(8): Dialect]
 /**
- * This trait provides functionality of Pg\ReturningInterface
- *
- * @see \AndrewGos\QueryBuilder\Query\Interface\PgSql\ReturningInterface
+ * @moduleContract
+ * @purpose Provides shared implementation of PostgreSQL RETURNING clause functionality for queries.
+ * @scope PostgreSQL RETURNING clause implementation trait.
+ * @input array $columns, ?string $oldAlias, ?string $newAlias
+ * @output ReturningTrait methods for RETURNING clause management
+ * @invariants
+ * - returningColumns null means no RETURNING clause
+ * @modulemap
+ * ReturningTrait => PostgreSQL RETURNING clause implementation
+ */
+// endregion MODULE_CONTRACT
+// GREP_SUMMARY: PostgreSQL, RETURNING, OLD, NEW, trait, dialect
+
+// region TRAIT_ReturningTrait [DOMAIN(8): Trait; CONCEPT(8): ReturningTrait; TECH(8): Dialect]
+/**
+ * @purpose Provides shared implementation of ReturningInterface for PostgreSQL RETURNING clause support with OLD/NEW aliases.
  */
 trait ReturningTrait
 {
@@ -23,6 +37,10 @@ trait ReturningTrait
     /**
      * @inheritDoc
      */
+    // region METHOD_returning [DOMAIN(8): Trait; TECH(8): Returning]
+    /**
+     * @purpose Set RETURNING columns with optional OLD/NEW aliases.
+     */
     public function returning(array $columns, ?string $oldAlias = null, ?string $newAlias = null): static
     {
         $this->returningColumns = $columns;
@@ -31,9 +49,14 @@ trait ReturningTrait
 
         return $this;
     }
+    // endregion METHOD_returning
 
     /**
      * @inheritDoc
+     */
+    // region METHOD_addReturning [DOMAIN(8): Trait; TECH(8): Returning]
+    /**
+     * @purpose Add RETURNING columns with optional OLD/NEW aliases.
      */
     public function addReturning(array $columns, ?string $oldAlias = null, ?string $newAlias = null): static
     {
@@ -43,4 +66,6 @@ trait ReturningTrait
 
         return $this;
     }
+    // endregion METHOD_addReturning
 }
+// endregion TRAIT_ReturningTrait
