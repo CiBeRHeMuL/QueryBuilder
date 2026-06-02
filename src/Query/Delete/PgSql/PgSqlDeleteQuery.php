@@ -13,10 +13,24 @@ use AndrewGos\QueryBuilder\Query\Interface\PgSql\ReturningInterface;
 use AndrewGos\QueryBuilder\Query\Select\SelectQueryInterface;
 use AndrewGos\QueryBuilder\Query\Trait\JoinTrait;
 use AndrewGos\QueryBuilder\Query\Trait\PgSql\ReturningTrait;
-use AndrewGos\QueryBuilder\Query\Trait\PgSql\UsingTrait;
 use UnitEnum;
 
 // region MODULE_CONTRACT [DOMAIN(8): Delete; CONCEPT(8): PgSqlDeleteQuery; TECH(8): Dialect]
+/**
+ * @moduleContract
+ * @purpose PostgreSQL-specific DELETE query with USING, JOIN, RETURNING clauses and returnable query support.
+ * @scope PostgreSQL DELETE query building with advanced clauses.
+ * @input Tables, conditions, using tables, joins, returning columns
+ * @output PgSqlDeleteQuery instance with PostgreSQL-specific DELETE capabilities
+ * @invariants
+ * - DELETE is returnable only if RETURNING clause is specified
+ * @modulemap
+ * PgSqlDeleteQuery => PostgreSQL DELETE query with USING, JOIN, and RETURNING
+ */
+// endregion MODULE_CONTRACT
+// GREP_SUMMARY: PostgreSQL, DELETE, USING, JOIN, RETURNING, dialect
+
+// region CLASS_PgSqlDeleteQuery [DOMAIN(8): Delete; CONCEPT(8): PgSqlDeleteQuery; TECH(8): Dialect]
 /**
  * @template TValue of bool|int|float|string|UnitEnum|ExprInterface|SelectQueryInterface|null
  * @template TExpression of ExprInterface|SelectQueryInterface
@@ -34,21 +48,6 @@ use UnitEnum;
  * @template TConditions of ExprInterface|array<int, bool|ExprInterface>
  *
  * @template TOrderBy of array<string, int|string>|array<int, string|ExprInterface|OrderColumn> column => order, expression or OrderColumn
- * @moduleContract
- * @purpose PostgreSQL-specific DELETE query with USING, JOIN, RETURNING clauses and returnable query support.
- * @scope PostgreSQL DELETE query building with advanced clauses.
- * @input Tables, conditions, using tables, joins, returning columns
- * @output PgSqlDeleteQuery instance with PostgreSQL-specific DELETE capabilities
- * @invariants
- * - DELETE is returnable only if RETURNING clause is specified
- * @modulemap
- * PgSqlDeleteQuery => PostgreSQL DELETE query with USING, JOIN, and RETURNING
- */
-// endregion MODULE_CONTRACT
-// GREP_SUMMARY: PostgreSQL, DELETE, USING, JOIN, RETURNING, dialect
-
-// region CLASS_PgSqlDeleteQuery [DOMAIN(8): Delete; CONCEPT(8): PgSqlDeleteQuery; TECH(8): Dialect]
-/**
  * @purpose PostgreSQL DELETE query extending DeleteQuery with USING, JOIN, RETURNING clauses and MaybeReturnableQueryInterface implementation.
  */
 class PgSqlDeleteQuery extends DeleteQuery implements JoinInterface, ReturningInterface, MaybeReturnableQueryInterface

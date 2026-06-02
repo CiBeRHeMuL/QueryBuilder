@@ -25,6 +25,11 @@ use UnitEnum;
 
 // region INTERFACE_ReturningInterface [DOMAIN(8): Interface; CONCEPT(8): ReturningInterface; TECH(8): Dialect]
 /**
+ * @template TValue of bool|int|float|string|UnitEnum|ExprInterface|SelectQueryInterface|ValuesQueryInterface|null
+ * @template TExpression of TValue|array<TExpression>
+ *
+ * @template TSelectExpression of TExpression
+ *
  * @purpose Contract for queries supporting PostgreSQL RETURNING clause with column selection and OLD/NEW alias support.
  */
 interface ReturningInterface

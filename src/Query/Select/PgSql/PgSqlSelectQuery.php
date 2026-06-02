@@ -10,8 +10,6 @@ use UnitEnum;
 
 // region MODULE_CONTRACT [DOMAIN(8): Select; CONCEPT(8): PgSqlSelectQuery; TECH(8): Dialect]
 /**
- * @template TValue of bool|int|float|string|UnitEnum|ExprInterface|SelectQueryInterface|null
- * @phpstan-template TExpression of TValue|array<TExpression>
  * @moduleContract
  * @purpose PostgreSQL-specific SELECT query with DISTINCT ON and lock mode support.
  * @scope PostgreSQL SELECT query building with DISTINCT ON extension.
@@ -28,6 +26,8 @@ use UnitEnum;
 
 // region CLASS_PgSqlSelectQuery [DOMAIN(8): Select; CONCEPT(8): PgSqlSelectQuery; TECH(8): Dialect]
 /**
+ * @template TValue of bool|int|float|string|UnitEnum|ExprInterface|SelectQueryInterface|null
+ * @phpstan-template TExpression of TValue|array<TExpression>
  * @purpose PostgreSQL SELECT query extending SelectQuery with DISTINCT ON clause and FOR UPDATE/FOR SHARE lock modes.
  */
 class PgSqlSelectQuery extends SelectQuery
