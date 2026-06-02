@@ -17,13 +17,11 @@ use AndrewGos\QueryBuilder\Helper\HExpr;
 // endregion MODULE_CONTRACT
 // GREP_SUMMARY: ORDER BY, trait, SQL, sorting, ordering, HExpr, normalize
 
+// region TRAIT_OrderByTrait [DOMAIN(8): Query; CONCEPT(9): Trait; TECH(8): SQL]
 /**
  * This trait provides functionality of OrderByInterface
  *
  * @see \AndrewGos\QueryBuilder\Query\Interface\OrderByInterface
- */
-// region TRAIT_OrderByTrait [DOMAIN(8): Query; CONCEPT(9): Trait; TECH(8): SQL]
-/**
  * @purpose Implement OrderByInterface for queries requiring result sorting.
  */
 trait OrderByTrait

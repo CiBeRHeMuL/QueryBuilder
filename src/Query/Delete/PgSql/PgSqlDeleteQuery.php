@@ -16,6 +16,7 @@ use AndrewGos\QueryBuilder\Query\Trait\PgSql\ReturningTrait;
 use AndrewGos\QueryBuilder\Query\Trait\PgSql\UsingTrait;
 use UnitEnum;
 
+// region MODULE_CONTRACT [DOMAIN(8): Delete; CONCEPT(8): PgSqlDeleteQuery; TECH(8): Dialect]
 /**
  * @template TValue of bool|int|float|string|UnitEnum|ExprInterface|SelectQueryInterface|null
  * @template TExpression of ExprInterface|SelectQueryInterface
@@ -33,9 +34,6 @@ use UnitEnum;
  * @template TConditions of ExprInterface|array<int, bool|ExprInterface>
  *
  * @template TOrderBy of array<string, int|string>|array<int, string|ExprInterface|OrderColumn> column => order, expression or OrderColumn
- */
-// region MODULE_CONTRACT [DOMAIN(8): Delete; CONCEPT(8): PgSqlDeleteQuery; TECH(8): Dialect]
-/**
  * @moduleContract
  * @purpose PostgreSQL-specific DELETE query with USING, JOIN, RETURNING clauses and returnable query support.
  * @scope PostgreSQL DELETE query building with advanced clauses.
@@ -63,13 +61,11 @@ class PgSqlDeleteQuery extends DeleteQuery implements JoinInterface, ReturningIn
      */
     protected(set) array $using = [];
 
+    // region METHOD_using [DOMAIN(8): Delete; TECH(8): Using]
     /**
      * @param array<int|string, TTable> $tables
      *
      * @return static
-     */
-    // region METHOD_using [DOMAIN(8): Delete; TECH(8): Using]
-    /**
      * @purpose Set USING tables for PostgreSQL DELETE.
      */
     public function using(array $tables): static
@@ -80,13 +76,11 @@ class PgSqlDeleteQuery extends DeleteQuery implements JoinInterface, ReturningIn
     }
     // endregion METHOD_using
 
+    // region METHOD_addUsing [DOMAIN(8): Delete; TECH(8): Using]
     /**
      * @param array<int|string, TTable> $tables
      *
      * @return static
-     */
-    // region METHOD_addUsing [DOMAIN(8): Delete; TECH(8): Using]
-    /**
      * @purpose Add additional USING tables for PostgreSQL DELETE.
      */
     public function addUsing(array $tables): static
@@ -99,13 +93,11 @@ class PgSqlDeleteQuery extends DeleteQuery implements JoinInterface, ReturningIn
     }
     // endregion METHOD_addUsing
 
+    // region METHOD_isReturnable [DOMAIN(8): Delete; TECH(8): Returning]
     /**
      * For PostgreSQL we can use result of DELETE statement only if RETURNING clause is specified
      *
      * @return bool
-     */
-    // region METHOD_isReturnable [DOMAIN(8): Delete; TECH(8): Returning]
-    /**
      * @purpose Check if DELETE query is returnable (has RETURNING clause).
      */
     public function isReturnable(): bool

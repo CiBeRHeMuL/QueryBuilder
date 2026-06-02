@@ -28,13 +28,11 @@ trait PartitionTrait
      */
     protected(set) array $partitions = [];
 
+    // region METHOD_partition [DOMAIN(8): Trait; TECH(8): Partition]
     /**
      * @param string[] $partitions
      *
      * @return static
-     */
-    // region METHOD_partition [DOMAIN(8): Trait; TECH(8): Partition]
-    /**
      * @purpose Set partitions for MySQL PARTITION clause.
      */
     public function partition(array $partitions): static
@@ -45,13 +43,11 @@ trait PartitionTrait
     }
     // endregion METHOD_partition
 
+    // region METHOD_addPartition [DOMAIN(8): Trait; TECH(8): Partition]
     /**
      * @param string[] $partitions
      *
      * @return static
-     */
-    // region METHOD_addPartition [DOMAIN(8): Trait; TECH(8): Partition]
-    /**
      * @purpose Add additional partitions for MySQL PARTITION clause.
      */
     public function addPartition(array $partitions): static

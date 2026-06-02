@@ -18,11 +18,9 @@ use AndrewGos\QueryBuilder\Expr\ExprInterface;
 // endregion MODULE_CONTRACT
 // GREP_SUMMARY: LIMIT, OFFSET, FETCH, pagination, SQL, bound type
 
-/**
- * This interface provides methods for working with OFFSET, LIMIT, FETCH clause
- */
 // region INTERFACE_LimitInterface [DOMAIN(8): Query; CONCEPT(9): Pagination; TECH(8): SQL]
 /**
+ * This interface provides methods for working with OFFSET, LIMIT, FETCH clause
  * @purpose Define methods for working with OFFSET, LIMIT, FETCH clause.
  */
 interface LimitInterface

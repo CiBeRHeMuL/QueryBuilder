@@ -19,6 +19,7 @@ use UnitEnum;
 // endregion MODULE_CONTRACT
 // GREP_SUMMARY: WHERE, conditions, filtering, SQL, AND, OR, expressions
 
+// region INTERFACE_WhereInterface [DOMAIN(8): Query; CONCEPT(9): Filtering; TECH(8): SQL]
 /**
  * This interface provides methods for working with WHERE clause
  *
@@ -27,9 +28,6 @@ use UnitEnum;
  * @template TCondition of TValue|array<TCondition>
  * @template TStandaloneCondition of bool|ExprInterface
  * @template TConditions of array<string, TCondition>|array<int, TStandaloneCondition>
- */
-// region INTERFACE_WhereInterface [DOMAIN(8): Query; CONCEPT(9): Filtering; TECH(8): SQL]
-/**
  * @purpose Define methods for working with WHERE clause.
  */
 interface WhereInterface

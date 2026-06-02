@@ -20,14 +20,12 @@ use AndrewGos\QueryBuilder\Query\Values\ValuesQueryInterface;
 // endregion MODULE_CONTRACT
 // GREP_SUMMARY: FROM, SQL, tables, subquery, JOIN source, clause
 
+// region INTERFACE_FromInterface [DOMAIN(8): Query; CONCEPT(9): From; TECH(8): SQL]
 /**
  * This interface provides methods for working with FROM clause
  *
  * @template TTable of string|ExprInterface|SelectQueryInterface|ValuesQueryInterface|SelectTable
  * @template TNormalizedTable of ExprInterface|SelectQueryInterface|ValuesQueryInterface|SelectTable
- */
-// region INTERFACE_FromInterface [DOMAIN(8): Query; CONCEPT(9): From; TECH(8): SQL]
-/**
  * @purpose Define methods for working with FROM clause.
  */
 interface FromInterface

@@ -19,13 +19,11 @@ use AndrewGos\QueryBuilder\Query\Select\SelectQueryInterface;
 // endregion MODULE_CONTRACT
 // GREP_SUMMARY: UNION, INTERSECT, EXCEPT, set operations, trait, SQL
 
+// region TRAIT_OperationsTrait [DOMAIN(8): Query; CONCEPT(9): Trait; TECH(8): SQL]
 /**
  * This trait provides functionality of OperationsInterface
  *
  * @see \AndrewGos\QueryBuilder\Query\Interface\OperationsInterface
- */
-// region TRAIT_OperationsTrait [DOMAIN(8): Query; CONCEPT(9): Trait; TECH(8): SQL]
-/**
  * @purpose Implement OperationsInterface for queries requiring set operation support.
  */
 trait OperationsTrait

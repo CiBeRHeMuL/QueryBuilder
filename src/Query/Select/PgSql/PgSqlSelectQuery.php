@@ -8,12 +8,10 @@ use AndrewGos\QueryBuilder\Query\Select\SelectQuery;
 use AndrewGos\QueryBuilder\Query\Select\SelectQueryInterface;
 use UnitEnum;
 
+// region MODULE_CONTRACT [DOMAIN(8): Select; CONCEPT(8): PgSqlSelectQuery; TECH(8): Dialect]
 /**
  * @template TValue of bool|int|float|string|UnitEnum|ExprInterface|SelectQueryInterface|null
  * @phpstan-template TExpression of TValue|array<TExpression>
- */
-// region MODULE_CONTRACT [DOMAIN(8): Select; CONCEPT(8): PgSqlSelectQuery; TECH(8): Dialect]
-/**
  * @moduleContract
  * @purpose PostgreSQL-specific SELECT query with DISTINCT ON and lock mode support.
  * @scope PostgreSQL SELECT query building with DISTINCT ON extension.
@@ -62,13 +60,11 @@ class PgSqlSelectQuery extends SelectQuery
         get => array_first($this->lockModes);
     }
 
+    // region METHOD_distinctOn [DOMAIN(8): Select; TECH(8): Distinct]
     /**
      * @param TExpression[] $columns
      *
      * @return PgSqlSelectQuery
-     */
-    // region METHOD_distinctOn [DOMAIN(8): Select; TECH(8): Distinct]
-    /**
      * @purpose Set DISTINCT ON columns for PostgreSQL SELECT.
      */
     public function distinctOn(array $columns): static
@@ -79,13 +75,11 @@ class PgSqlSelectQuery extends SelectQuery
     }
     // endregion METHOD_distinctOn
 
+    // region METHOD_addDistinctOn [DOMAIN(8): Select; TECH(8): Distinct]
     /**
      * @param TExpression[] $columns
      *
      * @return PgSqlSelectQuery
-     */
-    // region METHOD_addDistinctOn [DOMAIN(8): Select; TECH(8): Distinct]
-    /**
      * @purpose Add DISTINCT ON columns for PostgreSQL SELECT.
      */
     public function addDistinctOn(array $columns): static

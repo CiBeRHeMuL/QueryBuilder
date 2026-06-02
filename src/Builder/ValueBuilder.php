@@ -31,6 +31,7 @@ use UnitEnum;
 // region CLASS_ValueBuilder [DOMAIN(8): Builder; CONCEPT(8): ValueBuilding; TECH(8): TypeDispatch]
 final readonly class ValueBuilder
 {
+    // region METHOD_build [DOMAIN(8): Builder; CONCEPT(8): EntryPoint; TECH(8): Validation]
     /**
      * @template TValue of bool|int|float|string|UnitEnum|ExprInterface|SelectQueryInterface|null
      * @phpstan-template TExpression of TValue|array<TExpression>
@@ -40,9 +41,6 @@ final readonly class ValueBuilder
      * @param bool $stringAsIdentifier
      *
      * @return ExprInterface
-     */
-    // region METHOD_build [DOMAIN(8): Builder; CONCEPT(8): EntryPoint; TECH(8): Validation]
-    /**
      * @purpose Validate and dispatch a value to the appropriate expression builder.
      * @io mixed value + GrammarInterface -> ExprInterface
      * @complexity 3

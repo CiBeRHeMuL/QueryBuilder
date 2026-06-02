@@ -20,14 +20,12 @@ use AndrewGos\QueryBuilder\Helper\HExpr;
 // endregion MODULE_CONTRACT
 // GREP_SUMMARY: FROM, single-table, trait, SQL, DELETE, UPDATE, constraint
 
+// region TRAIT_SingleFromTrait [DOMAIN(8): Query; CONCEPT(9): Trait; TECH(8): SQL]
 /**
  * This trait provides functionality of FromInterface
  * for queries which allow using only single table.
  *
  * @see \AndrewGos\QueryBuilder\Query\Interface\FromInterface
- */
-// region TRAIT_SingleFromTrait [DOMAIN(8): Query; CONCEPT(9): Trait; TECH(8): SQL]
-/**
  * @purpose Implement FromInterface for queries restricted to a single FROM table.
  */
 trait SingleFromTrait

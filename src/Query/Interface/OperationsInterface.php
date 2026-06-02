@@ -19,11 +19,9 @@ use AndrewGos\QueryBuilder\Query\Select\SelectQueryInterface;
 // endregion MODULE_CONTRACT
 // GREP_SUMMARY: UNION, INTERSECT, EXCEPT, set operations, SQL, combine queries
 
-/**
- * This interface provides methods for working with UNION, INTERSECT, EXCEPT clauses
- */
 // region INTERFACE_OperationsInterface [DOMAIN(8): Query; CONCEPT(9): SetOperations; TECH(8): SQL]
 /**
+ * This interface provides methods for working with UNION, INTERSECT, EXCEPT clauses
  * @purpose Define methods for working with UNION, INTERSECT, EXCEPT clauses.
  */
 interface OperationsInterface

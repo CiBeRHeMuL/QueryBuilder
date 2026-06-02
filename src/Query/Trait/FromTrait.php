@@ -19,14 +19,12 @@ use AndrewGos\QueryBuilder\Helper\HExpr;
 // endregion MODULE_CONTRACT
 // GREP_SUMMARY: FROM, trait, multi-table, SQL, tables, HExpr, normalize
 
+// region TRAIT_FromTrait [DOMAIN(8): Query; CONCEPT(9): Trait; TECH(8): SQL]
 /**
  * This trait provides functionality of FromInterface
  * for queries which allow using not only single table.
  *
  * @see \AndrewGos\QueryBuilder\Query\Interface\FromInterface
- */
-// region TRAIT_FromTrait [DOMAIN(8): Query; CONCEPT(9): Trait; TECH(8): SQL]
-/**
  * @purpose Implement FromInterface for queries allowing multiple FROM tables.
  */
 trait FromTrait

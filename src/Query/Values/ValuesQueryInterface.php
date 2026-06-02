@@ -22,12 +22,10 @@ use UnitEnum;
 // endregion MODULE_CONTRACT
 // GREP_SUMMARY: VALUES, SQL, query, value lists, inline values, interface
 
+// region INTERFACE_ValuesQueryInterface [DOMAIN(8): Query; CONCEPT(9): Values; TECH(8): SQL]
 /**
  * @template TSimpleValue of bool|int|float|string|UnitEnum|ExprInterface|null
  * @template TValues of TSimpleValue|TValues[]
- */
-// region INTERFACE_ValuesQueryInterface [DOMAIN(8): Query; CONCEPT(9): Values; TECH(8): SQL]
-/**
  * @purpose Define the contract for VALUES SQL queries.
  */
 interface ValuesQueryInterface extends OperationsInterface, OrderByInterface, LimitInterface, MaybeReturnableQueryInterface

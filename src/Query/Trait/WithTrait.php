@@ -15,13 +15,11 @@ namespace AndrewGos\QueryBuilder\Query\Trait;
 // endregion MODULE_CONTRACT
 // GREP_SUMMARY: WITH, CTE, trait, SQL, common table expression, recursive
 
+// region TRAIT_WithTrait [DOMAIN(8): Query; CONCEPT(9): Trait; TECH(8): SQL]
 /**
  * This trait provides functionality of WithInterface
  *
  * @see \AndrewGos\QueryBuilder\Query\Interface\WithInterface
- */
-// region TRAIT_WithTrait [DOMAIN(8): Query; CONCEPT(9): Trait; TECH(8): SQL]
-/**
  * @purpose Implement WithInterface for queries requiring CTE support.
  */
 trait WithTrait

@@ -28,6 +28,7 @@ use UnitEnum;
 // endregion MODULE_CONTRACT
 // GREP_SUMMARY: SELECT, SQL, query, select columns, FROM, JOIN, WHERE, GROUP BY, HAVING, WINDOW, ORDER BY, LIMIT, LOCK, UNION
 
+// region INTERFACE_SelectQueryInterface [DOMAIN(8): Query; CONCEPT(10): Select; TECH(8): SQL]
 /**
  * @template TValue of bool|int|float|string|UnitEnum|ExprInterface|SelectQueryInterface|null
  * @template TExpression of TValue|array<TExpression>
@@ -40,9 +41,6 @@ use UnitEnum;
  * @template TCondition of TValue|array<TCondition>
  * @template TStandaloneCondition of bool|ExprInterface
  * @template TConditions of array<string, TCondition>|array<int, TStandaloneCondition>
- */
-// region INTERFACE_SelectQueryInterface [DOMAIN(8): Query; CONCEPT(10): Select; TECH(8): SQL]
-/**
  * @purpose Define the contract for SELECT SQL queries.
  */
 interface SelectQueryInterface extends

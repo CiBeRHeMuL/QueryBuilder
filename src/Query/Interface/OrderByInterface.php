@@ -18,13 +18,11 @@ use AndrewGos\QueryBuilder\Expr\Order\OrderColumn;
 // endregion MODULE_CONTRACT
 // GREP_SUMMARY: ORDER BY, sorting, SQL, ordering, columns, direction
 
+// region INTERFACE_OrderByInterface [DOMAIN(8): Query; CONCEPT(9): Sorting; TECH(8): SQL]
 /**
  * This interface provides methods for working with ORDER BY clause
  *
  * @template TOrderBy of array<string, int|string>|array<int, string|ExprInterface|OrderColumn> column => order, expression or OrderColumn
- */
-// region INTERFACE_OrderByInterface [DOMAIN(8): Query; CONCEPT(9): Sorting; TECH(8): SQL]
-/**
  * @purpose Define methods for working with ORDER BY clause.
  */
 interface OrderByInterface

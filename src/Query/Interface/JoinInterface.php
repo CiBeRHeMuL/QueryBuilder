@@ -23,6 +23,7 @@ use UnitEnum;
 // endregion MODULE_CONTRACT
 // GREP_SUMMARY: JOIN, SQL, INNER, LEFT, RIGHT, CROSS, FULL, NATURAL, tables
 
+// region INTERFACE_JoinInterface [DOMAIN(8): Query; CONCEPT(9): Join; TECH(8): SQL]
 /**
  * This interface provides methods for working with JOIN clause
  *
@@ -33,9 +34,6 @@ use UnitEnum;
  * @template TCondition of TValue|array<TCondition>
  * @template TStandaloneCondition of bool|ExprInterface
  * @template TConditions of array<string, TCondition>|array<int, TStandaloneCondition>
- */
-// region INTERFACE_JoinInterface [DOMAIN(8): Query; CONCEPT(9): Join; TECH(8): SQL]
-/**
  * @purpose Define methods for working with JOIN clause.
  */
 interface JoinInterface

@@ -34,11 +34,9 @@ trait ReturningTrait
      */
     protected(set) ?array $returningColumns = null;
 
-    /**
-     * @inheritDoc
-     */
     // region METHOD_returning [DOMAIN(8): Trait; TECH(8): Returning]
     /**
+     * @inheritDoc
      * @purpose Set RETURNING columns with optional OLD/NEW aliases.
      */
     public function returning(array $columns, ?string $oldAlias = null, ?string $newAlias = null): static
@@ -51,11 +49,9 @@ trait ReturningTrait
     }
     // endregion METHOD_returning
 
-    /**
-     * @inheritDoc
-     */
     // region METHOD_addReturning [DOMAIN(8): Trait; TECH(8): Returning]
     /**
+     * @inheritDoc
      * @purpose Add RETURNING columns with optional OLD/NEW aliases.
      */
     public function addReturning(array $columns, ?string $oldAlias = null, ?string $newAlias = null): static

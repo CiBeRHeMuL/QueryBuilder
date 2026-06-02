@@ -19,13 +19,11 @@ use AndrewGos\QueryBuilder\Expr\OrExpr;
 // endregion MODULE_CONTRACT
 // GREP_SUMMARY: WHERE, trait, SQL, conditions, AND, OR, filtering
 
+// region TRAIT_WhereTrait [DOMAIN(8): Query; CONCEPT(9): Trait; TECH(8): SQL]
 /**
  * This trait provides functionality of WhereInterface
  *
  * @see \AndrewGos\QueryBuilder\Query\Interface\WhereInterface
- */
-// region TRAIT_WhereTrait [DOMAIN(8): Query; CONCEPT(9): Trait; TECH(8): SQL]
-/**
  * @purpose Implement WhereInterface for queries requiring WHERE clause support.
  */
 trait WhereTrait

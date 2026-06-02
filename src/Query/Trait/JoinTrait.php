@@ -24,13 +24,11 @@ use AndrewGos\QueryBuilder\Query\Values\ValuesQueryInterface;
 // endregion MODULE_CONTRACT
 // GREP_SUMMARY: JOIN, trait, SQL, INNER, LEFT, RIGHT, CROSS, FULL, NATURAL
 
+// region TRAIT_JoinTrait [DOMAIN(8): Query; CONCEPT(9): Trait; TECH(8): SQL]
 /**
  * This trait provides functionality of JoinInterface
  *
  * @see \AndrewGos\QueryBuilder\Query\Interface\JoinInterface
- */
-// region TRAIT_JoinTrait [DOMAIN(8): Query; CONCEPT(9): Trait; TECH(8): SQL]
-/**
  * @purpose Implement JoinInterface for queries requiring JOIN support.
  */
 trait JoinTrait

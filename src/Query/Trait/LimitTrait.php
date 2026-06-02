@@ -18,13 +18,11 @@ use AndrewGos\QueryBuilder\Expr\ExprInterface;
 // endregion MODULE_CONTRACT
 // GREP_SUMMARY: LIMIT, OFFSET, FETCH, trait, SQL, pagination, bound type
 
+// region TRAIT_LimitTrait [DOMAIN(8): Query; CONCEPT(9): Trait; TECH(8): SQL]
 /**
  * This trait provides functionality of LimitInterface
  *
  * @see \AndrewGos\QueryBuilder\Query\Interface\LimitInterface
- */
-// region TRAIT_LimitTrait [DOMAIN(8): Query; CONCEPT(9): Trait; TECH(8): SQL]
-/**
  * @purpose Implement LimitInterface for queries requiring pagination support.
  */
 trait LimitTrait
