@@ -35,7 +35,7 @@ enum FrameBoundEnum
     public function getSql(): string
     {
         return match ($this) {
-            self::Preceding => 'PRESIDING',
+            self::Preceding => 'PRECEDING',
             self::Following => 'FOLLOWING',
             self::CurrentRow => 'CURRENT ROW',
         };
