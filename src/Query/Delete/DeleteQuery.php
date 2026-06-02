@@ -5,7 +5,6 @@ namespace AndrewGos\QueryBuilder\Query\Delete;
 use AndrewGos\QueryBuilder\Query\Trait\SingleFromTrait;
 use AndrewGos\QueryBuilder\Query\Trait\WhereTrait;
 use AndrewGos\QueryBuilder\Query\Trait\WithTrait;
-use AndrewGos\QueryBuilder\Query\Trait\WhereTrait;
 
 // region MODULE_CONTRACT [DOMAIN(8): Query; CONCEPT(9): Delete; TECH(8): SQL]
 /**
