@@ -65,7 +65,7 @@ class HExpr
      * @purpose Checks that value can be used as an expression. Throws on invalid type.
      * @io mixed -> void (throws on invalid)
      * @complexity 5
-     * @uses QueryBuilderException::valueIsNotExpr
+     * @using QueryBuilderException::valueIsNotExpr
      * STRUCTURE: ▼ [value] → ◇ is_null/bool/int/float/string/ExprInterface/SelectQueryInterface/ValuesQueryInterface/UnitEnum/array → ● valid → ∑ return | ✗ throw
      */
     public static function testExpr(mixed $value): void
@@ -90,7 +90,7 @@ class HExpr
      * @purpose Checks that value can be used as a SELECT expression. Throws on invalid type.
      * @io mixed -> void (throws on invalid)
      * @complexity 5
-     * @uses QueryBuilderException::valueIsNotSelectExpr
+     * @using QueryBuilderException::valueIsNotSelectExpr
      */
     public static function testSelectExpr(mixed $value): void
     {
@@ -114,7 +114,7 @@ class HExpr
      * @purpose Checks that value can be used as a GROUP BY expression. Throws on invalid type.
      * @io mixed -> void (throws on invalid)
      * @complexity 5
-     * @uses QueryBuilderException::valueIsNotGroupByExpr
+     * @using QueryBuilderException::valueIsNotGroupByExpr
      */
     public static function testGroupByExpr(mixed $value): void
     {
@@ -136,7 +136,7 @@ class HExpr
      * @purpose Checks that value can be used as a condition. Throws on invalid type.
      * @io mixed -> void (throws on invalid)
      * @complexity 5
-     * @uses QueryBuilderException::valueIsNotCondition
+     * @using QueryBuilderException::valueIsNotCondition
      */
     public static function testCondition(mixed $condition): void
     {
@@ -160,7 +160,7 @@ class HExpr
      * @purpose Checks that value can be used as a standalone condition (bool or ExprInterface only). Throws on invalid type.
      * @io mixed -> void (throws on invalid)
      * @complexity 3
-     * @uses QueryBuilderException::valueIsNotStandaloneCondition
+     * @using QueryBuilderException::valueIsNotStandaloneCondition
      */
     public static function testStandaloneCondition(mixed $condition): void
     {
@@ -216,7 +216,7 @@ class HExpr
      * @purpose Checks that value can be used as a table expression. Throws on invalid type.
      * @io mixed -> void (throws on invalid)
      * @complexity 3
-     * @uses QueryBuilderException::valueIsNotTable
+     * @using QueryBuilderException::valueIsNotTable
      */
     public static function testTable(mixed $value): void
     {

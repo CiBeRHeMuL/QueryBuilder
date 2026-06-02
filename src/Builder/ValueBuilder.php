@@ -44,7 +44,7 @@ final readonly class ValueBuilder
      * @purpose Validate and dispatch a value to the appropriate expression builder.
      * @io mixed value + GrammarInterface -> ExprInterface
      * @complexity 3
-     * @uses HExpr::testExpr
+     * @using HExpr::testExpr
      */
     public function build(
         bool|int|float|string|UnitEnum|ExprInterface|SelectQueryInterface|ValuesQueryInterface|array|null $value,

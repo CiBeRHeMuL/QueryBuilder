@@ -59,7 +59,7 @@ abstract class AbstractGrammar implements GrammarInterface
      * @purpose Build a complete SELECT query by assembling all clauses (WITH, SELECT, FROM, JOIN, WHERE, GROUP BY, HAVING, WINDOW, SET ops, ORDER BY, LIMIT, LOCK) in order.
      * @io SelectQueryInterface -> BuiltQuery
      * @complexity 7
-     * @uses HExpr::mergeExpressionParts
+     * @using HExpr::mergeExpressionParts
      * STRUCTURE: ▶ ┌WITH, SELECT, FROM, JOIN, WHERE, GROUP BY, HAVING, WINDOW, OPS, ORDER BY, LIMIT, LOCK┐ → ● HExpr::merge(parts, ' ') → ∑ BuiltQuery(expr, params)
      */
     public function buildSelectQuery(SelectQueryInterface $query): BuiltQuery
@@ -166,7 +166,7 @@ abstract class AbstractGrammar implements GrammarInterface
      * @purpose Build a complete INSERT query: [WITH] INSERT INTO table [(columns)] {VALUES|SELECT|DEFAULT VALUES}.
      * @io InsertQueryInterface -> BuiltQuery
      * @complexity 5
-     * @uses HExpr::mergeExpressionParts, buildWithClause, buildInsertSource
+     * @using HExpr::mergeExpressionParts, buildWithClause, buildInsertSource
      * STRUCTURE: ▶ ┌WITH, 'INSERT INTO', table, alias, columns, source┐ → ● HExpr::merge(parts, ' ') → ∑ BuiltQuery
      */
     public function buildInsertQuery(InsertQueryInterface $query): BuiltQuery

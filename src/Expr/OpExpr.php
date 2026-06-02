@@ -56,7 +56,7 @@ class OpExpr extends AbstractExpr
      * @purpose Build the binary operator SQL expression with automatic parenthesization of sub-expressions.
      * @io left, operator, right, GrammarInterface -> [string, array]
      * @complexity 6
-     * @uses ValueBuilder
+     * @using ValueBuilder
      */
     protected function doBuild(GrammarInterface $grammar): array
     {
