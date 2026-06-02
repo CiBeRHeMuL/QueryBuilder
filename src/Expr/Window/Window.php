@@ -2,10 +2,10 @@
 
 namespace AndrewGos\QueryBuilder\Expr\Window;
 
+use AndrewGos\QueryBuilder\Builder\ValueBuilder;
 use AndrewGos\QueryBuilder\Enum\Window\FrameBoundEnum;
 use AndrewGos\QueryBuilder\Enum\Window\FrameExclusionEnum;
 use AndrewGos\QueryBuilder\Enum\Window\FrameTypeEnum;
-use AndrewGos\QueryBuilder\Exception\QueryBuilderException;
 use AndrewGos\QueryBuilder\Expr\AbstractExpr;
 use AndrewGos\QueryBuilder\Expr\Expr;
 use AndrewGos\QueryBuilder\Expr\ExprInterface;
@@ -13,7 +13,6 @@ use AndrewGos\QueryBuilder\Expr\Order\OrderColumn;
 use AndrewGos\QueryBuilder\Grammar\GrammarInterface;
 use AndrewGos\QueryBuilder\Helper\HExpr;
 use AndrewGos\QueryBuilder\Query\Select\SelectQueryInterface;
-use AndrewGos\QueryBuilder\Builder\ValueBuilder;
 use UnitEnum;
 
 // region MODULE_CONTRACT [DOMAIN(9): Window; CONCEPT(9): WindowFunction; TECH(8): SQLAnalytics]

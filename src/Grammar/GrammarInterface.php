@@ -2,11 +2,11 @@
 
 namespace AndrewGos\QueryBuilder\Grammar;
 
+use AndrewGos\QueryBuilder\Query\Delete\DeleteQueryInterface;
+use AndrewGos\QueryBuilder\Query\Insert\InsertQueryInterface;
 use AndrewGos\QueryBuilder\Query\Interface\MaybeReturnableQueryInterface;
 use AndrewGos\QueryBuilder\Query\Select\SelectQueryInterface;
-use AndrewGos\QueryBuilder\Query\Delete\DeleteQueryInterface;
 use AndrewGos\QueryBuilder\Query\Update\UpdateQueryInterface;
-use AndrewGos\QueryBuilder\Query\Insert\InsertQueryInterface;
 use AndrewGos\QueryBuilder\Query\Values\ValuesQueryInterface;
 
 // region MODULE_CONTRACT [DOMAIN(9): Grammar; CONCEPT(9): Contract; TECH(9): Interface]

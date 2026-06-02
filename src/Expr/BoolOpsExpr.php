@@ -2,7 +2,6 @@
 
 namespace AndrewGos\QueryBuilder\Expr;
 
-use AndrewGos\QueryBuilder\Exception\QueryBuilderException;
 use AndrewGos\QueryBuilder\Grammar\GrammarInterface;
 use AndrewGos\QueryBuilder\Helper\HExpr;
 use AndrewGos\QueryBuilder\Query\Select\SelectQueryInterface;

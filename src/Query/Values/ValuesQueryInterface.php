@@ -4,9 +4,9 @@ namespace AndrewGos\QueryBuilder\Query\Values;
 
 use AndrewGos\QueryBuilder\Expr\ExprInterface;
 use AndrewGos\QueryBuilder\Query\Interface\LimitInterface;
+use AndrewGos\QueryBuilder\Query\Interface\MaybeReturnableQueryInterface;
 use AndrewGos\QueryBuilder\Query\Interface\OperationsInterface;
 use AndrewGos\QueryBuilder\Query\Interface\OrderByInterface;
-use AndrewGos\QueryBuilder\Query\Interface\MaybeReturnableQueryInterface;
 use UnitEnum;
 
 // region MODULE_CONTRACT [DOMAIN(8): Query; CONCEPT(9): Values; TECH(8): SQL]

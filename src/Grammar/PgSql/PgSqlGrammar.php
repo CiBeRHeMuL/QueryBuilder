@@ -15,12 +15,12 @@ use AndrewGos\QueryBuilder\Grammar\AbstractGrammar;
 use AndrewGos\QueryBuilder\Grammar\BuiltQuery;
 use AndrewGos\QueryBuilder\Helper\HExpr;
 use AndrewGos\QueryBuilder\Query\Delete\DeleteQueryInterface;
+use AndrewGos\QueryBuilder\Query\Delete\PgSql\PgSqlDeleteQuery;
 use AndrewGos\QueryBuilder\Query\Insert\InsertQueryInterface;
 use AndrewGos\QueryBuilder\Query\Insert\PgSql\PgSqlInsertQuery;
 use AndrewGos\QueryBuilder\Query\Interface\MaybeReturnableQueryInterface;
 use AndrewGos\QueryBuilder\Query\Interface\PgSql\ReturningInterface;
 use AndrewGos\QueryBuilder\Query\Select\PgSql\PgSqlSelectQuery;
-use AndrewGos\QueryBuilder\Query\Delete\PgSql\PgSqlDeleteQuery;
 use AndrewGos\QueryBuilder\Query\Select\SelectQueryInterface;
 use AndrewGos\QueryBuilder\Query\Values\ValuesQueryInterface;
 

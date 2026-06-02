@@ -2,7 +2,6 @@
 
 namespace AndrewGos\QueryBuilder\Expr\Window;
 
-use AndrewGos\QueryBuilder\Expr\AbstractExpr;
 use AndrewGos\QueryBuilder\Expr\ExprInterface;
 use AndrewGos\QueryBuilder\Grammar\GrammarInterface;
 use AndrewGos\QueryBuilder\Helper\HExpr;

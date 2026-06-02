@@ -2,9 +2,7 @@
 
 namespace AndrewGos\QueryBuilder\Expr\Table\PgSql;
 
-use AndrewGos\QueryBuilder\Expr\ExprInterface;
 use AndrewGos\QueryBuilder\Expr\Table\SelectTable;
-use AndrewGos\QueryBuilder\Query\Select\SelectQueryInterface;
 
 // region MODULE_CONTRACT [DOMAIN(8): Table; CONCEPT(8): PgSqlSelectTable; TECH(8): Dialect]
 /**

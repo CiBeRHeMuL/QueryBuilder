@@ -2,11 +2,7 @@
 
 namespace AndrewGos\QueryBuilder\Expr\Group;
 
-use AndrewGos\QueryBuilder\Builder\ValueBuilder;
-use AndrewGos\QueryBuilder\Expr\AbstractExpr;
 use AndrewGos\QueryBuilder\Expr\ExprInterface;
-use AndrewGos\QueryBuilder\Grammar\GrammarInterface;
-use AndrewGos\QueryBuilder\Helper\HExpr;
 use UnitEnum;
 
 // region MODULE_CONTRACT [DOMAIN(7): GROUP BY; CONCEPT(8): Cube; TECH(6): SQLStandard]

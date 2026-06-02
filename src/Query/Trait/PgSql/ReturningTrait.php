@@ -2,10 +2,6 @@
 
 namespace AndrewGos\QueryBuilder\Query\Trait\PgSql;
 
-use AndrewGos\QueryBuilder\Expr\AndExpr;
-use AndrewGos\QueryBuilder\Expr\ExprInterface;
-use AndrewGos\QueryBuilder\Expr\OrExpr;
-
 // region MODULE_CONTRACT [DOMAIN(8): Trait; CONCEPT(8): ReturningTrait; TECH(8): Dialect]
 /**
  * @moduleContract

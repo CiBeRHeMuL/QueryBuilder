@@ -2,10 +2,9 @@
 
 namespace AndrewGos\QueryBuilder\Expr;
 
-use AndrewGos\QueryBuilder\Exception\QueryBuilderException;
+use AndrewGos\QueryBuilder\Builder\ValueBuilder;
 use AndrewGos\QueryBuilder\Grammar\GrammarInterface;
 use AndrewGos\QueryBuilder\Query\Select\SelectQueryInterface;
-use AndrewGos\QueryBuilder\Builder\ValueBuilder;
 use UnitEnum;
 
 // region MODULE_CONTRACT [DOMAIN(7): Expression; CONCEPT(7): Operator; TECH(7): Binary]

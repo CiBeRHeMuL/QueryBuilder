@@ -2,19 +2,11 @@
 
 namespace AndrewGos\QueryBuilder\Query\Select;
 
-use AndrewGos\QueryBuilder\Enum\JoinTypeEnum;
-use AndrewGos\QueryBuilder\Enum\LimitBoundTypeEnum;
-use AndrewGos\QueryBuilder\Enum\SetOperationEnum;
-use AndrewGos\QueryBuilder\Exception\QueryBuilderException;
 use AndrewGos\QueryBuilder\Expr\AndExpr;
 use AndrewGos\QueryBuilder\Expr\ExprInterface;
 use AndrewGos\QueryBuilder\Expr\Lock\LockModeInterface;
 use AndrewGos\QueryBuilder\Expr\OrExpr;
-use AndrewGos\QueryBuilder\Expr\SetOperation\SetOperation;
-use AndrewGos\QueryBuilder\Expr\Table\SelectTable;
 use AndrewGos\QueryBuilder\Expr\Window\Window;
-use AndrewGos\QueryBuilder\Helper\HExpr;
-use AndrewGos\QueryBuilder\Expr\Join\JoinTable;
 use AndrewGos\QueryBuilder\Query\Trait\FromTrait;
 use AndrewGos\QueryBuilder\Query\Trait\JoinTrait;
 use AndrewGos\QueryBuilder\Query\Trait\LimitTrait;

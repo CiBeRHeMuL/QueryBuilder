@@ -2,14 +2,9 @@
 
 namespace AndrewGos\QueryBuilder\Query\Values;
 
-use AndrewGos\QueryBuilder\Enum\LimitBoundTypeEnum;
-use AndrewGos\QueryBuilder\Enum\SetOperationEnum;
-use AndrewGos\QueryBuilder\Expr\ExprInterface;
-use AndrewGos\QueryBuilder\Query\Select\SelectQueryInterface;
 use AndrewGos\QueryBuilder\Query\Trait\LimitTrait;
 use AndrewGos\QueryBuilder\Query\Trait\OperationsTrait;
 use AndrewGos\QueryBuilder\Query\Trait\OrderByTrait;
-use AndrewGos\QueryBuilder\Query\Values\ValuesQueryInterface;
 
 // region MODULE_CONTRACT [DOMAIN(8): Query; CONCEPT(9): Values; TECH(8): SQL]
 /**

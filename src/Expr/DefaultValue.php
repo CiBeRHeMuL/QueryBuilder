@@ -2,7 +2,6 @@
 
 namespace AndrewGos\QueryBuilder\Expr;
 
-use AndrewGos\QueryBuilder\Expr\ExprInterface;
 use AndrewGos\QueryBuilder\Grammar\GrammarInterface;
 
 // region MODULE_CONTRACT [DOMAIN(6): Expression; CONCEPT(5): Default; TECH(6): DDL]
