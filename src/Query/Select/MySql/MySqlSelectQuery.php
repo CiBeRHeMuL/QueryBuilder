@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace AndrewGos\QueryBuilder\Query\Select\MySql;
 
 use AndrewGos\QueryBuilder\Expr\Lock\LockModeInterface;
@@ -21,6 +23,7 @@ use AndrewGos\QueryBuilder\Query\Trait\MySql\PartitionTrait;
  */
 // endregion MODULE_CONTRACT
 // GREP_SUMMARY: MySQL, SELECT, HIGH_PRIORITY, STRAIGHT_JOIN, SQL_CALC_FOUND_ROWS, PARTITION, lock, dialect
+// STRUCTURE: ▶ SelectQuery + PartitionTrait + HIGH_PRIORITY/STRAIGHT_JOIN/SQL_* flags + addLock() → ∑ [MySqlSelectQuery]
 
 // region CLASS_MySqlSelectQuery [DOMAIN(8): Select; CONCEPT(8): MySqlSelectQuery; TECH(8): Dialect]
 /**

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace AndrewGos\QueryBuilder\Enum\Lock\MySql;
 
 // region MODULE_CONTRACT [DOMAIN(6): Enum; CONCEPT(7): LockWaitMode; TECH(9): MySQL]
@@ -14,6 +16,7 @@ namespace AndrewGos\QueryBuilder\Enum\Lock\MySql;
  */
 // endregion MODULE_CONTRACT
 // GREP_SUMMARY: MySQL, Lock, Wait, NOWAIT, SKIP LOCKED
+// STRUCTURE: ▶ enum cases ┌Nowait, SkipLocked┐ → ⚡ getSql → match case → ∑ return 'NOWAIT'|'SKIP LOCKED'
 
 // region ENUM_MySqlLockWaitModeEnum [DOMAIN(6): Enum; CONCEPT(7): LockWaitMode; TECH(9): MySQL]
 /**

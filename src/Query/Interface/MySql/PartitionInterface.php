@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace AndrewGos\QueryBuilder\Query\Interface\MySql;
 
 // region MODULE_CONTRACT [DOMAIN(8): Interface; CONCEPT(8): PartitionInterface; TECH(8): Dialect]
@@ -16,6 +18,7 @@ namespace AndrewGos\QueryBuilder\Query\Interface\MySql;
  */
 // endregion MODULE_CONTRACT
 // GREP_SUMMARY: MySQL, PARTITION, interface, dialect
+// STRUCTURE: ▶ ┌partitions property┐ + partition() + addPartition() → ∑ [PartitionInterface contract]
 
 // region INTERFACE_PartitionInterface [DOMAIN(8): Interface; CONCEPT(8): PartitionInterface; TECH(8): Dialect]
 /**

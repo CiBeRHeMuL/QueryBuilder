@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace AndrewGos\QueryBuilder\Query\Select;
 
 use AndrewGos\QueryBuilder\Expr\ExprInterface;
@@ -27,6 +29,7 @@ use UnitEnum;
  */
 // endregion MODULE_CONTRACT
 // GREP_SUMMARY: SELECT, SQL, query, select columns, FROM, JOIN, WHERE, GROUP BY, HAVING, WINDOW, ORDER BY, LIMIT, LOCK, UNION
+// STRUCTURE: ▶ WithInterface + WhereInterface + FromInterface + JoinInterface + OperationsInterface + OrderByInterface + LimitInterface + MaybeReturnableQueryInterface + select()/distinct()/groupBy()/having()/window()/lock() → ∑ [SelectQueryInterface contract]
 
 // region INTERFACE_SelectQueryInterface [DOMAIN(8): Query; CONCEPT(10): Select; TECH(8): SQL]
 /**
@@ -209,7 +212,7 @@ interface SelectQueryInterface extends
 
     // region METHOD_lock [DOMAIN(8): Query; CONCEPT(10): Select; TECH(8): SQL]
     /**
-     * @purpose Apply a lock mode (FOR UPDATE, FOR SHARE, etc.) to the SELECT.
+     * @purpose Apply a lock mode (FOR UPDATE, FOR NO KEY UPDATE, FOR SHARE, FOR KEY SHARE, optionally with NOWAIT/SKIP LOCKED) to the SELECT.
      * @io LockModeInterface|null $lockMode -> static
      * @complexity 2
      *

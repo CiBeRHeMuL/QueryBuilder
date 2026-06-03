@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace AndrewGos\QueryBuilder\Query\Interface\PgSql;
 
 use AndrewGos\QueryBuilder\Expr\ExprInterface;
@@ -23,6 +25,7 @@ use UnitEnum;
  */
 // endregion MODULE_CONTRACT
 // GREP_SUMMARY: PostgreSQL, RETURNING, OLD, NEW, interface, dialect
+// STRUCTURE: ▶ MaybeReturnableQueryInterface + ┌columns, oldAlias, newAlias┐ + returning() + addReturning() → isReturnable: ◇ returningColumns !== null? → ∑ [ReturningInterface contract]
 
 // region INTERFACE_ReturningInterface [DOMAIN(8): Interface; CONCEPT(8): ReturningInterface; TECH(8): Dialect]
 /**

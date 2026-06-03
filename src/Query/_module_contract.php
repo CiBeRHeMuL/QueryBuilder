@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * @moduleContract
  * @purpose Define the Query namespace contracts for SQL query building (SELECT, INSERT, UPDATE, DELETE, VALUES).
@@ -9,7 +11,7 @@
  * @modulemap
  * Delete/ => DELETE query construction
  * Insert/ => INSERT query construction
- * Interface/ => Clause interfaces (FROM, JOIN, WHERE, etc.)
+ *  Interface/ => Clause interfaces (FROM, JOIN, WHERE, ORDER BY, LIMIT, WITH, Operations, Partition, Returning)
  * Select/ => SELECT query construction
  * Trait/ => Interface implementations as reusable traits
  * Update/ => UPDATE query construction

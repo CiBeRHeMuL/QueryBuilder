@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace AndrewGos\QueryBuilder\Enum\Lock\PgSql;
 
 // region MODULE_CONTRACT [DOMAIN(6): Enum; CONCEPT(7): LockWaitMode; TECH(9): PgSQL]
@@ -14,6 +16,7 @@ namespace AndrewGos\QueryBuilder\Enum\Lock\PgSql;
  */
 // endregion MODULE_CONTRACT
 // GREP_SUMMARY: PostgreSQL, Lock, Wait, NOWAIT, SKIP LOCKED
+// STRUCTURE: ▶ enum cases ┌Nowait, SkipLocked┐ → ⚡ getSql → match case → ∑ return 'NOWAIT'|'SKIP LOCKED'
 
 // region ENUM_PgSqlLockWaitModeEnum [DOMAIN(6): Enum; CONCEPT(7): LockWaitMode; TECH(9): PgSQL]
 /**

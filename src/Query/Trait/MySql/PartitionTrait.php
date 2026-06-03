@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace AndrewGos\QueryBuilder\Query\Trait\MySql;
 
 // region MODULE_CONTRACT [DOMAIN(8): Trait; CONCEPT(8): PartitionTrait; TECH(8): Dialect]
@@ -16,6 +18,7 @@ namespace AndrewGos\QueryBuilder\Query\Trait\MySql;
  */
 // endregion MODULE_CONTRACT
 // GREP_SUMMARY: MySQL, PARTITION, trait, dialect
+// STRUCTURE: ▶ partition(array) + addPartition(array) → ∑ [PartitionTrait methods]
 
 // region TRAIT_PartitionTrait [DOMAIN(8): Trait; CONCEPT(8): PartitionTrait; TECH(8): Dialect]
 /**

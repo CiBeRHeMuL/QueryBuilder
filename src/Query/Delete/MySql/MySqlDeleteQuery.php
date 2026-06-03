@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace AndrewGos\QueryBuilder\Query\Delete\MySql;
 
 use AndrewGos\QueryBuilder\Query\Delete\DeleteQuery;
@@ -23,6 +25,7 @@ use AndrewGos\QueryBuilder\Query\Trait\OrderByTrait;
  */
 // endregion MODULE_CONTRACT
 // GREP_SUMMARY: MySQL, DELETE, LOW_PRIORITY, QUICK, IGNORE, PARTITION, dialect
+// STRUCTURE: ▶ DeleteQuery + FromTrait + OrderByTrait + LimitTrait + PartitionTrait + lowPriority/quick/ignore → ∑ [MySqlDeleteQuery]
 
 // region CLASS_MySqlDeleteQuery [DOMAIN(8): Delete; CONCEPT(8): MySqlDeleteQuery; TECH(8): Dialect]
 /**

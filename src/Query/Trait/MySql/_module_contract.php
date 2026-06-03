@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * @moduleContract
  * @purpose MySQL-specific query traits including PartitionTrait for PARTITION clause implementation shared across query types.

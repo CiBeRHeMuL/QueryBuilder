@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace AndrewGos\QueryBuilder\Expr\Update\PgSql;
 
 use AndrewGos\QueryBuilder\Builder\ValueBuilder;
@@ -22,6 +24,7 @@ use AndrewGos\QueryBuilder\Query\Values\ValuesQueryInterface;
  */
 // endregion MODULE_CONTRACT
 // GREP_SUMMARY: PostgreSQL, SET, ROW, multi-column, dialect
+// STRUCTURE: ◇ isRow && array target? → ⚡ ROW(value) syntax → ⊕ Expr | ✗ → parent::getSql()
 
 // region CLASS_PgSqlSetClause [DOMAIN(8): UPDATE; CONCEPT(8): PgSqlSetClause; TECH(6): Dialect]
 /**

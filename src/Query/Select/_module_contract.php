@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * @moduleContract
  * @purpose Provide SELECT SQL query construction with full clause support (WITH, FROM, JOIN, WHERE, GROUP BY, HAVING, WINDOW, ORDER BY, LIMIT, LOCK, UNION/INTERSECT/EXCEPT).

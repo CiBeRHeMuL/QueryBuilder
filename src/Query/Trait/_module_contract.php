@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * @moduleContract
  * @purpose Provide reusable trait implementations of Query clause interfaces.

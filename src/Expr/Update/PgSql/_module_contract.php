@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * @moduleContract
  * @purpose Provides PostgreSQL-specific SET clause extension with ROW() syntax support.

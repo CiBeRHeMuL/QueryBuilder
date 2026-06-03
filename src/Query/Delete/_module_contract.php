@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * @moduleContract
  * @purpose Provide DELETE SQL query construction with WITH, FROM, and WHERE support.

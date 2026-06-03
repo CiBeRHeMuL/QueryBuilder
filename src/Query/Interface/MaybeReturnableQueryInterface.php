@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace AndrewGos\QueryBuilder\Query\Interface;
 
 // region MODULE_CONTRACT [DOMAIN(8): Query; CONCEPT(7): Returnable; TECH(7): SQL]
@@ -14,6 +16,7 @@ namespace AndrewGos\QueryBuilder\Query\Interface;
  */
 // endregion MODULE_CONTRACT
 // GREP_SUMMARY: returnable, query, SQL, marker interface, isReturnable
+// STRUCTURE: ▶ isReturnable(): bool → ∑ [MaybeReturnableQueryInterface contract]
 
 // region INTERFACE_MaybeReturnableQueryInterface [DOMAIN(8): Query; CONCEPT(7): Returnable; TECH(7): SQL]
 /**

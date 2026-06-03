@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace AndrewGos\QueryBuilder\Enum\Lock\PgSql;
 
 use AndrewGos\QueryBuilder\Expr\Lock\LockModeInterface;
@@ -17,6 +19,7 @@ use AndrewGos\QueryBuilder\Grammar\GrammarInterface;
  */
 // endregion MODULE_CONTRACT
 // GREP_SUMMARY: PostgreSQL, Lock, Mode, FOR UPDATE, FOR SHARE, FOR NO KEY UPDATE, FOR KEY SHARE
+// STRUCTURE: ▶ enum cases ┌ForUpdate, ForNoKeyUpdate, ForShare, ForKeyShare┐ → ⚡ getSql(grammar) → match case → ∑ return 'UPDATE'|'NO KEY UPDATE'|'SHARE'|'KEY SHARE'
 
 // region ENUM_PgSqlLockModeEnum [DOMAIN(6): Enum; CONCEPT(7): LockMode; TECH(9): PgSQL]
 /**

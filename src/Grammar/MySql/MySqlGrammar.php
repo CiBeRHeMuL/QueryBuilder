@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace AndrewGos\QueryBuilder\Grammar\MySql;
 
 use AndrewGos\QueryBuilder\Exception\QueryBuilderException;
@@ -25,7 +27,7 @@ use AndrewGos\QueryBuilder\Query\Update\UpdateQueryInterface;
  * @moduleContract
  * @purpose MySQL-specific SQL grammar implementing identifier escaping (backtick), DELETE/SELECT query building with MySQL extensions (LOW_PRIORITY, QUICK, IGNORE, HIGH_PRIORITY, SQL_* hints, LIMIT offset,syntax, PARTITION, FOR UPDATE/SHARE).
  * @scope MySQL SQL dialect query building.
- * @input Various query objects (SelectQueryInterface, DeleteQueryInterface, etc.)
+ * @input Query objects (SelectQueryInterface, DeleteQueryInterface, InsertQueryInterface, UpdateQueryInterface, ValuesQueryInterface)
  * @output BuiltQuery with MySQL dialect SQL and parameters
  * @invariants
  * - Identifiers are escaped with backticks

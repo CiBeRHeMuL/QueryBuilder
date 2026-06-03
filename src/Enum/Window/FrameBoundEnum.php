@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace AndrewGos\QueryBuilder\Enum\Window;
 
 // region MODULE_CONTRACT [DOMAIN(6): Enum; CONCEPT(7): FrameBound; TECH(9): SQL]
@@ -14,6 +16,7 @@ namespace AndrewGos\QueryBuilder\Enum\Window;
  */
 // endregion MODULE_CONTRACT
 // GREP_SUMMARY: Window, Frame, Bound, PRECEDING, FOLLOWING, CURRENT ROW, SQL
+// STRUCTURE: ▶ enum cases ┌Preceding, Following, CurrentRow┐ → ⚡ getSql → match case → ∑ return 'PRECEDING'|'FOLLOWING'|'CURRENT ROW'
 
 // region ENUM_FrameBoundEnum [DOMAIN(6): Enum; CONCEPT(7): FrameBound; TECH(9): SQL]
 /**

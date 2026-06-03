@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace AndrewGos\QueryBuilder\Query\Trait;
 
 use AndrewGos\QueryBuilder\Helper\HExpr;
@@ -19,6 +21,7 @@ use AndrewGos\QueryBuilder\Helper\HExpr;
  */
 // endregion MODULE_CONTRACT
 // GREP_SUMMARY: FROM, single-table, trait, SQL, DELETE, UPDATE, constraint
+// STRUCTURE: ▶ from(array) → array_slice(0,1) → normalize | addFrom → delegates to from → ∑ [SingleFromTrait methods]
 
 // region TRAIT_SingleFromTrait [DOMAIN(8): Query; CONCEPT(9): Trait; TECH(8): SQL]
 /**

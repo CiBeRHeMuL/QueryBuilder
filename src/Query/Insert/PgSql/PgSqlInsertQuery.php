@@ -26,6 +26,7 @@ use AndrewGos\QueryBuilder\Query\Trait\PgSql\ReturningTrait;
  */
 // endregion MODULE_CONTRACT
 // GREP_SUMMARY: PostgreSQL, INSERT, OVERRIDING, ON CONFLICT, RETURNING, dialect
+// STRUCTURE: ▶ InsertQuery + ReturningTrait + overrideValue() + onConflict() → ∑ [PgSqlInsertQuery]
 
 // region CLASS_PgSqlInsertQuery [DOMAIN(8): Insert; CONCEPT(8): PgSqlInsertQuery; TECH(8): Dialect]
 /**

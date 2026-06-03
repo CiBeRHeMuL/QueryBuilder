@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace AndrewGos\QueryBuilder\Enum\Cte;
 
 // region MODULE_CONTRACT [DOMAIN(6): Enum; CONCEPT(7): CTESearch; TECH(9): SQL]
@@ -14,6 +16,7 @@ namespace AndrewGos\QueryBuilder\Enum\Cte;
  */
 // endregion MODULE_CONTRACT
 // GREP_SUMMARY: CTE, Search, BREADTH, DEPTH, Recursive, SQL
+// STRUCTURE: ▶ enum cases ┌Breadth, Depth┐ → ⚡ getSql → match case → ∑ return 'BREADTH'|'DEPTH'
 
 // region ENUM_SearchTypeEnum [DOMAIN(6): Enum; CONCEPT(7): CTESearch; TECH(9): SQL]
 /**

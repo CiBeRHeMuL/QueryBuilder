@@ -19,6 +19,7 @@ use AndrewGos\QueryBuilder\Grammar\GrammarInterface;
  */
 // endregion MODULE_CONTRACT
 // GREP_SUMMARY: PostgreSQL, ON CONFLICT, ON CONSTRAINT, conflict target
+// STRUCTURE: ▶ getSql ┌grammar┐ → ⚡ return 'ON CONSTRAINT ' . escapeIdentifier → getParams → ⚡ return [] → ∑ [PgSqlConflictTargetConstraint]
 
 // region CLASS_PgSqlConflictTargetConstraint [DOMAIN(8): Conflict; CONCEPT(8): TargetConstraint; TECH(8): Dialect]
 /**

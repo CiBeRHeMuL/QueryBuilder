@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace AndrewGos\QueryBuilder\Query\Select\PgSql;
 
 use AndrewGos\QueryBuilder\Expr\ExprInterface;
@@ -23,6 +25,7 @@ use UnitEnum;
  */
 // endregion MODULE_CONTRACT
 // GREP_SUMMARY: PostgreSQL, SELECT, DISTINCT ON, lock, dialect
+// STRUCTURE: ▶ SelectQuery + distinctOn() + addDistinctOn() + addLock() → ∑ [PgSqlSelectQuery]
 
 // region CLASS_PgSqlSelectQuery [DOMAIN(8): Select; CONCEPT(8): PgSqlSelectQuery; TECH(8): Dialect]
 /**

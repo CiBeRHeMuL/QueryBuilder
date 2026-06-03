@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * @moduleContract
  * @purpose Provides SET clause value objects for UPDATE statements, including PostgreSQL ROW syntax extension.

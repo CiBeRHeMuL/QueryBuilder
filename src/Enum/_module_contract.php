@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * @moduleContract
  * @purpose Provide PHP enum types that represent SQL keyword constants across all supported dialects (standard SQL, MySQL, PostgreSQL).

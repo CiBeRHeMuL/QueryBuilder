@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace AndrewGos\QueryBuilder\Query\Update;
 
 use AndrewGos\QueryBuilder\Expr\ExprInterface;
@@ -25,6 +27,7 @@ use UnitEnum;
  */
 // endregion MODULE_CONTRACT
 // GREP_SUMMARY: UPDATE, SQL, query, update rows, WithTrait, WhereTrait, SET
+// STRUCTURE: ▶ WithTrait + WhereTrait + table(name) + set(array→SetClause[]) → ∑ [UpdateQuery]
 
 // region CLASS_UpdateQuery [DOMAIN(8): Query; CONCEPT(9): Update; TECH(8): SQL]
 /**

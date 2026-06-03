@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace AndrewGos\QueryBuilder\Expr\SetOperation;
 
 use AndrewGos\QueryBuilder\Enum\SetOperationEnum;
@@ -17,6 +19,7 @@ use AndrewGos\QueryBuilder\Query\Select\SelectQueryInterface;
  */
 // endregion MODULE_CONTRACT
 // GREP_SUMMARY: UNION, INTERSECT, EXCEPT, set operation, compound query, SQL
+// STRUCTURE: ▶ ┌operation, query┐ → ∑ [SetOperation]
 
 // region CLASS_SetOperation [DOMAIN(8): SetOperation; CONCEPT(8): UnionIntersectExcept; TECH(5): ValueObject]
 /**

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * @moduleContract
  * @purpose MySQL-specific query interfaces including PARTITION clause support for SELECT and DELETE queries.

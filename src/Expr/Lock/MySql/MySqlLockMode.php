@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace AndrewGos\QueryBuilder\Expr\Lock\MySql;
 
 use AndrewGos\QueryBuilder\Enum\Lock\MySql\MySqlLockModeEnum;
@@ -21,6 +23,7 @@ use AndrewGos\QueryBuilder\Grammar\GrammarInterface;
  */
 // endregion MODULE_CONTRACT
 // GREP_SUMMARY: MySQL, lock, FOR UPDATE, FOR SHARE, NOWAIT, SKIP LOCKED, dialect
+// STRUCTURE: ⚡ [mode, tables, waitMode] → ┌modeSql┐ → ◇ tables? → ⊕ 'OF' + escapeIdentifier(each) → ┌waitModeSql┐ → ∑ implode(' ')
 
 // region CLASS_MySqlLockMode [DOMAIN(8): Lock; CONCEPT(8): MySqlLockMode; TECH(8): Dialect]
 /**

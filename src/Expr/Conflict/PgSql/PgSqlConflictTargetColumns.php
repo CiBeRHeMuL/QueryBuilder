@@ -23,6 +23,7 @@ use AndrewGos\QueryBuilder\Grammar\GrammarInterface;
  */
 // endregion MODULE_CONTRACT
 // GREP_SUMMARY: PostgreSQL, ON CONFLICT, columns, COLLATE, opclass, WHERE, conflict target
+// STRUCTURE: ▶ getSql ┌grammar┐ → ○ loop $columns: ◇ string? ⚡ escapeIdentifier → ◇ ExprInterface? ⚡ wrap in (expr) → ◇ array? ⚡ escapeIdentifier + COLLATE + opclass → ⊕ colParts → ◇ has $where? ⚡ AndExpr WHERE → ∑ return '(...) [WHERE ...]'
 
 // region CLASS_PgSqlConflictTargetColumns [DOMAIN(8): Conflict; CONCEPT(8): TargetColumns; TECH(8): Dialect]
 /**

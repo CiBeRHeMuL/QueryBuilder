@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace AndrewGos\QueryBuilder\Enum;
 
 // region MODULE_CONTRACT [DOMAIN(6): Enum; CONCEPT(7): LimitBound; TECH(9): SQL]
@@ -14,6 +16,7 @@ namespace AndrewGos\QueryBuilder\Enum;
  */
 // endregion MODULE_CONTRACT
 // GREP_SUMMARY: Limit, Bound, ONLY, WITH TIES, SQL
+// STRUCTURE: ▶ enum cases ┌Only, WithTies┐ → ⚡ getSql → match case → ∑ return 'ONLY'|'WITH TIES'
 
 // region ENUM_LimitBoundTypeEnum [DOMAIN(6): Enum; CONCEPT(7): LimitBound; TECH(9): SQL]
 /**

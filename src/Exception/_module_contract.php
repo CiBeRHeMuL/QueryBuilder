@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * @moduleContract
  * @purpose Exception namespace — centralized domain exception factory for the QueryBuilder.

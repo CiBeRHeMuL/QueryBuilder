@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace AndrewGos\QueryBuilder\Query\Interface;
 
 use AndrewGos\QueryBuilder\Expr\ExprInterface;
@@ -17,6 +19,7 @@ use AndrewGos\QueryBuilder\Expr\Order\OrderColumn;
  */
 // endregion MODULE_CONTRACT
 // GREP_SUMMARY: ORDER BY, sorting, SQL, ordering, columns, direction
+// STRUCTURE: ▶ ┌orderBy property┐ + orderBy() + addOrderBy() → ∑ [OrderByInterface contract]
 
 // region INTERFACE_OrderByInterface [DOMAIN(8): Query; CONCEPT(9): Sorting; TECH(8): SQL]
 /**

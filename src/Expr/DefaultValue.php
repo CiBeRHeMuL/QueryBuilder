@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace AndrewGos\QueryBuilder\Expr;
 
 use AndrewGos\QueryBuilder\Grammar\GrammarInterface;
@@ -16,6 +18,7 @@ use AndrewGos\QueryBuilder\Grammar\GrammarInterface;
  */
 // endregion MODULE_CONTRACT
 // GREP_SUMMARY: DefaultValue, SQL DEFAULT, DDL expression
+// STRUCTURE: ▶ getExpression → ⚡ return 'DEFAULT' → getParams → ⚡ return [] → ∑ [DefaultValue]
 
 // region CLASS_DefaultValue [DOMAIN(6): Expression; CONCEPT(5): Default; TECH(6): DDL]
 /**

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace AndrewGos\QueryBuilder\Query\Update\PgSql;
 
 use AndrewGos\QueryBuilder\Expr\ExprInterface;
@@ -30,6 +32,7 @@ use UnitEnum;
  */
 // endregion MODULE_CONTRACT
 // GREP_SUMMARY: PostgreSQL, UPDATE, FROM, JOIN, RETURNING, dialect
+// STRUCTURE: ▶ UpdateQuery + FromTrait + JoinTrait + ReturningTrait → ∑ [PgSqlUpdateQuery]
 
 // region CLASS_PgSqlUpdateQuery [DOMAIN(8): Update; CONCEPT(8): PgSqlUpdateQuery; TECH(8): Dialect]
 /**

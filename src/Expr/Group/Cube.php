@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace AndrewGos\QueryBuilder\Expr\Group;
 
 use AndrewGos\QueryBuilder\Expr\ExprInterface;
@@ -17,6 +19,7 @@ use UnitEnum;
  */
 // endregion MODULE_CONTRACT
 // GREP_SUMMARY: GROUP BY, CUBE, aggregate, SQL standard, OLAP
+// STRUCTURE: ▶ ┌columns┐ → parent::__construct('CUBE', columns) → ∑ [Cube]
 
 // region CLASS_Cube [DOMAIN(7): GROUP BY; CONCEPT(8): Cube; TECH(6): SQLStandard]
 /**

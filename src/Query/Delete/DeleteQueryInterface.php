@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace AndrewGos\QueryBuilder\Query\Delete;
 
 use AndrewGos\QueryBuilder\Query\Interface\FromInterface;
@@ -18,6 +20,7 @@ use AndrewGos\QueryBuilder\Query\Interface\WithInterface;
  */
 // endregion MODULE_CONTRACT
 // GREP_SUMMARY: DELETE, SQL, interface, query contract, delete, WithInterface, FromInterface, WhereInterface
+// STRUCTURE: ▶ WithInterface + FromInterface + WhereInterface → ∑ [DeleteQueryInterface contract]
 
 // region INTERFACE_DeleteQueryInterface [DOMAIN(8): Query; CONCEPT(9): Delete; TECH(8): SQL]
 /**

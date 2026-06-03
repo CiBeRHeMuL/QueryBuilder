@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * @moduleContract
  * @purpose Root namespace for the QueryBuilder library — provides a fluent SQL query building API.

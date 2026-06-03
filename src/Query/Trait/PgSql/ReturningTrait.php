@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace AndrewGos\QueryBuilder\Query\Trait\PgSql;
 
 // region MODULE_CONTRACT [DOMAIN(8): Trait; CONCEPT(8): ReturningTrait; TECH(8): Dialect]
@@ -16,6 +18,7 @@ namespace AndrewGos\QueryBuilder\Query\Trait\PgSql;
  */
 // endregion MODULE_CONTRACT
 // GREP_SUMMARY: PostgreSQL, RETURNING, OLD, NEW, trait, dialect
+// STRUCTURE: ▶ returning(columns, oldAlias, newAlias) + addReturning() + isReturnable: ◇ columns !== null ? → ∑ [ReturningTrait methods]
 
 // region TRAIT_ReturningTrait [DOMAIN(8): Trait; CONCEPT(8): ReturningTrait; TECH(8): Dialect]
 /**

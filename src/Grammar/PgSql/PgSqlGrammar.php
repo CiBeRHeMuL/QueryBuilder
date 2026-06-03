@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace AndrewGos\QueryBuilder\Grammar\PgSql;
 
 use AndrewGos\QueryBuilder\Builder\ValueBuilder;
@@ -32,7 +34,7 @@ use AndrewGos\QueryBuilder\Query\Values\ValuesQueryInterface;
  * @moduleContract
  * @purpose PostgreSQL-specific SQL grammar implementing identifier escaping (double-quotes), CTE materialization, DISTINCT ON, ONLY table modifier, RETURNING clause, USING clause, and FOR UPDATE/SHARE lock modes.
  * @scope PostgreSQL SQL dialect query building.
- * @input Various query objects (SelectQueryInterface, DeleteQueryInterface, MaybeReturnableQueryInterface, etc.)
+ * @input Query objects (SelectQueryInterface, DeleteQueryInterface, InsertQueryInterface, UpdateQueryInterface, ValuesQueryInterface)
  * @output BuiltQuery with PostgreSQL dialect SQL and parameters
  * @invariants
  * - Identifiers are escaped with double quotes
@@ -193,6 +195,7 @@ class PgSqlGrammar extends AbstractGrammar
     // region METHOD_buildMaybeReturnableQuery [DOMAIN(8): Grammar; TECH(8): QueryBuilding]
     /**
      * @purpose Route returnable query types (SELECT, VALUES, DELETE) to their respective builder methods.
+     * @throws QueryBuilderException
      */
     public function buildMaybeReturnableQuery(MaybeReturnableQueryInterface $query): BuiltQuery
     {

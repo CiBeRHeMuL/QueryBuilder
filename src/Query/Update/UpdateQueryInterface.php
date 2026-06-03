@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace AndrewGos\QueryBuilder\Query\Update;
 
 use AndrewGos\QueryBuilder\Expr\ExprInterface;
@@ -22,6 +24,7 @@ use UnitEnum;
  */
 // endregion MODULE_CONTRACT
 // GREP_SUMMARY: UPDATE, SQL, interface, query contract, update, WithInterface, WhereInterface, SET
+// STRUCTURE: ▶ WithInterface + WhereInterface + table() + set() → ∑ [UpdateQueryInterface contract]
 
 // region INTERFACE_UpdateQueryInterface [DOMAIN(8): Query; CONCEPT(9): Update; TECH(8): SQL]
 /**

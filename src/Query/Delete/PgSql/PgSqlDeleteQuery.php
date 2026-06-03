@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace AndrewGos\QueryBuilder\Query\Delete\PgSql;
 
 use AndrewGos\QueryBuilder\Expr\ExprInterface;
@@ -28,6 +30,7 @@ use UnitEnum;
  */
 // endregion MODULE_CONTRACT
 // GREP_SUMMARY: PostgreSQL, DELETE, USING, JOIN, RETURNING, dialect
+// STRUCTURE: ▶ DeleteQuery + ReturningTrait + JoinTrait + using()/addUsing() → ∑ [PgSqlDeleteQuery]
 
 // region CLASS_PgSqlDeleteQuery [DOMAIN(8): Delete; CONCEPT(8): PgSqlDeleteQuery; TECH(8): Dialect]
 /**

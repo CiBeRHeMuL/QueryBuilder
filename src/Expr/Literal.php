@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace AndrewGos\QueryBuilder\Expr;
 
 use AndrewGos\QueryBuilder\Grammar\GrammarInterface;
@@ -19,6 +21,7 @@ use UnitEnum;
  */
 // endregion MODULE_CONTRACT
 // GREP_SUMMARY: Literal, parameterized value, bound parameter
+// STRUCTURE: ▶ generateParamId() → ┌':paramId', [paramId => value]┐ → ∑ [Literal]
 
 // region CLASS_Literal [DOMAIN(6): Expression; CONCEPT(5): Literal; TECH(6): Parameterized]
 class Literal extends AbstractExpr

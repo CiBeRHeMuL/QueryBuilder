@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace AndrewGos\QueryBuilder\Expr\Cte;
 
 use AndrewGos\QueryBuilder\Enum\Cte\SearchTypeEnum;
@@ -16,6 +18,7 @@ use AndrewGos\QueryBuilder\Enum\Cte\SearchTypeEnum;
  */
 // endregion MODULE_CONTRACT
 // GREP_SUMMARY: CTE, recursive query, search, breadth-first, depth-first, PostgreSQL, Oracle
+// STRUCTURE: ▶ __construct ┌type, columns, searchSeqColumnName┐ → ∑ [Search value object]
 
 // region CLASS_Search [DOMAIN(7): CTE; CONCEPT(8): RecursiveQuery; TECH(5): ValueObject]
 /**

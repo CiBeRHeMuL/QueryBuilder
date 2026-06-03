@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace AndrewGos\QueryBuilder\Expr\Cte;
 
 use AndrewGos\QueryBuilder\Expr\Literal;
@@ -16,6 +18,7 @@ use AndrewGos\QueryBuilder\Expr\Literal;
  */
 // endregion MODULE_CONTRACT
 // GREP_SUMMARY: CTE, cycle detection, recursive query, Oracle, PostgreSQL
+// STRUCTURE: ▶ __construct ┌columns, cycleMarkCol, cyclePathCol, markValue, markDefault┐ → ∑ [Cycle value object]
 
 // region CLASS_Cycle [DOMAIN(7): CTE; CONCEPT(8): RecursiveQuery; TECH(5): ValueObject]
 /**

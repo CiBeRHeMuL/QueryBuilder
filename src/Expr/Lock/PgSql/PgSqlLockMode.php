@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace AndrewGos\QueryBuilder\Expr\Lock\PgSql;
 
 use AndrewGos\QueryBuilder\Enum\Lock\PgSql\PgSqlLockModeEnum;
@@ -21,6 +23,7 @@ use AndrewGos\QueryBuilder\Grammar\GrammarInterface;
  */
 // endregion MODULE_CONTRACT
 // GREP_SUMMARY: PostgreSQL, lock, FOR UPDATE, FOR NO KEY UPDATE, FOR SHARE, FOR KEY SHARE, dialect
+// STRUCTURE: ⚡ [mode, tables, waitMode] → ┌modeSql┐ → ◇ tables? → ⊕ 'OF' + escapeIdentifier(each) → ┌waitModeSql┐ → ∑ implode(' ')
 
 // region CLASS_PgSqlLockMode [DOMAIN(8): Lock; CONCEPT(8): PgSqlLockMode; TECH(8): Dialect]
 /**

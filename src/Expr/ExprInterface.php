@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace AndrewGos\QueryBuilder\Expr;
 
 use AndrewGos\QueryBuilder\Grammar\GrammarInterface;
@@ -19,6 +21,7 @@ use UnitEnum;
  */
 // endregion MODULE_CONTRACT
 // GREP_SUMMARY: ExprInterface, expression contract, SQL fragment
+// STRUCTURE: ▶ getExpression(GrammarInterface) + getParams() → ∑ [ExprInterface contract]
 
 // region INTERFACE_ExprInterface [DOMAIN(8): Expression; CONCEPT(8): Contract; TECH(8): Interface]
 interface ExprInterface

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace AndrewGos\QueryBuilder\Expr;
 
 use AndrewGos\QueryBuilder\Grammar\GrammarInterface;
@@ -22,6 +24,7 @@ use UnitEnum;
  */
 // endregion MODULE_CONTRACT
 // GREP_SUMMARY: BoolOpsExpr, boolean expression, AND OR base
+// STRUCTURE: ▶ doBuild ┌conditions + operator┐ → ⚡ HExpr::normalizeConditions → ◇ count > 1? ○ each: wrap in (parens) └─ else → single unwrapped → ⊕ implode(operator) → ∑ return [sql, params]
 
 // region CLASS_BoolOpsExpr [DOMAIN(7): Expression; CONCEPT(7): Boolean; TECH(7): Abstract]
 /**

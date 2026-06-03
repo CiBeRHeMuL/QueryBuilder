@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace AndrewGos\QueryBuilder\Query\Interface;
 
 use AndrewGos\QueryBuilder\Enum\LimitBoundTypeEnum;
@@ -17,6 +19,7 @@ use AndrewGos\QueryBuilder\Expr\ExprInterface;
  */
 // endregion MODULE_CONTRACT
 // GREP_SUMMARY: LIMIT, OFFSET, FETCH, pagination, SQL, bound type
+// STRUCTURE: ▶ ┌offset, limit, limitBoundType┐ + offset() + limit() → ∑ [LimitInterface contract]
 
 // region INTERFACE_LimitInterface [DOMAIN(8): Query; CONCEPT(9): Pagination; TECH(8): SQL]
 /**

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace AndrewGos\QueryBuilder\Enum;
 
 // region MODULE_CONTRACT [DOMAIN(6): Enum; CONCEPT(7): JoinType; TECH(9): SQL]
@@ -14,6 +16,7 @@ namespace AndrewGos\QueryBuilder\Enum;
  */
 // endregion MODULE_CONTRACT
 // GREP_SUMMARY: Join, SQL, JOIN, INNER, OUTER, CROSS, LEFT, RIGHT, FULL
+// STRUCTURE: ▶ enum cases ┌Cross, Inner, LeftOuter, RightOuter, FullOuter┐ → ⚡ getSql → match case → ∑ return '... JOIN'
 
 // region ENUM_JoinTypeEnum [DOMAIN(6): Enum; CONCEPT(7): JoinType; TECH(9): SQL]
 /**

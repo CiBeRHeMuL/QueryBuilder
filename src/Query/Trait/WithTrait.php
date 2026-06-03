@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace AndrewGos\QueryBuilder\Query\Trait;
 
 // region MODULE_CONTRACT [DOMAIN(8): Query; CONCEPT(9): Trait; TECH(8): SQL]
@@ -14,6 +16,7 @@ namespace AndrewGos\QueryBuilder\Query\Trait;
  */
 // endregion MODULE_CONTRACT
 // GREP_SUMMARY: WITH, CTE, trait, SQL, common table expression, recursive
+// STRUCTURE: ▶ with(array, recursive) + addWith(array_merge) → ∑ [WithTrait methods]
 
 // region TRAIT_WithTrait [DOMAIN(8): Query; CONCEPT(9): Trait; TECH(8): SQL]
 /**

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace AndrewGos\QueryBuilder\Expr;
 
 use AndrewGos\QueryBuilder\Query\Select\SelectQueryInterface;
@@ -17,6 +19,7 @@ use UnitEnum;
  */
 // endregion MODULE_CONTRACT
 // GREP_SUMMARY: AndExpr, AND expression, boolean condition
+// STRUCTURE: ▶ __construct ┌conditions┐ → ⊕ parent::__construct(conditions, 'AND') → ∑ [AndExpr extends BoolOpsExpr]
 
 // region CLASS_AndExpr [DOMAIN(7): Expression; CONCEPT(6): Boolean; TECH(7): AND]
 /**

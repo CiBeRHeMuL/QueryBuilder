@@ -26,6 +26,7 @@ use AndrewGos\QueryBuilder\Helper\HExpr;
  */
 // endregion MODULE_CONTRACT
 // GREP_SUMMARY: PostgreSQL, ON CONFLICT, DO UPDATE, SET, WHERE, conflict action
+// STRUCTURE: ▶ getSql ┌grammar┐ → ○ loop $set: ⚡ SetClause per column → ⊕ setParts + params → ◇ has $where? ⚡ AndExpr WHERE → ⊕ mergeParams → ∑ return 'DO UPDATE SET ... [WHERE ...]'
 
 // region CLASS_PgSqlConflictActionDoUpdate [DOMAIN(8): Conflict; CONCEPT(8): ActionDoUpdate; TECH(8): Dialect]
 /**

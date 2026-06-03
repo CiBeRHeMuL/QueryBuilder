@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace AndrewGos\QueryBuilder\Enum\Lock\MySql;
 
 use AndrewGos\QueryBuilder\Expr\Lock\LockModeInterface;
@@ -17,6 +19,7 @@ use AndrewGos\QueryBuilder\Grammar\GrammarInterface;
  */
 // endregion MODULE_CONTRACT
 // GREP_SUMMARY: MySQL, Lock, Mode, FOR UPDATE, FOR SHARE
+// STRUCTURE: ▶ enum cases ┌ForUpdate, ForShare┐ → ⚡ getSql(grammar) → match case → ∑ return 'UPDATE'|'SHARE'
 
 // region ENUM_MySqlLockModeEnum [DOMAIN(6): Enum; CONCEPT(7): LockMode; TECH(9): MySQL]
 /**

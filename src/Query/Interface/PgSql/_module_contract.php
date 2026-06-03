@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * @moduleContract
  * @purpose PostgreSQL-specific query interfaces including RETURNING clause support for INSERT/UPDATE/DELETE queries.

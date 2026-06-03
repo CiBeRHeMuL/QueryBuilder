@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * @moduleContract
  * @purpose PostgreSQL-specific CTE (Common Table Expression) extensions including materialization hints and SEARCH/CYCLE clause support.

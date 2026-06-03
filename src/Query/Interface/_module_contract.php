@@ -1,8 +1,10 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * @moduleContract
- * @purpose Define clause interfaces for SQL query building (FROM, JOIN, WHERE, ORDER BY, LIMIT, etc.).
+ * @purpose Define clause interfaces for SQL query building: FROM, JOIN, WHERE, ORDER BY, LIMIT, WITH, Operations, Partition, Returning.
  * @scope Stateless contract interfaces for each SQL clause.
  * @input Generic type parameters for type-safe query construction.
  * @output Interface contracts implemented by query classes and traits.

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace AndrewGos\QueryBuilder\Query\Update\MySql;
 
 use AndrewGos\QueryBuilder\Expr\ExprInterface;
@@ -32,6 +34,7 @@ use UnitEnum;
  */
 // endregion MODULE_CONTRACT
 // GREP_SUMMARY: MySQL, UPDATE, LOW_PRIORITY, IGNORE, PARTITION, multi-table, dialect
+// STRUCTURE: ▶ UpdateQuery + OrderByTrait + LimitTrait + PartitionTrait + addTable() + lowPriority/ignore → ∑ [MySqlUpdateQuery]
 
 // region CLASS_MySqlUpdateQuery [DOMAIN(8): Update; CONCEPT(8): MySqlUpdateQuery; TECH(8): Dialect]
 /**

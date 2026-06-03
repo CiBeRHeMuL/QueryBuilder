@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace AndrewGos\QueryBuilder\Query\Trait;
 
 use AndrewGos\QueryBuilder\Enum\LimitBoundTypeEnum;
@@ -17,6 +19,7 @@ use AndrewGos\QueryBuilder\Expr\ExprInterface;
  */
 // endregion MODULE_CONTRACT
 // GREP_SUMMARY: LIMIT, OFFSET, FETCH, trait, SQL, pagination, bound type
+// STRUCTURE: ▶ offset(int|Expr, clamp≥0) + limit(int|Expr|null, clamp≥0, boundType) → ∑ [LimitTrait methods]
 
 // region TRAIT_LimitTrait [DOMAIN(8): Query; CONCEPT(9): Trait; TECH(8): SQL]
 /**

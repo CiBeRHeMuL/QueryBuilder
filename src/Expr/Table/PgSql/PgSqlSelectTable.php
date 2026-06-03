@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace AndrewGos\QueryBuilder\Expr\Table\PgSql;
 
 use AndrewGos\QueryBuilder\Expr\Table\SelectTable;
@@ -18,6 +20,7 @@ use AndrewGos\QueryBuilder\Expr\Table\SelectTable;
  */
 // endregion MODULE_CONTRACT
 // GREP_SUMMARY: PostgreSQL, table, ONLY, inheritance, SELECT, dialect
+// STRUCTURE: ▶ ┌name, only(false)┐ → parent::__construct(name) + $only → ∑ [PgSqlSelectTable]
 
 // region CLASS_PgSqlSelectTable [DOMAIN(8): Table; CONCEPT(8): PgSqlSelectTable; TECH(8): Dialect]
 /**

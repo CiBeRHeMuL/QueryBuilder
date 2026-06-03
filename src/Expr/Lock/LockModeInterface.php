@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace AndrewGos\QueryBuilder\Expr\Lock;
 
 use AndrewGos\QueryBuilder\Grammar\GrammarInterface;
@@ -16,6 +18,7 @@ use AndrewGos\QueryBuilder\Grammar\GrammarInterface;
  */
 // endregion MODULE_CONTRACT
 // GREP_SUMMARY: LOCK, FOR UPDATE, FOR SHARE, lock mode, SQL, pessimistic locking
+// STRUCTURE: ▶ getSql(GrammarInterface) → string [LockModeInterface contract]
 
 // region INTERFACE_LockModeInterface [DOMAIN(8): Lock; CONCEPT(8): LockMode; TECH(5): SQLStandard]
 /**

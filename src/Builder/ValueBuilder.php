@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace AndrewGos\QueryBuilder\Builder;
 
 use AndrewGos\QueryBuilder\Expr\Expr;
@@ -27,6 +29,7 @@ use UnitEnum;
  */
 // endregion MODULE_CONTRACT
 // GREP_SUMMARY: ValueBuilder, value dispatch, type conversion, expression builder
+// STRUCTURE: ▶ build ┌validate┐ → ○ doBuild ┌match type┐ → ◇ SelectQuery? ⚡ wrap parens ─● ◇ ValuesQuery? ⚡ wrap parens ─● ◇ ExprInterface? ⊕ pass through ─● ◇ UnitEnum? ⚡ genParamId → ⊕ :param ─● ◇ null? ⊕ 'NULL' ─● ◇ bool? ⊕ TRUE/FALSE ─● ◇ array? ○ map doBuild → ⊕ (..., ...) ─● ◇ string+id? ⚡ escapeIdentifier ─● default ⊕ Literal → ∑ return ExprInterface
 
 // region CLASS_ValueBuilder [DOMAIN(8): Builder; CONCEPT(8): ValueBuilding; TECH(8): TypeDispatch]
 final readonly class ValueBuilder

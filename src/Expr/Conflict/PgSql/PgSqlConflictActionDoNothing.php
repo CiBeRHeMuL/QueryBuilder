@@ -19,6 +19,7 @@ use AndrewGos\QueryBuilder\Grammar\GrammarInterface;
  */
 // endregion MODULE_CONTRACT
 // GREP_SUMMARY: PostgreSQL, ON CONFLICT, DO NOTHING, conflict action
+// STRUCTURE: ▶ getSql → ⚡ return 'DO NOTHING' → getParams → ⚡ return [] → ∑ [PgSqlConflictActionDoNothing]
 
 // region CLASS_PgSqlConflictActionDoNothing [DOMAIN(8): Conflict; CONCEPT(8): ActionDoNothing; TECH(8): Dialect]
 /**

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace AndrewGos\QueryBuilder\Query\Interface;
 
 use AndrewGos\QueryBuilder\Expr\ExprInterface;
@@ -18,6 +20,7 @@ use UnitEnum;
  */
 // endregion MODULE_CONTRACT
 // GREP_SUMMARY: WHERE, conditions, filtering, SQL, AND, OR, expressions
+// STRUCTURE: ▶ ┌where property┐ + where() + andWhere() + orWhere(OrExpr) → ∑ [WhereInterface contract]
 
 // region INTERFACE_WhereInterface [DOMAIN(8): Query; CONCEPT(9): Filtering; TECH(8): SQL]
 /**

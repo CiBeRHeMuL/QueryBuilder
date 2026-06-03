@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace AndrewGos\QueryBuilder\Expr;
 
 use AndrewGos\QueryBuilder\Exception\QueryBuilderException;
@@ -20,6 +22,7 @@ use AndrewGos\QueryBuilder\Grammar\GrammarInterface;
  */
 // endregion MODULE_CONTRACT
 // GREP_SUMMARY: AbstractExpr, lazy build, expression caching, base class
+// STRUCTURE: ▶ getExpression ┌grammar┐ → ◇ cached in $expressions[grammar::class]? ⊕ return cached └─ else → ⚡ doBuild → ● cache [expr, params] → ∑ return expr
 
 // region CLASS_AbstractExpr [DOMAIN(7): Expression; CONCEPT(7): Base; TECH(7): Abstract]
 abstract class AbstractExpr implements ExprInterface
@@ -50,6 +53,7 @@ abstract class AbstractExpr implements ExprInterface
     // region METHOD_getParams [DOMAIN(7): Expression; CONCEPT(6): Params; TECH(7): Accessor]
     /**
      * @purpose Return the bound parameters, ensuring the expression was built first.
+     * @throws QueryBuilderException
      * @inheritDoc
      */
     public function getParams(): array

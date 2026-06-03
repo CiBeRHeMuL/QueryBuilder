@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace AndrewGos\QueryBuilder\Expr\Cte\PgSql;
 
 use AndrewGos\QueryBuilder\Expr\Cte\Cycle;
@@ -21,6 +23,7 @@ use AndrewGos\QueryBuilder\Query\Interface\MaybeReturnableQueryInterface;
  */
 // endregion MODULE_CONTRACT
 // GREP_SUMMARY: PostgreSQL, CTE, WITH, materialized, SEARCH, CYCLE, dialect
+// STRUCTURE: ▶ __construct ┌query + parent(search, cycle) + materialized┐ → ∑ [PgSqlWithQuery extends WithQuery]
 
 // region CLASS_PgSqlWithQuery [DOMAIN(8): CTE; CONCEPT(8): PgSqlWithQuery; TECH(8): Dialect]
 /**

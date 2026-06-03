@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace AndrewGos\QueryBuilder\Query\Insert;
 
 use AndrewGos\QueryBuilder\Query\Select\SelectQueryInterface;
@@ -20,6 +22,7 @@ use AndrewGos\QueryBuilder\Query\Values\ValuesQueryInterface;
  */
 // endregion MODULE_CONTRACT
 // GREP_SUMMARY: INSERT, SQL, query, insert, INTO, DEFAULT VALUES, WithTrait
+// STRUCTURE: ▶ WithTrait + into(table, columns, alias) + source(query|null) → ∑ [InsertQuery]
 
 // region CLASS_InsertQuery [DOMAIN(8): Query; CONCEPT(9): Insert; TECH(8): SQL]
 /**

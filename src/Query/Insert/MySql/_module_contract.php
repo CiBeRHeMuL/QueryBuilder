@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * @moduleContract
  * @purpose MySQL-specific INSERT query implementation with LOW_PRIORITY, DELAYED, HIGH_PRIORITY, IGNORE modifiers and PARTITION support.

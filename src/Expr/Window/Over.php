@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace AndrewGos\QueryBuilder\Expr\Window;
 
 use AndrewGos\QueryBuilder\Expr\ExprInterface;

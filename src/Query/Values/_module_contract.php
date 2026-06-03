@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * @moduleContract
  * @purpose Provide VALUES SQL query construction for inline value lists with ORDER BY, LIMIT, and set operations.

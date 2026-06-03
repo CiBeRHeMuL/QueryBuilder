@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * @moduleContract
  * @purpose Provides MySQL-specific UPDATE query with multi-table support, PARTITION, ORDER BY, LIMIT, and LOW_PRIORITY/IGNORE flags.

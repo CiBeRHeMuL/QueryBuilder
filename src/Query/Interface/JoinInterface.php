@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace AndrewGos\QueryBuilder\Query\Interface;
 
 use AndrewGos\QueryBuilder\Enum\JoinTypeEnum;
@@ -22,6 +24,7 @@ use UnitEnum;
  */
 // endregion MODULE_CONTRACT
 // GREP_SUMMARY: JOIN, SQL, INNER, LEFT, RIGHT, CROSS, FULL, NATURAL, tables
+// STRUCTURE: ▶ ┌joinTables property┐ + join() + inner/left/right/cross/full/natural*Join() → ∑ [JoinInterface contract]
 
 // region INTERFACE_JoinInterface [DOMAIN(8): Query; CONCEPT(9): Join; TECH(8): SQL]
 /**

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace AndrewGos\QueryBuilder\Enum\Insert\PgSql;
 
 // region MODULE_CONTRACT [DOMAIN(6): Enum; CONCEPT(7): OverrideValue; TECH(9): PgSQL]
@@ -14,6 +16,7 @@ namespace AndrewGos\QueryBuilder\Enum\Insert\PgSql;
  */
 // endregion MODULE_CONTRACT
 // GREP_SUMMARY: PostgreSQL, Insert, Override, System, User, Value
+// STRUCTURE: ▶ enum cases ┌System, User┐ → ∑ [PgSqlOverrideValueMethodEnum]
 
 // region ENUM_PgSqlOverrideValueMethodEnum [DOMAIN(6): Enum; CONCEPT(7): OverrideValue; TECH(9): PgSQL]
 /**

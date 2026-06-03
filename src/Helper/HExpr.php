@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace AndrewGos\QueryBuilder\Helper;
 
 use AndrewGos\QueryBuilder\Builder\ValueBuilder;
@@ -65,6 +67,7 @@ class HExpr
      * @purpose Checks that value can be used as an expression. Throws on invalid type.
      * @io mixed -> void (throws on invalid)
      * @complexity 5
+     * @throws QueryBuilderException
      * @using QueryBuilderException::valueIsNotExpr
      * STRUCTURE: ▼ [value] → ◇ is_null/bool/int/float/string/ExprInterface/SelectQueryInterface/ValuesQueryInterface/UnitEnum/array → ● valid → ∑ return | ✗ throw
      */
@@ -90,6 +93,7 @@ class HExpr
      * @purpose Checks that value can be used as a SELECT expression. Throws on invalid type.
      * @io mixed -> void (throws on invalid)
      * @complexity 5
+     * @throws QueryBuilderException
      * @using QueryBuilderException::valueIsNotSelectExpr
      */
     public static function testSelectExpr(mixed $value): void
@@ -114,6 +118,7 @@ class HExpr
      * @purpose Checks that value can be used as a GROUP BY expression. Throws on invalid type.
      * @io mixed -> void (throws on invalid)
      * @complexity 5
+     * @throws QueryBuilderException
      * @using QueryBuilderException::valueIsNotGroupByExpr
      */
     public static function testGroupByExpr(mixed $value): void
@@ -136,6 +141,7 @@ class HExpr
      * @purpose Checks that value can be used as a condition. Throws on invalid type.
      * @io mixed -> void (throws on invalid)
      * @complexity 5
+     * @throws QueryBuilderException
      * @using QueryBuilderException::valueIsNotCondition
      */
     public static function testCondition(mixed $condition): void
@@ -160,6 +166,7 @@ class HExpr
      * @purpose Checks that value can be used as a standalone condition (bool or ExprInterface only). Throws on invalid type.
      * @io mixed -> void (throws on invalid)
      * @complexity 3
+     * @throws QueryBuilderException
      * @using QueryBuilderException::valueIsNotStandaloneCondition
      */
     public static function testStandaloneCondition(mixed $condition): void
@@ -194,6 +201,7 @@ class HExpr
      * @purpose Validate an ORDER BY array structure — string keys expect int|string values, int keys expect string|ExprInterface|OrderColumn values.
      * @io array -> void (throws on invalid)
      * @complexity 5
+     * @throws QueryBuilderException
      */
     public static function testOrderByArray(array $columns): void
     {
@@ -216,6 +224,7 @@ class HExpr
      * @purpose Checks that value can be used as a table expression. Throws on invalid type.
      * @io mixed -> void (throws on invalid)
      * @complexity 3
+     * @throws QueryBuilderException
      * @using QueryBuilderException::valueIsNotTable
      */
     public static function testTable(mixed $value): void

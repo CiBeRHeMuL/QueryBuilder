@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace AndrewGos\QueryBuilder\Expr\Table;
 
 // region MODULE_CONTRACT [DOMAIN(8): Table; CONCEPT(7): TableReference; TECH(5): ValueObject]
@@ -14,6 +16,7 @@ namespace AndrewGos\QueryBuilder\Expr\Table;
  */
 // endregion MODULE_CONTRACT
 // GREP_SUMMARY: table, FROM, table reference, SQL
+// STRUCTURE: ▶ ┌name┐ → ∑ [SelectTable]
 
 // region CLASS_SelectTable [DOMAIN(8): Table; CONCEPT(7): TableReference; TECH(5): ValueObject]
 /**

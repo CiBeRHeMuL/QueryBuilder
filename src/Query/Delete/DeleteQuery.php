@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace AndrewGos\QueryBuilder\Query\Delete;
 
 use AndrewGos\QueryBuilder\Query\Trait\SingleFromTrait;
@@ -20,6 +22,7 @@ use AndrewGos\QueryBuilder\Query\Trait\WithTrait;
  */
 // endregion MODULE_CONTRACT
 // GREP_SUMMARY: DELETE, SQL, query, delete rows, WithTrait, SingleFromTrait, WhereTrait
+// STRUCTURE: ▶ WithTrait + SingleFromTrait + WhereTrait → ∑ [DeleteQuery]
 
 // region CLASS_DeleteQuery [DOMAIN(8): Query; CONCEPT(9): Delete; TECH(8): SQL]
 /**

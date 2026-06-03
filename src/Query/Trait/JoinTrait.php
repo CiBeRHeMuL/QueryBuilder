@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace AndrewGos\QueryBuilder\Query\Trait;
 
 use AndrewGos\QueryBuilder\Enum\JoinTypeEnum;
@@ -23,6 +25,7 @@ use AndrewGos\QueryBuilder\Query\Values\ValuesQueryInterface;
  */
 // endregion MODULE_CONTRACT
 // GREP_SUMMARY: JOIN, trait, SQL, INNER, LEFT, RIGHT, CROSS, FULL, NATURAL
+// STRUCTURE: ▶ join() + innerJoin() + leftJoin() + rightJoin() + crossJoin() + fullJoin() + natural*Join() → ∑ [JoinTrait methods]
 
 // region TRAIT_JoinTrait [DOMAIN(8): Query; CONCEPT(9): Trait; TECH(8): SQL]
 /**
@@ -185,6 +188,7 @@ trait JoinTrait
      * @purpose Create a NATURAL JOIN, validating that cross join is not used with natural.
      * @io JoinTypeEnum $type, TTable $table, ?string $alias -> static
      * @complexity 3
+     * @throws QueryBuilderException
      *
      * @inheritDoc
      */

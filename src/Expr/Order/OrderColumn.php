@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace AndrewGos\QueryBuilder\Expr\Order;
 
 use AndrewGos\QueryBuilder\Expr\ExprInterface;
@@ -16,6 +18,7 @@ use AndrewGos\QueryBuilder\Expr\ExprInterface;
  */
 // endregion MODULE_CONTRACT
 // GREP_SUMMARY: ORDER BY, sort, ASC, DESC, column ordering, SQL
+// STRUCTURE: ▶ ┌expr, order('ASC')┐ → ∑ [OrderColumn]
 
 // region CLASS_OrderColumn [DOMAIN(8): ORDER BY; CONCEPT(7): SortColumn; TECH(5): ValueObject]
 /**

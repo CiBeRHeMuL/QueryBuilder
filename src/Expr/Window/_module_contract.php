@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * @moduleContract
  * @purpose Provides window function clause builders: OVER clause and Window definition (PARTITION BY, ORDER BY, frame).

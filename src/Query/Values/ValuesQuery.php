@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace AndrewGos\QueryBuilder\Query\Values;
 
 use AndrewGos\QueryBuilder\Query\Trait\LimitTrait;
@@ -20,6 +22,7 @@ use AndrewGos\QueryBuilder\Query\Trait\OrderByTrait;
  */
 // endregion MODULE_CONTRACT
 // GREP_SUMMARY: VALUES, SQL, query, value lists, inline values, ORDER BY, LIMIT, set operations
+// STRUCTURE: ▶ OperationsTrait + OrderByTrait + LimitTrait + values() + addValues() → ∑ [ValuesQuery]
 
 // region CLASS_ValuesQuery [DOMAIN(8): Query; CONCEPT(9): Values; TECH(8): SQL]
 /**

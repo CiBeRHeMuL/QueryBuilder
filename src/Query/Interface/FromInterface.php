@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace AndrewGos\QueryBuilder\Query\Interface;
 
 use AndrewGos\QueryBuilder\Expr\ExprInterface;
@@ -19,6 +21,7 @@ use AndrewGos\QueryBuilder\Query\Values\ValuesQueryInterface;
  */
 // endregion MODULE_CONTRACT
 // GREP_SUMMARY: FROM, SQL, tables, subquery, JOIN source, clause
+// STRUCTURE: ▶ ┌from property┐ + from() + addFrom() → ∑ [FromInterface contract]
 
 // region INTERFACE_FromInterface [DOMAIN(8): Query; CONCEPT(9): From; TECH(8): SQL]
 /**

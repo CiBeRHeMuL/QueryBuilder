@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace AndrewGos\QueryBuilder\Expr\Group;
 
 use AndrewGos\QueryBuilder\Expr\ExprInterface;
@@ -17,6 +19,7 @@ use UnitEnum;
  */
 // endregion MODULE_CONTRACT
 // GREP_SUMMARY: GROUP BY, GROUPING SETS, aggregate, SQL standard, OLAP
+// STRUCTURE: ▶ ┌columns┐ → parent::__construct('GROUPING SETS', columns) → ∑ [GroupingSets]
 
 // region CLASS_GroupingSets [DOMAIN(7): GROUP BY; CONCEPT(8): GroupingSets; TECH(6): SQLStandard]
 /**

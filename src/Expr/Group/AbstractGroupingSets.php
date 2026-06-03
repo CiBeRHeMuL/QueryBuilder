@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace AndrewGos\QueryBuilder\Expr\Group;
 
 use AndrewGos\QueryBuilder\Builder\ValueBuilder;

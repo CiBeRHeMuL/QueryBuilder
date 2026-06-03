@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace AndrewGos\QueryBuilder\Exception;
 
 use AndrewGos\Helpers\HString;
@@ -29,6 +31,7 @@ use UnitEnum;
  */
 // endregion MODULE_CONTRACT
 // GREP_SUMMARY: QueryBuilderException, exception, error handling, validation
+// STRUCTURE: ▶ static named constructors ┌valueIsNotExpr, valueIsNotTable, ... (10 total)┐ → ○ each: ⚡ format message with typed context → ⊕ new self → ∑ return QueryBuilderException
 
 // region CLASS_QueryBuilderException [DOMAIN(9): Exception; CONCEPT(9): ErrorHandling; TECH(9): Exception]
 class QueryBuilderException extends RuntimeException

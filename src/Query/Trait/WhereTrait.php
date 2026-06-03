@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace AndrewGos\QueryBuilder\Query\Trait;
 
 use AndrewGos\QueryBuilder\Expr\AndExpr;
@@ -18,6 +20,7 @@ use AndrewGos\QueryBuilder\Expr\OrExpr;
  */
 // endregion MODULE_CONTRACT
 // GREP_SUMMARY: WHERE, trait, SQL, conditions, AND, OR, filtering
+// STRUCTURE: ▶ where(conditions) | andWhere(merge) | orWhere(OrExpr[AndExpr(existing) + AndExpr(new)]) → ∑ [WhereTrait methods]
 
 // region TRAIT_WhereTrait [DOMAIN(8): Query; CONCEPT(9): Trait; TECH(8): SQL]
 /**

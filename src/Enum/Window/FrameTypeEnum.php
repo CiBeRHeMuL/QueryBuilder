@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace AndrewGos\QueryBuilder\Enum\Window;
 
 // region MODULE_CONTRACT [DOMAIN(6): Enum; CONCEPT(7): FrameType; TECH(9): SQL]
@@ -14,6 +16,7 @@ namespace AndrewGos\QueryBuilder\Enum\Window;
  */
 // endregion MODULE_CONTRACT
 // GREP_SUMMARY: Window, Frame, Type, ROWS, RANGE, GROUPS, SQL
+// STRUCTURE: ▶ enum cases ┌Rows, Range, Groups┐ → ⚡ getSql → match case → ∑ return 'ROWS'|'RANGE'|'GROUPS'
 
 // region ENUM_FrameTypeEnum [DOMAIN(6): Enum; CONCEPT(7): FrameType; TECH(9): SQL]
 /**

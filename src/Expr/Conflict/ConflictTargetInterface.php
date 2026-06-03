@@ -18,6 +18,7 @@ use AndrewGos\QueryBuilder\Grammar\GrammarInterface;
  */
 // endregion MODULE_CONTRACT
 // GREP_SUMMARY: ON CONFLICT, target, columns, constraint, conflict resolution
+// STRUCTURE: ▶ contract methods ┌getSql(GrammarInterface), getParams()┐ → ∑ [ConflictTargetInterface]
 
 // region INTERFACE_ConflictTargetInterface [DOMAIN(8): Conflict; CONCEPT(8): Target; TECH(5): SQLStandard]
 /**

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace AndrewGos\QueryBuilder\Expr;
 
 use AndrewGos\QueryBuilder\Builder\ValueBuilder;
@@ -23,6 +25,7 @@ use UnitEnum;
  */
 // endregion MODULE_CONTRACT
 // GREP_SUMMARY: OpExpr, binary operator, comparison expression
+// STRUCTURE: ▶ ┌left, operator, right┐ → ◇ '=' + (null|true|false)? → operator='IS' → ⚡ ValueBuilder.build(left+right) → ◇ ExprInterface? → parenthesize → ∑ 'left OPERATOR right' + params
 
 // region CLASS_OpExpr [DOMAIN(7): Expression; CONCEPT(7): Operator; TECH(7): Binary]
 class OpExpr extends AbstractExpr

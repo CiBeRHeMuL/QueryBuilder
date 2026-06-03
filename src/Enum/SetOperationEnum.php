@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace AndrewGos\QueryBuilder\Enum;
 
 // region MODULE_CONTRACT [DOMAIN(6): Enum; CONCEPT(7): SetOperation; TECH(9): SQL]
@@ -14,6 +16,7 @@ namespace AndrewGos\QueryBuilder\Enum;
  */
 // endregion MODULE_CONTRACT
 // GREP_SUMMARY: Set, Operation, UNION, INTERSECT, EXCEPT, ALL, DISTINCT, SQL
+// STRUCTURE: ▶ enum cases ┌Union, Intersect, Except ─● ALL|Distinct┐ → ⚡ getSql → match case → ∑ return '... ALL'|'... DISTINCT'
 
 // region ENUM_SetOperationEnum [DOMAIN(6): Enum; CONCEPT(7): SetOperation; TECH(9): SQL]
 /**

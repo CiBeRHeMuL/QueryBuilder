@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace AndrewGos\QueryBuilder\Query\Values;
 
 use AndrewGos\QueryBuilder\Expr\ExprInterface;
@@ -21,6 +23,7 @@ use UnitEnum;
  */
 // endregion MODULE_CONTRACT
 // GREP_SUMMARY: VALUES, SQL, query, value lists, inline values, interface
+// STRUCTURE: ▶ OperationsInterface + OrderByInterface + LimitInterface + MaybeReturnableQueryInterface + values() + addValues() → ∑ [ValuesQueryInterface contract]
 
 // region INTERFACE_ValuesQueryInterface [DOMAIN(8): Query; CONCEPT(9): Values; TECH(8): SQL]
 /**

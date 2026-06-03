@@ -1,9 +1,11 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * @moduleContract
  * @purpose Provides the JOIN clause value object for defining table joins in SQL queries.
- * @scope Single value object covering all JOIN types (INNER, LEFT, RIGHT, CROSS, NATURAL, etc.).
+ * @scope Single value object covering all JOIN types (INNER, LEFT, RIGHT, CROSS, FULL, NATURAL).
  * @input Join type, table reference, conditions, natural join flag.
  * @output Join clause data for SQL rendering.
  * @modulemap

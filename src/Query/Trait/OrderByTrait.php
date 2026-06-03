@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace AndrewGos\QueryBuilder\Query\Trait;
 
 use AndrewGos\QueryBuilder\Helper\HExpr;
@@ -16,6 +18,7 @@ use AndrewGos\QueryBuilder\Helper\HExpr;
  */
 // endregion MODULE_CONTRACT
 // GREP_SUMMARY: ORDER BY, trait, SQL, sorting, ordering, HExpr, normalize
+// STRUCTURE: ▶ orderBy(array) → HExpr::normalizeOrderBy | addOrderBy(array) → array_merge + normalize → ∑ [OrderByTrait methods]
 
 // region TRAIT_OrderByTrait [DOMAIN(8): Query; CONCEPT(9): Trait; TECH(8): SQL]
 /**

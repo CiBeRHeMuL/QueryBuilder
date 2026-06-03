@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * @moduleContract
  * @purpose Grammar namespace — provides SQL dialect grammar abstraction for query building.

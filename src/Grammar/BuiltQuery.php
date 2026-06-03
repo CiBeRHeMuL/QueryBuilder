@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace AndrewGos\QueryBuilder\Grammar;
 
 // region MODULE_CONTRACT [DOMAIN(7): Grammar; CONCEPT(6): QueryResult; TECH(7): DTO]
@@ -16,6 +18,7 @@ namespace AndrewGos\QueryBuilder\Grammar;
  */
 // endregion MODULE_CONTRACT
 // GREP_SUMMARY: BuiltQuery, SQL result, query params, compiled query
+// STRUCTURE: ▶ ┌sql, params┐ → ∑ [BuiltQuery DTO]
 
 // region CLASS_BuiltQuery [DOMAIN(7): Grammar; CONCEPT(6): QueryResult; TECH(7): DTO]
 final readonly class BuiltQuery

@@ -22,6 +22,7 @@ use AndrewGos\QueryBuilder\Query\Trait\MySql\PartitionTrait;
  */
 // endregion MODULE_CONTRACT
 // GREP_SUMMARY: MySQL, INSERT, LOW_PRIORITY, DELAYED, HIGH_PRIORITY, IGNORE, PARTITION, dialect
+// STRUCTURE: ▶ InsertQuery + PartitionTrait + lowPriority/delayed/highPriority/ignore → ∑ [MySqlInsertQuery]
 
 // region CLASS_MySqlInsertQuery [DOMAIN(8): Insert; CONCEPT(8): MySqlInsertQuery; TECH(8): Dialect]
 /**

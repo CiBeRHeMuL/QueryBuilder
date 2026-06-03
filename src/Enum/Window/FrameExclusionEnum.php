@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace AndrewGos\QueryBuilder\Enum\Window;
 
 // region MODULE_CONTRACT [DOMAIN(6): Enum; CONCEPT(7): FrameExclusion; TECH(9): SQL]
@@ -14,6 +16,7 @@ namespace AndrewGos\QueryBuilder\Enum\Window;
  */
 // endregion MODULE_CONTRACT
 // GREP_SUMMARY: Window, Frame, Exclusion, CURRENT ROW, GROUP, TIES, NO OTHERS, SQL
+// STRUCTURE: ▶ enum cases ┌CurrentRow, Group, Ties, NoOthers┐ → ⚡ getSql → match case → ∑ return 'CURRENT ROW'|'GROUP'|'TIES'|'NO OTHERS'
 
 // region ENUM_FrameExclusionEnum [DOMAIN(6): Enum; CONCEPT(7): FrameExclusion; TECH(9): SQL]
 /**

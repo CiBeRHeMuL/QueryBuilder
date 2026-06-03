@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace AndrewGos\QueryBuilder\Query\Select;
 
 use AndrewGos\QueryBuilder\Expr\AndExpr;
@@ -30,6 +32,7 @@ use AndrewGos\QueryBuilder\Query\Trait\WithTrait;
  */
 // endregion MODULE_CONTRACT
 // GREP_SUMMARY: SELECT, SQL, query, select, columns, FROM, JOIN, WHERE, GROUP BY, HAVING, WINDOW, ORDER BY, LIMIT, LOCK, UNION, set operations
+// STRUCTURE: ▶ WithTrait + FromTrait + WhereTrait + JoinTrait + OperationsTrait + OrderByTrait + LimitTrait + select()/groupBy()/having()/window()/lock() → ∑ [SelectQuery]
 
 // region CLASS_SelectQuery [DOMAIN(8): Query; CONCEPT(10): Select; TECH(8): SQL]
 /**
@@ -220,7 +223,7 @@ class SelectQuery implements SelectQueryInterface
 
     // region METHOD_lock [DOMAIN(8): Query; CONCEPT(10): Select; TECH(8): SQL]
     /**
-     * @purpose Apply a lock mode (FOR UPDATE, FOR SHARE, etc.) to the SELECT.
+     * @purpose Apply a lock mode (FOR UPDATE, FOR NO KEY UPDATE, FOR SHARE, FOR KEY SHARE, optionally with NOWAIT/SKIP LOCKED) to the SELECT.
      * @io LockModeInterface|null $lockMode -> static
      * @complexity 2
      *

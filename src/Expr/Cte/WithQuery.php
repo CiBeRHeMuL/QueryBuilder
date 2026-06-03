@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace AndrewGos\QueryBuilder\Expr\Cte;
 
 use AndrewGos\QueryBuilder\Enum\Cte\SearchTypeEnum;
@@ -20,6 +22,7 @@ use AndrewGos\QueryBuilder\Query\Interface\MaybeReturnableQueryInterface;
  */
 // endregion MODULE_CONTRACT
 // GREP_SUMMARY: CTE, with clause, recursive query, search, cycle, PostgreSQL, Oracle, SQL Server
+// STRUCTURE: ▶ __construct ┌query, search, cycle┐ → ○ search(type, cols, seqCol) ⊕ new Search → return $this → ○ cycle(cols, markCol, pathCol, markVal, defaultVal) ⚡ to Literal → ⊕ new Cycle → return $this → ∑ [WithQuery fluent builder]
 
 // region CLASS_WithQuery [DOMAIN(7): CTE; CONCEPT(9): WithClause; TECH(6): FluentBuilder]
 /**

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace AndrewGos\QueryBuilder\Query\Interface;
 
 use AndrewGos\QueryBuilder\Expr\Cte\WithQuery;
@@ -16,6 +18,7 @@ use AndrewGos\QueryBuilder\Expr\Cte\WithQuery;
  */
 // endregion MODULE_CONTRACT
 // GREP_SUMMARY: WITH, CTE, common table expression, SQL, recursive, subquery
+// STRUCTURE: ▶ ┌with property, withRecursive┐ + with() + addWith() → ∑ [WithInterface contract]
 
 // region INTERFACE_WithInterface [DOMAIN(8): Query; CONCEPT(9): CTE; TECH(8): SQL]
 /**

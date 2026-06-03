@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace AndrewGos\QueryBuilder\Expr;
 
 use AndrewGos\QueryBuilder\Grammar\GrammarInterface;
@@ -19,6 +21,7 @@ use UnitEnum;
  */
 // endregion MODULE_CONTRACT
 // GREP_SUMMARY: Expr, simple expression, immutable, SQL fragment
+// STRUCTURE: ▶ __construct ┌expression, params┐ → getExpression → ⊕ return expression → getParams → ⊕ return params → ∑ [Expr immutable node]
 
 // region CLASS_Expr [DOMAIN(7): Expression; CONCEPT(6): SimpleExpr; TECH(7): DTO]
 final class Expr implements ExprInterface

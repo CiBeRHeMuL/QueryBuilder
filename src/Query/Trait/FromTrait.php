@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace AndrewGos\QueryBuilder\Query\Trait;
 
 use AndrewGos\QueryBuilder\Helper\HExpr;
@@ -18,6 +20,7 @@ use AndrewGos\QueryBuilder\Helper\HExpr;
  */
 // endregion MODULE_CONTRACT
 // GREP_SUMMARY: FROM, trait, multi-table, SQL, tables, HExpr, normalize
+// STRUCTURE: ▶ from(array) → array_map(HExpr::normalizeTable) | addFrom(array) → array_merge + normalize → ∑ [FromTrait methods]
 
 // region TRAIT_FromTrait [DOMAIN(8): Query; CONCEPT(9): Trait; TECH(8): SQL]
 /**

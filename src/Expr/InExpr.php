@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace AndrewGos\QueryBuilder\Expr;
 
 use AndrewGos\QueryBuilder\Query\Select\SelectQueryInterface;
@@ -17,6 +19,7 @@ use UnitEnum;
  */
 // endregion MODULE_CONTRACT
 // GREP_SUMMARY: InExpr, IN operator, subquery condition
+// STRUCTURE: ▶ ┌left, right┐ → parent::__construct(left, 'IN', right) → ∑ [InExpr]
 
 // region CLASS_InExpr [DOMAIN(7): Expression; CONCEPT(6): Comparison; TECH(7): IN]
 class InExpr extends OpExpr

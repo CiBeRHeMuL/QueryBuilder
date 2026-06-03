@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * @moduleContract
  * @purpose Provides the table reference value object for SELECT, FROM, and JOIN clauses.

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * @moduleContract
  * @purpose PostgreSQL-specific SELECT query implementation with DISTINCT ON clause and FOR UPDATE/FOR SHARE/FOR NO KEY UPDATE/FOR KEY SHARE lock modes.
