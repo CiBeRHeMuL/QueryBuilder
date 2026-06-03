@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace AndrewGos\QueryBuilder\Expr\Conflict\PgSql;
 
-use AndrewGos\QueryBuilder\Builder\ValueBuilder;
 use AndrewGos\QueryBuilder\Expr\AndExpr;
 use AndrewGos\QueryBuilder\Expr\Conflict\ConflictActionInterface;
 use AndrewGos\QueryBuilder\Expr\ExprInterface;
+use AndrewGos\QueryBuilder\Expr\Update\SetClause;
 use AndrewGos\QueryBuilder\Grammar\GrammarInterface;
 use AndrewGos\QueryBuilder\Helper\HExpr;
 
@@ -46,18 +46,16 @@ final class PgSqlConflictActionDoUpdate implements ConflictActionInterface
 
     // region METHOD_getSql [DOMAIN(8): Conflict; TECH(8): SQLGeneration]
     /**
-     * @purpose Render the DO UPDATE SET ... WHERE ... SQL fragment.
+     * @purpose Render the DO UPDATE SET ... WHERE ... SQL fragment. Each SET column renders via SetClause::getSql().
      */
     public function getSql(GrammarInterface $grammar): string
     {
-        $vb = new ValueBuilder();
         $setParts = [];
         $params = [];
 
         foreach ($this->set as $column => $value) {
-            $escapedColumn = $grammar->escapeIdentifier($column);
-            $expr = $vb->build($value, $grammar);
-            $setParts[] = $escapedColumn . ' = ' . $expr->getExpression($grammar);
+            $expr = (new SetClause($column, $value))->getSql($grammar);
+            $setParts[] = $expr->getExpression($grammar);
             $params = HExpr::mergeParams($params, $expr->getParams());
         }
 

@@ -4,13 +4,13 @@ namespace AndrewGos\QueryBuilder\Grammar\PgSql;
 
 use AndrewGos\QueryBuilder\Builder\ValueBuilder;
 use AndrewGos\QueryBuilder\Exception\QueryBuilderException;
-use AndrewGos\QueryBuilder\Expr\Cte\PgSql\PgSqlWithQuery;
-use AndrewGos\QueryBuilder\Expr\Cte\WithQuery;
 use AndrewGos\QueryBuilder\Expr\Expr;
 use AndrewGos\QueryBuilder\Expr\ExprInterface;
 use AndrewGos\QueryBuilder\Expr\Lock\LockModeInterface;
 use AndrewGos\QueryBuilder\Expr\Table\PgSql\PgSqlSelectTable;
 use AndrewGos\QueryBuilder\Expr\Table\SelectTable;
+use AndrewGos\QueryBuilder\Expr\Cte\PgSql\PgSqlWithQuery;
+use AndrewGos\QueryBuilder\Expr\Cte\WithQuery;
 use AndrewGos\QueryBuilder\Grammar\AbstractGrammar;
 use AndrewGos\QueryBuilder\Grammar\BuiltQuery;
 use AndrewGos\QueryBuilder\Helper\HExpr;
@@ -18,10 +18,13 @@ use AndrewGos\QueryBuilder\Query\Delete\DeleteQueryInterface;
 use AndrewGos\QueryBuilder\Query\Delete\PgSql\PgSqlDeleteQuery;
 use AndrewGos\QueryBuilder\Query\Insert\InsertQueryInterface;
 use AndrewGos\QueryBuilder\Query\Insert\PgSql\PgSqlInsertQuery;
+use AndrewGos\QueryBuilder\Query\Interface\FromInterface;
+use AndrewGos\QueryBuilder\Query\Interface\JoinInterface;
 use AndrewGos\QueryBuilder\Query\Interface\MaybeReturnableQueryInterface;
 use AndrewGos\QueryBuilder\Query\Interface\PgSql\ReturningInterface;
 use AndrewGos\QueryBuilder\Query\Select\PgSql\PgSqlSelectQuery;
 use AndrewGos\QueryBuilder\Query\Select\SelectQueryInterface;
+use AndrewGos\QueryBuilder\Query\Update\UpdateQueryInterface;
 use AndrewGos\QueryBuilder\Query\Values\ValuesQueryInterface;
 
 // region MODULE_CONTRACT [DOMAIN(8): Grammar; CONCEPT(8): PgSqlGrammar; TECH(8): Dialect]
@@ -69,6 +72,54 @@ class PgSqlGrammar extends AbstractGrammar
         );
     }
     // endregion METHOD_buildDeleteQuery
+
+    // region METHOD_buildUpdateQuery [DOMAIN(8): Grammar; TECH(8): Update]
+    /**
+     * @purpose Build PostgreSQL-specific UPDATE query: WITH + UPDATE + table + SET + [FROM] + [JOIN] + WHERE + [RETURNING].
+     * @param UpdateQueryInterface $query The UPDATE DTO; PgSqlUpdateQuery adds FROM, JOIN, RETURNING via interfaces.
+     * @return BuiltQuery The compiled PostgreSQL SQL string and bound parameters.
+     * @throws QueryBuilderException if table is empty.
+     * STRUCTURE: ▶ ┌WITH, 'UPDATE', table, SET, FROM, JOIN, WHERE, RETURNING┐ → ● HExpr::merge → ∑ BuiltQuery
+     */
+    public function buildUpdateQuery(UpdateQueryInterface $query): BuiltQuery
+    {
+        if ($query->table === '') {
+            throw new QueryBuilderException('UPDATE query requires a table name. Call table() before building.');
+        }
+
+        if (!$query->set) {
+            throw new QueryBuilderException('UPDATE query requires at least one SET clause. Call set() before building.');
+        }
+
+        $parts = [
+            $this->buildWithClause($query),
+            'UPDATE',
+            $this->escapeIdentifierDotted($query->table),
+            $this->buildSetClause($query->set),
+        ];
+
+        if ($query instanceof FromInterface) {
+            $parts[] = $this->buildFromClause($query);
+        }
+
+        if ($query instanceof JoinInterface) {
+            $parts[] = $this->buildJoinClause($query);
+        }
+
+        $parts[] = $this->buildWhereClause($query);
+
+        if ($query instanceof ReturningInterface) {
+            $parts[] = $this->buildReturning($query);
+        }
+
+        $expr = HExpr::mergeExpressionParts($parts, $this, ' ');
+
+        return new BuiltQuery(
+            $expr->getExpression($this),
+            $expr->getParams(),
+        );
+    }
+    // endregion METHOD_buildUpdateQuery
 
     // region METHOD_buildInsertQuery [DOMAIN(8): Grammar; TECH(8): Insert]
     /**
@@ -153,6 +204,7 @@ class PgSqlGrammar extends AbstractGrammar
             $query instanceof SelectQueryInterface => $this->buildSelectQuery($query),
             $query instanceof ValuesQueryInterface => $this->buildValuesQuery($query),
             $query instanceof DeleteQueryInterface => $this->buildDeleteQuery($query),
+            $query instanceof UpdateQueryInterface => $this->buildUpdateQuery($query),
             default => throw QueryBuilderException::returnableQueryCannotBeBuilt($query, $this),
         };
     }

@@ -23,6 +23,7 @@ use AndrewGos\QueryBuilder\Query\Interface\OperationsInterface;
 use AndrewGos\QueryBuilder\Query\Interface\OrderByInterface;
 use AndrewGos\QueryBuilder\Query\Interface\WhereInterface;
 use AndrewGos\QueryBuilder\Query\Interface\WithInterface;
+use AndrewGos\QueryBuilder\Expr\Update\SetClause;
 use AndrewGos\QueryBuilder\Query\Select\SelectQueryInterface;
 use AndrewGos\QueryBuilder\Query\Update\UpdateQueryInterface;
 use AndrewGos\QueryBuilder\Query\Values\ValuesQueryInterface;
@@ -217,18 +218,64 @@ abstract class AbstractGrammar implements GrammarInterface
     }
     // endregion METHOD_buildInsertSource
 
-    // region METHOD_buildUpdateQuery [DOMAIN(9): Grammar; CONCEPT(8): UPDATE; TECH(8): STUB]
+    // region METHOD_buildUpdateQuery [DOMAIN(9): Grammar; CONCEPT(9): UPDATE; TECH(9): Pipeline]
     /**
-     * @purpose STUB — Not yet implemented. Build an UPDATE query.
-     * @io UpdateQueryInterface -> BuiltQuery
-     * @complexity 0
-     * @throws RuntimeException always — TODO stub
+     * @purpose Build a complete UPDATE query (ANSI SQL): WITH + UPDATE + table + SET + WHERE. Validates that table is set.
+     * @param UpdateQueryInterface $query The UPDATE query DTO with table, set, and optional where/with.
+     * @return BuiltQuery The compiled SQL string and bound parameters.
+     * @throws QueryBuilderException if table is empty
+     * @complexity 5
+     * STRUCTURE: ▶ ┌WITH, 'UPDATE', table, SET, WHERE┐ → ● HExpr::merge → ◇ empty table? → ✗ throw → ∑ BuiltQuery
      */
     public function buildUpdateQuery(UpdateQueryInterface $query): BuiltQuery
     {
-        // TODO: Implement buildUpdateQuery() method.
+        if ($query->table === '') {
+            throw new QueryBuilderException('UPDATE query requires a table name. Call table() before building.');
+        }
+
+        if (!$query->set) {
+            throw new QueryBuilderException('UPDATE query requires at least one SET clause. Call set() before building.');
+        }
+
+        $parts = [
+            $this->buildWithClause($query),
+            'UPDATE',
+            $this->escapeIdentifierDotted($query->table),
+            $this->buildSetClause($query->set),
+            $this->buildWhereClause($query),
+        ];
+
+        $expr = HExpr::mergeExpressionParts($parts, $this, ' ');
+
+        return new BuiltQuery(
+            $expr->getExpression($this),
+            $expr->getParams(),
+        );
     }
     // endregion METHOD_buildUpdateQuery
+
+    // region METHOD_buildSetClause [DOMAIN(9): Grammar; CONCEPT(9): SET; TECH(9): ClauseBuilder]
+    /**
+     * @purpose Build the SET clause from an array of SetClause objects. Delegates rendering to SetClause::getSql(), adds "SET " prefix.
+     * @param SetClause[] $set Array of SetClause objects.
+     * @return ExprInterface The rendered SET clause including "SET " prefix, with merged params.
+     * @complexity 4
+     * STRUCTURE: ┌set array┐ → ○ foreach $clause->getSql($this) → ⊕ parts, merge params → ∑ 'SET ' + implode(', ')
+     */
+    public function buildSetClause(array $set): ExprInterface
+    {
+        $parts = [];
+        $params = [];
+
+        foreach ($set as $clause) {
+            $expr = $clause->getSql($this);
+            $parts[] = $expr->getExpression($this);
+            $params = HExpr::mergeParams($params, $expr->getParams());
+        }
+
+        return new Expr('SET ' . implode(', ', $parts), $params);
+    }
+    // endregion METHOD_buildSetClause
 
     // region METHOD_escapeIdentifierDotted [DOMAIN(8): Grammar; CONCEPT(8): Escaping; TECH(8): Identifier]
     /**

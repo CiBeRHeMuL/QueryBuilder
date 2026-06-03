@@ -2,6 +2,7 @@
 
 namespace AndrewGos\QueryBuilder\Grammar\MySql;
 
+use AndrewGos\QueryBuilder\Exception\QueryBuilderException;
 use AndrewGos\QueryBuilder\Expr\Expr;
 use AndrewGos\QueryBuilder\Expr\ExprInterface;
 use AndrewGos\QueryBuilder\Expr\Lock\LockModeInterface;
@@ -16,6 +17,8 @@ use AndrewGos\QueryBuilder\Query\Interface\LimitInterface;
 use AndrewGos\QueryBuilder\Query\Interface\MySql\PartitionInterface;
 use AndrewGos\QueryBuilder\Query\Select\MySql\MySqlSelectQuery;
 use AndrewGos\QueryBuilder\Query\Select\SelectQueryInterface;
+use AndrewGos\QueryBuilder\Query\Update\MySql\MySqlUpdateQuery;
+use AndrewGos\QueryBuilder\Query\Update\UpdateQueryInterface;
 
 // region MODULE_CONTRACT [DOMAIN(8): Grammar; CONCEPT(8): MySqlGrammar; TECH(8): Dialect]
 /**
@@ -130,6 +133,71 @@ class MySqlGrammar extends AbstractGrammar
         );
     }
     // endregion METHOD_buildInsertQuery
+
+    // region METHOD_buildUpdateQuery [DOMAIN(8): Grammar; TECH(8): Update]
+    /**
+     * @purpose Build MySQL-specific UPDATE query: WITH + UPDATE + [LOW_PRIORITY|IGNORE] + tables (inline, comma-separated, no FROM) + SET + WHERE + ORDER BY + LIMIT + PARTITION.
+     * @param UpdateQueryInterface $query The UPDATE DTO; MySqlUpdateQuery adds LOW_PRIORITY, IGNORE, ORDER BY, LIMIT, PARTITION.
+     * @return BuiltQuery The compiled MySQL SQL string and bound parameters.
+     * @throws QueryBuilderException if no tables are set.
+     * STRUCTURE: ▶ ┌WITH, 'UPDATE', modifiers, tables, SET, WHERE, ORDER BY, LIMIT, PARTITION┐ → ● HExpr::merge → ∑ BuiltQuery
+     */
+    public function buildUpdateQuery(UpdateQueryInterface $query): BuiltQuery
+    {
+        if ($query instanceof MySqlUpdateQuery) {
+            $tables = $query->tables;
+        } else {
+            $tables = $query->table !== '' ? [$query->table] : [];
+        }
+
+        if (!$tables) {
+            throw new QueryBuilderException('UPDATE query requires at least one table. Call table() before building.');
+        }
+
+        if (!$query->set) {
+            throw new QueryBuilderException('UPDATE query requires at least one SET clause. Call set() before building.');
+        }
+
+        $parts = [
+            $this->buildWithClause($query),
+            'UPDATE',
+        ];
+
+        if ($query instanceof MySqlUpdateQuery) {
+            $query->lowPriority && $parts[] = new Expr('LOW_PRIORITY');
+            $query->ignore && $parts[] = new Expr('IGNORE');
+        }
+
+        $parts[] = new Expr(
+            implode(
+                ', ',
+                array_map(
+                    $this->escapeIdentifier(...),
+                    $tables,
+                ),
+            ),
+        );
+
+        $parts = [
+            ...$parts,
+            $this->buildSetClause($query->set),
+            $this->buildWhereClause($query),
+        ];
+
+        if ($query instanceof MySqlUpdateQuery) {
+            $parts[] = $this->buildOrderByClause($query);
+            $parts[] = $this->buildLimitClause($query);
+            $parts[] = $this->buildPartition($query);
+        }
+
+        $expr = HExpr::mergeExpressionParts($parts, $this, ' ');
+
+        return new BuiltQuery(
+            $expr->getExpression($this),
+            $expr->getParams(),
+        );
+    }
+    // endregion METHOD_buildUpdateQuery
 
     // region METHOD_buildSelectClause [DOMAIN(8): Grammar; TECH(8): Select]
     /**

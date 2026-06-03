@@ -15,7 +15,7 @@ use AndrewGos\QueryBuilder\Query\Insert\InsertQuery;
 use AndrewGos\QueryBuilder\Query\Insert\PgSql\PgSqlInsertQuery;
 use AndrewGos\QueryBuilder\Query\Select\PgSql\PgSqlSelectQuery;
 use AndrewGos\QueryBuilder\Query\Select\SelectQuery;
-use AndrewGos\QueryBuilder\Query\Update\UpdateQueryInterface;
+use AndrewGos\QueryBuilder\Query\Update\UpdateQuery;
 use AndrewGos\QueryBuilder\Query\Values\ValuesQuery;
 use PHPUnit\Framework\TestCase;
 
@@ -359,15 +359,17 @@ class DefaultGrammarTest extends TestCase
     }
     // endregion METHOD_testBuildValuesWithOrderAndLimit
 
-    // region METHOD_testBuildUpdateQueryThrows [DOMAIN(9): Testing; CONCEPT(9): Update; TECH(9): Stub]
+    // region METHOD_testBuildUpdateQueryThrows [DOMAIN(9): Testing; CONCEPT(9): Update; TECH(9): Validation]
     /**
-     * @purpose Verify DefaultGrammar::buildUpdateQuery throws TypeError (TODO stub returns null instead of BuiltQuery).
+     * @purpose Verify DefaultGrammar::buildUpdateQuery throws QueryBuilderException when table is empty.
      */
     public function testBuildUpdateQueryThrows(): void
     {
-        $query = $this->createMock(UpdateQueryInterface::class);
+        $query = new UpdateQuery();
+        $query->set(['name' => 'test']);
 
-        $this->expectException(\TypeError::class);
+        $this->expectException(QueryBuilderException::class);
+        $this->expectExceptionMessage('UPDATE query requires a table name.');
         $this->grammar->buildUpdateQuery($query);
     }
     // endregion METHOD_testBuildUpdateQueryThrows
