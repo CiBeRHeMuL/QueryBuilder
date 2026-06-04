@@ -965,7 +965,11 @@ abstract class AbstractGrammar implements GrammarInterface
         $vb = new ValueBuilder();
         foreach ($query->values as $value) {
             $expr = $vb->build($value, $this);
-            $parts[] = '(' . $expr->getExpression($this) . ')';
+            if (is_array($value)) {
+                $parts[] = $expr->getExpression($this);
+            } else {
+                $parts[] = '(' . $expr->getExpression($this) . ')';
+            }
             $params = HExpr::mergeParams($params, $expr->getParams());
         }
 

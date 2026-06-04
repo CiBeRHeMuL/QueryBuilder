@@ -55,7 +55,7 @@ class ValuesQueryTest extends TestCase
 
         $built = $this->grammar->buildValuesQuery($query);
         self::assertMatchesRegularExpression(
-            '/^VALUES \(\(:v\d+_\d+, :v\d+_\d+\)\), \(\(:v\d+_\d+, :v\d+_\d+\)\)$/',
+            '/^VALUES \(:v\d+_\d+, :v\d+_\d+\), \(:v\d+_\d+, :v\d+_\d+\)$/',
             $built->sql,
         );
         self::assertCount(4, $built->params);
@@ -155,7 +155,7 @@ class ValuesQueryTest extends TestCase
         $query->values([[null, true, false]]);
 
         $built = $this->grammar->buildValuesQuery($query);
-        self::assertSame('VALUES ((NULL, TRUE, FALSE))', $built->sql);
+        self::assertSame('VALUES (NULL, TRUE, FALSE)', $built->sql);
         self::assertSame([], $built->params);
     }
     // endregion METHOD_testValuesWithNullBool
