@@ -137,6 +137,52 @@ class ExpressionTest extends TestCase
     }
     // endregion METHOD_testOpExprBoolConversion
 
+    // region METHOD_testOpExprIsNotNullConversion [DOMAIN(9): Testing; CONCEPT(9): OpExpr; TECH(9): ISNOTNULL]
+    /**
+     * @purpose Verify OpExpr converts `!= NULL` and `<> NULL` to `IS NOT NULL` in constructor.
+     */
+    public function testOpExprIsNotNullConversion(): void
+    {
+        $op = new OpExpr(new Expr('"a"'), '!=', null);
+        $sql = $op->getExpression($this->grammar);
+        self::assertSame('("a") IS NOT NULL', $sql);
+        self::assertSame([], $op->getParams());
+
+        $op2 = new OpExpr(new Expr('"a"'), '<>', null);
+        $sql2 = $op2->getExpression($this->grammar);
+        self::assertSame('("a") IS NOT NULL', $sql2);
+        self::assertSame([], $op2->getParams());
+    }
+    // endregion METHOD_testOpExprIsNotNullConversion
+
+    // region METHOD_testOpExprIsNotBoolConversion [DOMAIN(9): Testing; CONCEPT(9): OpExpr; TECH(9): ISNOTBOOL]
+    /**
+     * @purpose Verify OpExpr converts `!= TRUE/FALSE` and `<> TRUE/FALSE` to `IS NOT TRUE/IS NOT FALSE` in constructor.
+     */
+    public function testOpExprIsNotBoolConversion(): void
+    {
+        $op = new OpExpr(new Expr('"a"'), '!=', true);
+        $sql = $op->getExpression($this->grammar);
+        self::assertSame('("a") IS NOT TRUE', $sql);
+        self::assertSame([], $op->getParams());
+
+        $op2 = new OpExpr(new Expr('"a"'), '!=', false);
+        $sql2 = $op2->getExpression($this->grammar);
+        self::assertSame('("a") IS NOT FALSE', $sql2);
+        self::assertSame([], $op2->getParams());
+
+        $op3 = new OpExpr(new Expr('"a"'), '<>', true);
+        $sql3 = $op3->getExpression($this->grammar);
+        self::assertSame('("a") IS NOT TRUE', $sql3);
+        self::assertSame([], $op3->getParams());
+
+        $op4 = new OpExpr(new Expr('"a"'), '<>', false);
+        $sql4 = $op4->getExpression($this->grammar);
+        self::assertSame('("a") IS NOT FALSE', $sql4);
+        self::assertSame([], $op4->getParams());
+    }
+    // endregion METHOD_testOpExprIsNotBoolConversion
+
     // region METHOD_testInExprWithArray [DOMAIN(9): Testing; CONCEPT(9): InExpr; TECH(9): INList]
     /**
      * @purpose Verify InExpr builds IN list from array values.

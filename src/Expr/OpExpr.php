@@ -13,27 +13,27 @@ use UnitEnum;
 // region MODULE_CONTRACT [DOMAIN(7): Expression; CONCEPT(7): Operator; TECH(7): Binary]
 /**
  * @moduleContract
- * @purpose Binary operator expression — builds SQL like `left OPERATOR right` with automatic IS substitution for NULL/boolean equality.
+ * @purpose Binary operator expression — builds SQL like `left OPERATOR right` with automatic IS/IS NOT substitution for NULL/boolean equality/inequality.
  * @scope Comparison and arithmetic operations.
  * @input left, operator string, right
  * @output Binary operator SQL expression
  * @invariants
- * - `= NULL` is automatically converted to `IS NULL`.
- * - `= TRUE/FALSE` is converted to `IS TRUE/FALSE`.
+ * - `= NULL` is automatically converted to `IS NULL`, `!=/<> NULL` → `IS NOT NULL`.
+ * - `= TRUE/FALSE` is converted to `IS TRUE/FALSE`, `!=/<> TRUE/FALSE` → `IS NOT TRUE/IS NOT FALSE`.
  * - Sub-expressions are parenthesized when needed.
  * @modulemap
  * OpExpr => Binary operator expression
  */
 // endregion MODULE_CONTRACT
 // GREP_SUMMARY: OpExpr, binary operator, comparison expression
-// STRUCTURE: ▶ ┌left, operator, right┐ → ◇ '=' + (null|true|false)? → operator='IS' → ⚡ ValueBuilder.build(left+right) → ◇ ExprInterface? → parenthesize → ∑ 'left OPERATOR right' + params
+// STRUCTURE: ▶ ┌left, operator, right┐ → ◇ operator '=' + (null|true|false)? → 'IS'; ◇ '!='|'<>' + (null|true|false)? → 'IS NOT' → ⚡ ValueBuilder.build(left+right) → ◇ ExprInterface? → parenthesize → ∑ 'left OPERATOR right' + params
 
 // region CLASS_OpExpr [DOMAIN(7): Expression; CONCEPT(7): Operator; TECH(7): Binary]
 class OpExpr extends AbstractExpr
 {
     // region METHOD___construct [DOMAIN(7): Expression; CONCEPT(6): Init; TECH(7): Operator]
     /**
-     * @purpose Store operands and operator. Auto-converts `= NULL` to `IS NULL` and `= TRUE/FALSE` to `IS TRUE/FALSE`.
+     * @purpose Store operands and operator. Auto-converts `= NULL` to `IS NULL`, `!=/<> NULL` → `IS NOT NULL`, and correspondingly for TRUE/FALSE.
      * @template TValue of bool|int|float|string|UnitEnum|ExprInterface|SelectQueryInterface|null
      * @phpstan-template TExpression of TValue|array<TExpression>
      *
@@ -46,10 +46,14 @@ class OpExpr extends AbstractExpr
         private string $operator,
         private bool|int|float|string|UnitEnum|ExprInterface|SelectQueryInterface|array|null $right,
     ) {
-        // Change operator to IS if right expr is null, true or false (to prevent a = null expressions).
+        // Change operator to IS/IS NOT if right expr is null, true or false (to prevent a = null / != null expressions).
         // TODO am i need to do it here??
-        if ($this->operator === '=' && in_array($this->right, [null, true, false], true)) {
-            $this->operator = 'IS';
+        if (in_array($this->right, [null, true, false], true)) {
+            if ($this->operator === '=') {
+                $this->operator = 'IS';
+            } elseif ($this->operator === '!=' || $this->operator === '<>') {
+                $this->operator = 'IS NOT';
+            }
         }
     }
     // endregion METHOD___construct
