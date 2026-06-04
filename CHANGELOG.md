@@ -14,6 +14,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- Documentation: README, quick-start, dialects, expressions, query-types guides.
+- CI pipeline: GitHub Actions with PHPUnit and PHP-CS-Fixer.
+- `.gitattributes` export-ignore configuration for distribution builds.
 - MERGE query support (in development).
 - Additional SQL dialect implementations (in development).
 
