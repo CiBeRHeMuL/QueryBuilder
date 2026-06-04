@@ -150,7 +150,7 @@ class DefaultGrammarTest extends TestCase
             ->innerJoin('profiles p', ['u.id' => new Expr('"p"."user_id"')]);
 
         $built = $this->grammar->buildSelectQuery($query);
-        self::assertSame('SELECT "u"."id", "p"."name" FROM "users u" INNER JOIN "profiles p" ON ("u"."id") = ("p"."user_id")', $built->sql);
+        self::assertSame('SELECT "u"."id", "p"."name" FROM "users u" INNER JOIN "profiles p" ON "u"."id" = ("p"."user_id")', $built->sql);
         self::assertSame([], $built->params);
     }
     // endregion METHOD_testBuildSelectWithJoin
@@ -183,7 +183,7 @@ class DefaultGrammarTest extends TestCase
             ->having(['COUNT(*)' => new Expr('> 1')]);
 
         $built = $this->grammar->buildSelectQuery($query);
-        self::assertSame('SELECT "type", COUNT(*) FROM "items" GROUP BY "type" HAVING ("COUNT(*)") = (> 1)', $built->sql);
+        self::assertSame('SELECT "type", COUNT(*) FROM "items" GROUP BY "type" HAVING "COUNT(*)" = (> 1)', $built->sql);
         self::assertSame([], $built->params);
     }
     // endregion METHOD_testBuildSelectWithGroupByAndHaving
@@ -256,7 +256,7 @@ class DefaultGrammarTest extends TestCase
             ->where(['id' => new Expr('(SELECT "id" FROM "to_delete")')]);
 
         $built = $this->grammar->buildDeleteQuery($query);
-        self::assertSame('WITH "to_delete" AS ( SELECT "id" FROM "inactive_users" ) DELETE FROM "users" WHERE ("id") = ((SELECT "id" FROM "to_delete"))', $built->sql);
+        self::assertSame('WITH "to_delete" AS ( SELECT "id" FROM "inactive_users" ) DELETE FROM "users" WHERE "id" = ((SELECT "id" FROM "to_delete"))', $built->sql);
         self::assertSame([], $built->params);
     }
     // endregion METHOD_testBuildDeleteWithCte

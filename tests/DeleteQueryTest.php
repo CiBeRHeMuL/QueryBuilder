@@ -42,7 +42,7 @@ class DeleteQueryTest extends TestCase
         $query->from(['users'])->where(['active' => false]);
 
         $built = $this->grammar->buildDeleteQuery($query);
-        self::assertSame('DELETE FROM "users" WHERE ("active") IS FALSE', $built->sql);
+        self::assertSame('DELETE FROM "users" WHERE "active" IS FALSE', $built->sql);
         self::assertSame([], $built->params);
     }
     // endregion METHOD_testAbstractGrammarBasicDelete
@@ -61,7 +61,7 @@ class DeleteQueryTest extends TestCase
         $query->with(['inactive' => new \AndrewGos\QueryBuilder\Expr\Cte\WithQuery($cteQuery)]);
 
         $built = $this->grammar->buildDeleteQuery($query);
-        self::assertSame('WITH "inactive" AS ( SELECT "id" FROM "inactive_users" ) DELETE FROM "users" WHERE ("id") = (> 100)', $built->sql);
+        self::assertSame('WITH "inactive" AS ( SELECT "id" FROM "inactive_users" ) DELETE FROM "users" WHERE "id" = (> 100)', $built->sql);
         self::assertSame([], $built->params);
     }
     // endregion METHOD_testAbstractGrammarDeleteWithCTE
@@ -78,7 +78,7 @@ class DeleteQueryTest extends TestCase
         $query->from(['users'])->using(['deleted_log'])->where(['users.id' => new \AndrewGos\QueryBuilder\Expr\Expr('deleted_log.user_id')]);
 
         $built = $grammar->buildDeleteQuery($query);
-        self::assertSame('DELETE FROM "users" USING "deleted_log" WHERE ("users"."id") = (deleted_log.user_id)', $built->sql);
+        self::assertSame('DELETE FROM "users" USING "deleted_log" WHERE "users"."id" = (deleted_log.user_id)', $built->sql);
         self::assertSame([], $built->params);
     }
     // endregion METHOD_testPgSqlUsingClause
@@ -96,7 +96,7 @@ class DeleteQueryTest extends TestCase
         $query->returning(['id']);
 
         $built = $grammar->buildDeleteQuery($query);
-        self::assertSame('DELETE FROM "users" WHERE ("active") IS FALSE RETURNING "id"', $built->sql);
+        self::assertSame('DELETE FROM "users" WHERE "active" IS FALSE RETURNING "id"', $built->sql);
         self::assertSame([], $built->params);
     }
     // endregion METHOD_testPgSqlReturning
@@ -135,7 +135,7 @@ class DeleteQueryTest extends TestCase
 
         $built = $grammar->buildDeleteQuery($query);
         self::assertMatchesRegularExpression(
-            '/^DELETE FROM "users" WHERE \("id"\) = :v\d+_\d+ RETURNING WITH \(OLD AS "old", NEW AS "new"\)\s+"id", "name"$/',
+            '/^DELETE FROM "users" WHERE "id" = :v\d+_\d+ RETURNING WITH \(OLD AS "old", NEW AS "new"\)\s+"id", "name"$/',
             $built->sql,
         );
         self::assertCount(1, $built->params);

@@ -24,7 +24,7 @@ use UnitEnum;
 // STRUCTURE: ▶ __construct ┌expression, params┐ → getExpression → ⊕ return expression → getParams → ⊕ return params → ∑ [Expr immutable node]
 
 // region CLASS_Expr [DOMAIN(7): Expression; CONCEPT(6): SimpleExpr; TECH(7): DTO]
-final class Expr implements ExprInterface
+class Expr implements ExprInterface
 {
     /**
      * @template TParam of null|bool|int|float|string|UnitEnum

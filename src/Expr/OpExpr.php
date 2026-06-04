@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace AndrewGos\QueryBuilder\Expr;
 
 use AndrewGos\QueryBuilder\Builder\ValueBuilder;
+use AndrewGos\QueryBuilder\Expr\ColumnExpr;
 use AndrewGos\QueryBuilder\Grammar\GrammarInterface;
 use AndrewGos\QueryBuilder\Query\Select\SelectQueryInterface;
 use UnitEnum;
@@ -66,8 +67,8 @@ class OpExpr extends AbstractExpr
         $left = $vb->build($this->left, $grammar);
         $right = $vb->build($this->right, $grammar);
 
-        $shouldParenthesizeLeft = $this->left instanceof ExprInterface;
-        $shouldParenthesizeRight = $this->right instanceof ExprInterface;
+        $shouldParenthesizeLeft = $this->left instanceof ExprInterface && !$this->left instanceof ColumnExpr;
+        $shouldParenthesizeRight = $this->right instanceof ExprInterface && !$this->right instanceof ColumnExpr;
 
         $expr = sprintf(
             '%s%s%s %s %s%s%s',

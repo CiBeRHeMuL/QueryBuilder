@@ -169,7 +169,7 @@ class UpdateQueryTest extends TestCase
 
         $built = $this->grammar->buildUpdateQuery($query);
         self::assertMatchesRegularExpression(
-            '/^UPDATE "users" SET \("first_name", "last_name"\) = \(SELECT "first", "last" FROM "tmp" WHERE \("id"\) = :v\d+_\d+\)$/',
+            '/^UPDATE "users" SET \("first_name", "last_name"\) = \(SELECT "first", "last" FROM "tmp" WHERE "id" = :v\d+_\d+\)$/',
             $built->sql,
         );
         self::assertCount(1, $built->params);
@@ -186,7 +186,7 @@ class UpdateQueryTest extends TestCase
         $query->table('users')->set(['status' => 'inactive'])->where(['active' => false]);
 
         $built = $this->grammar->buildUpdateQuery($query);
-        self::assertStringContainsString('WHERE ("active") IS FALSE', $built->sql);
+        self::assertStringContainsString('WHERE "active" IS FALSE', $built->sql);
     }
     // endregion METHOD_testAbstractGrammarUpdateWhere
 

@@ -6,6 +6,7 @@ namespace AndrewGos\QueryBuilder\Helper;
 
 use AndrewGos\QueryBuilder\Builder\ValueBuilder;
 use AndrewGos\QueryBuilder\Exception\QueryBuilderException;
+use AndrewGos\QueryBuilder\Expr\ColumnExpr;
 use AndrewGos\QueryBuilder\Expr\Expr;
 use AndrewGos\QueryBuilder\Expr\ExprInterface;
 use AndrewGos\QueryBuilder\Expr\InExpr;
@@ -267,11 +268,11 @@ class HExpr
                     is_array($condition),
                     $condition instanceof SelectQueryInterface,
                     $condition instanceof ValuesQueryInterface => new InExpr(
-                        new Expr($grammar->escapeIdentifierDotted($key)),
+                        new ColumnExpr($grammar->escapeIdentifierDotted($key)),
                         $condition,
                     ),
                     default => new OpExpr(
-                        new Expr($grammar->escapeIdentifierDotted($key)),
+                        new ColumnExpr($grammar->escapeIdentifierDotted($key)),
                         '=',
                         $condition,
                     ),

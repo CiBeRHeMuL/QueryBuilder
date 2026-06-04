@@ -111,7 +111,7 @@ class SelectQueryTest extends TestCase
         $query->select(['id'])->from(['users'])->where(['active' => true]);
 
         $built = $this->grammar->buildSelectQuery($query);
-        self::assertSame('SELECT "id" FROM "users" WHERE ("active") IS TRUE', $built->sql);
+        self::assertSame('SELECT "id" FROM "users" WHERE "active" IS TRUE', $built->sql);
         self::assertSame([], $built->params);
     }
     // endregion METHOD_testWhereClause

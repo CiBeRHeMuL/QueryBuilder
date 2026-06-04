@@ -211,8 +211,8 @@ class HelperTest extends TestCase
         }
         $sql1 = $result[0]->getExpression($this->grammar);
         $sql2 = $result[1]->getExpression($this->grammar);
-        self::assertMatchesRegularExpression('/^\("name"\) = :v\d+_\d+$/', $sql1);
-        self::assertMatchesRegularExpression('/^\("age"\) = :v\d+_\d+$/', $sql2);
+        self::assertMatchesRegularExpression('/^"name" = :v\d+_\d+$/', $sql1);
+        self::assertMatchesRegularExpression('/^"age" = :v\d+_\d+$/', $sql2);
     }
     // endregion METHOD_testNormalizeConditionsStringKey
 
@@ -228,7 +228,7 @@ class HelperTest extends TestCase
         self::assertCount(1, $result);
         self::assertInstanceOf(InExpr::class, $result[0]);
         $sql = $result[0]->getExpression($this->grammar);
-        self::assertMatchesRegularExpression('/^\("id"\) IN \(:v\d+_\d+, :v\d+_\d+, :v\d+_\d+\)$/', $sql);
+        self::assertMatchesRegularExpression('/^"id" IN \(:v\d+_\d+, :v\d+_\d+, :v\d+_\d+\)$/', $sql);
         $params = $result[0]->getParams();
         self::assertCount(3, $params);
         self::assertContains(1, $params);
@@ -339,7 +339,7 @@ class HelperTest extends TestCase
         self::assertCount(1, $result);
         self::assertInstanceOf(InExpr::class, $result[0]);
         $sql = $result[0]->getExpression($this->grammar);
-        self::assertSame('("id") IN (SELECT "id" FROM "users")', $sql);
+        self::assertSame('"id" IN (SELECT "id" FROM "users")', $sql);
         self::assertSame([], $result[0]->getParams());
     }
     // endregion METHOD_testNormalizeConditionsWithSelectQuery
