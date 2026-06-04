@@ -174,7 +174,7 @@ class GrammarTest extends TestCase
         $query->values([[1]]);
 
         $built = $grammar->buildMaybeReturnableQuery($query);
-        self::assertMatchesRegularExpression('/^VALUES \(\(:v\d+_\d+\)\)$/', $built->sql);
+        self::assertMatchesRegularExpression('/^VALUES \(:v\d+_\d+\)$/', $built->sql);
         self::assertCount(1, $built->params);
         self::assertContains(1, $built->params);
     }

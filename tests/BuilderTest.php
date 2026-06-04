@@ -131,7 +131,7 @@ class BuilderTest extends TestCase
         $sql = $expr->getExpression($this->grammar);
         $params = $expr->getParams();
 
-        self::assertMatchesRegularExpression('/^\(VALUES \(\(:v\d+_\d+, :v\d+_\d+\)\)\)$/', $sql);
+        self::assertMatchesRegularExpression('/^\(VALUES \(:v\d+_\d+, :v\d+_\d+\)\)$/', $sql);
         self::assertCount(2, $params);
         self::assertContains(1, $params);
         self::assertContains('Alice', $params);

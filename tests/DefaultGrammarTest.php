@@ -289,7 +289,7 @@ class DefaultGrammarTest extends TestCase
         $query->into('users', ['id', 'name'])->source($values);
 
         $built = $this->grammar->buildInsertQuery($query);
-        self::assertMatchesRegularExpression('/^INSERT INTO "users" \("id", "name"\) VALUES \(\(:v\d+_\d+, :v\d+_\d+\)\)$/', $built->sql);
+        self::assertMatchesRegularExpression('/^INSERT INTO "users" \("id", "name"\) VALUES \(:v\d+_\d+, :v\d+_\d+\)$/', $built->sql);
         self::assertCount(2, $built->params);
     }
     // endregion METHOD_testBuildInsertValues
@@ -322,7 +322,7 @@ class DefaultGrammarTest extends TestCase
         $query->values([[1, 'test']]);
 
         $built = $this->grammar->buildValuesQuery($query);
-        self::assertMatchesRegularExpression('/^VALUES \(\(:v\d+_\d+, :v\d+_\d+\)\)$/', $built->sql);
+        self::assertMatchesRegularExpression('/^VALUES \(:v\d+_\d+, :v\d+_\d+\)$/', $built->sql);
         self::assertCount(2, $built->params);
     }
     // endregion METHOD_testBuildValuesBasic
@@ -337,7 +337,7 @@ class DefaultGrammarTest extends TestCase
         $query->values([[1], [2], [3]]);
 
         $built = $this->grammar->buildValuesQuery($query);
-        self::assertMatchesRegularExpression('/^VALUES \(\(:v\d+_\d+\)\), \(\(:v\d+_\d+\)\), \(\(:v\d+_\d+\)\)$/', $built->sql);
+        self::assertMatchesRegularExpression('/^VALUES \(:v\d+_\d+\), \(:v\d+_\d+\), \(:v\d+_\d+\)$/', $built->sql);
         self::assertCount(3, $built->params);
     }
     // endregion METHOD_testBuildValuesMultipleRows
@@ -354,7 +354,7 @@ class DefaultGrammarTest extends TestCase
         $query->limit(1);
 
         $built = $this->grammar->buildValuesQuery($query);
-        self::assertMatchesRegularExpression('/^VALUES \(\(:v\d+_\d+\)\), \(\(:v\d+_\d+\)\) ORDER BY "1" ASC FETCH FIRST 1 ROW ONLY$/', $built->sql);
+        self::assertMatchesRegularExpression('/^VALUES \(:v\d+_\d+\), \(:v\d+_\d+\) ORDER BY "1" ASC FETCH FIRST 1 ROW ONLY$/', $built->sql);
         self::assertCount(2, $built->params);
     }
     // endregion METHOD_testBuildValuesWithOrderAndLimit
@@ -398,7 +398,7 @@ class DefaultGrammarTest extends TestCase
         $query->values([[1]]);
 
         $built = $this->grammar->buildMaybeReturnableQuery($query);
-        self::assertMatchesRegularExpression('/^VALUES \(\(:v\d+_\d+\)\)$/', $built->sql);
+        self::assertMatchesRegularExpression('/^VALUES \(:v\d+_\d+\)$/', $built->sql);
     }
     // endregion METHOD_testBuildMaybeReturnableValues
 
