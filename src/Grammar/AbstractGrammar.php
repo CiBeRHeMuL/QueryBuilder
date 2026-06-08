@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace AndrewGos\QueryBuilder\Grammar;
 
 use AndrewGos\QueryBuilder\Builder\ValueBuilder;
+use AndrewGos\QueryBuilder\Enum\JoinTypeEnum;
 use AndrewGos\QueryBuilder\Exception\QueryBuilderException;
 use AndrewGos\QueryBuilder\Expr\AndExpr;
 use AndrewGos\QueryBuilder\Expr\Cte\Cycle;
@@ -582,6 +583,9 @@ abstract class AbstractGrammar implements GrammarInterface
                 $conditions = $table->conditions;
                 if ($table->naturalJoin) {
                     $joinTypeStr = "NATURAL $joinTypeStr";
+                    $conditions = [];
+                }
+                if ($table->type === JoinTypeEnum::CrossJoin) {
                     $conditions = [];
                 }
 

@@ -141,21 +141,20 @@ trait JoinTrait
 
     // region METHOD_crossJoin [DOMAIN(8): Query; CONCEPT(9): Trait; TECH(8): SQL]
     /**
-     * @purpose Create a CROSS JOIN, delegating to join() with CrossJoin type.
-     * @io TTable $table, array $conditions, ?string $alias -> static
+     * @purpose Create a CROSS JOIN, delegating to join() with CrossJoin type and empty conditions.
+     * @io TTable $table, ?string $alias -> static
      * @complexity 2
      *
      * @inheritDoc
      */
     public function crossJoin(
         string|ExprInterface|SelectQueryInterface|ValuesQueryInterface|SelectTable $table,
-        array $conditions,
         ?string $alias = null,
     ): static {
         return $this->join(
             JoinTypeEnum::CrossJoin,
             $table,
-            $conditions,
+            [],
             $alias,
         );
     }

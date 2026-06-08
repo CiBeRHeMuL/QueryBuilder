@@ -285,10 +285,11 @@ class SelectQueryTest extends TestCase
     {
         $query = new SelectQuery();
         $query->select(['u.id'])->from(['users u'])
-            ->crossJoin('profiles p', []);
+            ->crossJoin('profiles p');
 
         $built = $this->grammar->buildSelectQuery($query);
         self::assertStringContainsString('CROSS JOIN', $built->sql);
+        self::assertStringNotContainsString('ON', $built->sql);
     }
     // endregion METHOD_testCrossJoin
 

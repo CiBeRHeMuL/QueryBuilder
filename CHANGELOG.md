@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+- CROSS JOIN больше не требует и не допускает условий соединения (ON clause), согласно стандарту SQL.
 - Remove excessive parentheses around column identifiers in short-syntax WHERE/HAVING/JOIN conditions (`['column' => value]`). Added `ColumnExpr` marker class to distinguish simple column identifiers from complex expressions.
 - Remove redundant double parentheses in VALUES row lists when row values are arrays (`VALUES ((1, 'Bob'))` → `VALUES (1, 'Bob')`).
 - Fix test regex patterns to expect single parentheses in VALUES output, matching corrected production code.

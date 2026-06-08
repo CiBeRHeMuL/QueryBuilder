@@ -128,19 +128,17 @@ interface JoinInterface
 
     // region METHOD_crossJoin [DOMAIN(8): Query; CONCEPT(9): Join; TECH(8): SQL]
     /**
-     * @purpose Create a CROSS JOIN with conditions.
-     * @io TTable $table, TConditions $conditions, ?string $alias -> static
+     * @purpose Create a CROSS JOIN — no ON conditions per SQL standard.
+     * @io TTable $table, ?string $alias -> static
      * @complexity 2
      *
      * @param TTable $table
-     * @param TConditions $conditions
      * @param string|null $alias
      *
      * @return static
      */
     public function crossJoin(
         string|ExprInterface|SelectQueryInterface|ValuesQueryInterface|SelectTable $table,
-        array $conditions,
         ?string $alias = null,
     ): static;
     // endregion METHOD_crossJoin
