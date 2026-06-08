@@ -84,7 +84,7 @@ class OpExpr extends AbstractExpr
             $right->getExpression($grammar),
             $shouldParenthesizeRight ? ')' : '',
         );
-        $params ??= array_merge(
+        $params = array_merge(
             $left->getParams(),
             $right->getParams(),
         );

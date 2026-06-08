@@ -512,8 +512,11 @@ class SelectQueryTest extends TestCase
         $query->select(['id'])->from(['users'])->offset(5)->limit(10);
 
         $built = $grammar->buildSelectQuery($query);
-        self::assertSame('SELECT `id` FROM `users` LIMIT 5, 10', $built->sql);
-        self::assertSame([], $built->params);
+        self::assertMatchesRegularExpression(
+            '/^SELECT `id` FROM `users` LIMIT :v\d+_\d+, :v\d+_\d+$/',
+            $built->sql,
+        );
+        self::assertCount(2, $built->params);
     }
     // endregion METHOD_testMySqlLimit
 

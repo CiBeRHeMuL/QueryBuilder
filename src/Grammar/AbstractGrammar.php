@@ -222,16 +222,14 @@ abstract class AbstractGrammar implements GrammarInterface
     }
     // endregion METHOD_buildInsertSource
 
-    // region METHOD_buildUpdateQuery [DOMAIN(9): Grammar; CONCEPT(9): UPDATE; TECH(9): Pipeline]
+    // region METHOD_validateUpdateQuery [DOMAIN(9): Grammar; CONCEPT(9): UPDATE; TECH(9): Validation]
     /**
-     * @purpose Build a complete UPDATE query (ANSI SQL): WITH + UPDATE + table + SET + WHERE. Validates that table is set.
-     * @param UpdateQueryInterface $query The UPDATE query DTO with table, set, and optional where/with.
-     * @return BuiltQuery The compiled SQL string and bound parameters.
-     * @throws QueryBuilderException if table is empty
-     * @complexity 5
-     * STRUCTURE: ▶ ┌WITH, 'UPDATE', table, SET, WHERE┐ → ● HExpr::merge → ◇ empty table? → ✗ throw → ∑ BuiltQuery
+     * @purpose Validate that the UPDATE query has a table and at least one SET clause.
+     * @param UpdateQueryInterface $query The UPDATE query DTO.
+     * @throws QueryBuilderException if table is empty or no SET clauses.
+     * @complexity 2
      */
-    public function buildUpdateQuery(UpdateQueryInterface $query): BuiltQuery
+    protected function validateUpdateQuery(UpdateQueryInterface $query): void
     {
         if ($query->table === '') {
             throw new QueryBuilderException('UPDATE query requires a table name. Call table() before building.');
@@ -240,6 +238,21 @@ abstract class AbstractGrammar implements GrammarInterface
         if (!$query->set) {
             throw new QueryBuilderException('UPDATE query requires at least one SET clause. Call set() before building.');
         }
+    }
+    // endregion METHOD_validateUpdateQuery
+
+    // region METHOD_buildUpdateQuery [DOMAIN(9): Grammar; CONCEPT(9): UPDATE; TECH(9): Pipeline]
+    /**
+     * @purpose Build a complete UPDATE query (ANSI SQL): WITH + UPDATE + table + SET + WHERE. Validates that table is set.
+     * @param UpdateQueryInterface $query The UPDATE query DTO with table, set, and optional where/with.
+     * @return BuiltQuery The compiled SQL string and bound parameters.
+     * @throws QueryBuilderException if table is empty
+     * @complexity 5
+     * STRUCTURE: ▶ validateUpdateQuery → ┌WITH, 'UPDATE', table, SET, WHERE┐ → ● HExpr::merge → ∑ BuiltQuery
+     */
+    public function buildUpdateQuery(UpdateQueryInterface $query): BuiltQuery
+    {
+        $this->validateUpdateQuery($query);
 
         $parts = [
             $this->buildWithClause($query),

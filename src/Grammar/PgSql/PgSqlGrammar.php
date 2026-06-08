@@ -85,13 +85,7 @@ class PgSqlGrammar extends AbstractGrammar
      */
     public function buildUpdateQuery(UpdateQueryInterface $query): BuiltQuery
     {
-        if ($query->table === '') {
-            throw new QueryBuilderException('UPDATE query requires a table name. Call table() before building.');
-        }
-
-        if (!$query->set) {
-            throw new QueryBuilderException('UPDATE query requires at least one SET clause. Call set() before building.');
-        }
+        $this->validateUpdateQuery($query);
 
         $parts = [
             $this->buildWithClause($query),

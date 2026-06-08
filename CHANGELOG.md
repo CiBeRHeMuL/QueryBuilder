@@ -10,6 +10,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 
 - Fix `AbstractGrammar::buildDistinctClause` passing `bool` instead of `'DISTINCT'` string to `Expr` constructor, causing broken SQL in all non-PgSql dialects.
+- Fix `MySqlGrammar::buildLimitClause` crashing on `ExprInterface` offset/limit values by using `ValueBuilder` for safe expression rendering.
+- Fix `andWhere` and `andHaving` overwriting conditions with identical string keys via `array_merge` — now wrap in `AndExpr` to preserve all conditions.
+- Fix `BoolOpsExpr::doBuild` crashing on empty conditions array with explicit `QueryBuilderException::emptyBoolExpression()`.
+- Fix duplicate validation logic in `buildUpdateQuery` by extracting `validateUpdateQuery()` into `AbstractGrammar`.
+- Fix `OpExpr::doBuild` using `$params ??=` instead of explicit `$params =` assignment.
+- Fix `HExpr::testSelectExpr` duplicating `testExpr` by delegating the call.
 - Fix `PgSqlSelectQuery::addDistinctOn` using assignment instead of `array_merge`, causing column replacement instead of appending.
 - CROSS JOIN больше не требует и не допускает условий соединения (ON clause), согласно стандарту SQL.
 - Remove redundant parentheses around column identifiers in short-syntax JOIN conditions (`['column' => value]`). String values in join condition arrays are now wrapped in `ColumnExpr` instead of `Expr`, preventing unnecessary parenthesization in `OpExpr::doBuild()`.

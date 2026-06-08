@@ -99,18 +99,7 @@ class HExpr
      */
     public static function testSelectExpr(mixed $value): void
     {
-        $isExpr = is_null($value)
-            || is_bool($value)
-            || is_int($value)
-            || is_float($value)
-            || is_string($value)
-            || $value instanceof ExprInterface
-            || $value instanceof SelectQueryInterface
-            || $value instanceof ValuesQueryInterface
-            || $value instanceof UnitEnum
-            || is_array($value) && array_walk($value, self::testSelectExpr(...));
-
-        $isExpr === false && throw QueryBuilderException::valueIsNotSelectExpr($value);
+        self::testExpr($value);
     }
     // endregion METHOD_testSelectExpr
 

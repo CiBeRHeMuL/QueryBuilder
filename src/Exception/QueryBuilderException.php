@@ -282,6 +282,20 @@ class QueryBuilderException extends RuntimeException
     }
     // endregion METHOD_valueIsNotReturnableQuery
 
+    // region METHOD_emptyBoolExpression [DOMAIN(9): Exception; CONCEPT(7): Validation; TECH(8): BoolOps]
+    /**
+     * @purpose Create exception when a boolean expression (AND/OR) has no conditions.
+     * @io -> self
+     * @complexity 1
+     */
+    public static function emptyBoolExpression(): self
+    {
+        return new self(
+            'AND/OR expression requires at least one condition. Ensure where()/having() is called before orWhere()/orHaving().',
+        );
+    }
+    // endregion METHOD_emptyBoolExpression
+
     // region METHOD_returnableQueryCannotBeBuilt [DOMAIN(9): Exception; CONCEPT(8): Validation; TECH(8): Grammar]
     /**
      * @purpose Create exception when a returnable query cannot be built by the given grammar.

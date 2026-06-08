@@ -53,6 +53,7 @@ trait WithTrait
     // region METHOD_addWith [DOMAIN(8): Query; CONCEPT(9): Trait; TECH(8): SQL]
     /**
      * @purpose Merge additional CTE definitions into existing ones.
+     * @warning При совпадении алиаса с существующим CTE происходит перезапись.
      * @io array $with, bool $recursive -> static
      * @complexity 2
      *

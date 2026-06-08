@@ -175,10 +175,10 @@ class SelectQuery implements SelectQueryInterface
      */
     public function andHaving(array|ExprInterface $conditions): static
     {
-        $this->having = array_merge(
-            $this->having,
-            $conditions instanceof ExprInterface ? [$conditions] : $conditions,
-        );
+        $this->having = [
+            new AndExpr($this->having),
+            new AndExpr($conditions instanceof ExprInterface ? [$conditions] : $conditions),
+        ];
 
         return $this;
     }

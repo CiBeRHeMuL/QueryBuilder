@@ -276,7 +276,7 @@ class UpdateQueryTest extends TestCase
 
         $built = $grammar->buildUpdateQuery($query);
         self::assertStringContainsString('ORDER BY `id` DESC', $built->sql);
-        self::assertStringContainsString('LIMIT 0, 10', $built->sql);
+        self::assertMatchesRegularExpression('/LIMIT :v\d+_\d+, :v\d+_\d+/', $built->sql);
     }
     // endregion METHOD_testMySqlOrderByLimit
 
@@ -310,7 +310,7 @@ class UpdateQueryTest extends TestCase
         $query->set(['name' => 'Alice']);
 
         $this->expectException(QueryBuilderException::class);
-        $this->expectExceptionMessage('UPDATE query requires at least one table');
+        $this->expectExceptionMessage('UPDATE query requires a table name');
         $grammar->buildUpdateQuery($query);
     }
     // endregion METHOD_testMySqlEmptyTablesThrows

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace AndrewGos\QueryBuilder\Grammar\MySql;
 
+use AndrewGos\QueryBuilder\Builder\ValueBuilder;
 use AndrewGos\QueryBuilder\Exception\QueryBuilderException;
 use AndrewGos\QueryBuilder\Expr\Expr;
 use AndrewGos\QueryBuilder\Expr\ExprInterface;
@@ -146,6 +147,8 @@ class MySqlGrammar extends AbstractGrammar
      */
     public function buildUpdateQuery(UpdateQueryInterface $query): BuiltQuery
     {
+        $this->validateUpdateQuery($query);
+
         if ($query instanceof MySqlUpdateQuery) {
             $tables = $query->tables;
         } else {
@@ -154,10 +157,6 @@ class MySqlGrammar extends AbstractGrammar
 
         if (!$tables) {
             throw new QueryBuilderException('UPDATE query requires at least one table. Call table() before building.');
-        }
-
-        if (!$query->set) {
-            throw new QueryBuilderException('UPDATE query requires at least one SET clause. Call set() before building.');
         }
 
         $parts = [
@@ -230,15 +229,23 @@ class MySqlGrammar extends AbstractGrammar
 
     // region METHOD_buildLimitClause [DOMAIN(8): Grammar; TECH(8): Limit]
     /**
-     * @purpose Build MySQL-specific LIMIT clause using offset, count syntax.
+     * @purpose Build MySQL-specific LIMIT clause using offset, count syntax. Handles ExprInterface for offset and limit.
      */
     protected function buildLimitClause(LimitInterface $query): ?ExprInterface
     {
         if ($query->offset || $query->limit !== null) {
-            $limit = $query->limit ?? '18446744073709551615';
-            $offset = $query->offset;
+            $params = [];
+            $vb = new ValueBuilder();
 
-            return new Expr("LIMIT $offset, $limit");
+            $limitValue = $query->limit ?? '18446744073709551615';
+
+            $offsetExpr = $vb->build($query->offset, $this);
+            $limitExpr = $vb->build($limitValue, $this);
+
+            return new Expr(
+                'LIMIT ' . $offsetExpr->getExpression($this) . ', ' . $limitExpr->getExpression($this),
+                HExpr::mergeParams($offsetExpr->getParams(), $limitExpr->getParams()),
+            );
         }
         return null;
     }

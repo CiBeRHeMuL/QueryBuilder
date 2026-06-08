@@ -62,10 +62,10 @@ trait WhereTrait
      */
     public function andWhere(array|ExprInterface $conditions): static
     {
-        $this->where = array_merge(
-            $this->where,
-            $conditions instanceof ExprInterface ? [$conditions] : $conditions,
-        );
+        $this->where = [
+            new AndExpr($this->where),
+            new AndExpr($conditions instanceof ExprInterface ? [$conditions] : $conditions),
+        ];
 
         return $this;
     }
