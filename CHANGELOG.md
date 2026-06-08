@@ -13,6 +13,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Remove redundant double parentheses in VALUES row lists when row values are arrays (`VALUES ((1, 'Bob'))` → `VALUES (1, 'Bob')`).
 - Fix test regex patterns to expect single parentheses in VALUES output, matching corrected production code.
 - Fix `OpExpr` to convert `!=`/`<> NULL/TRUE/FALSE` to `IS NOT NULL/TRUE/FALSE` instead of generating invalid SQL.
+- Fix `buildWithClause` to separate multiple CTEs with a comma (`, `) instead of a space (` `), correcting generated SQL for multi-CTE queries.
 
 ### Added
 

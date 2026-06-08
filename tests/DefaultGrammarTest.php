@@ -476,6 +476,34 @@ class DefaultGrammarTest extends TestCase
     }
     // endregion METHOD_testPgSqlInsertQueryWorksWithoutPgSqlFeatures
 
+    // region METHOD_testBuildSelectWithMultipleCtes [DOMAIN(9): Testing; CONCEPT(9): Select; TECH(9): CTE]
+    /**
+     * @purpose Verify DefaultGrammar builds SELECT with multiple CTEs separated by comma.
+     */
+    public function testBuildSelectWithMultipleCtes(): void
+    {
+        $cte1 = new SelectQuery();
+        $cte1->select(['id'])->from(['users']);
+
+        $cte2 = new SelectQuery();
+        $cte2->select(['name'])->from(['roles']);
+
+        $query = new SelectQuery();
+        $query->with(['active_users' => new WithQuery($cte1)])
+            ->addWith(['role_names' => new WithQuery($cte2)])
+            ->select(['id', 'name'])
+            ->from(['active_users'])
+            ->innerJoin('role_names', ['active_users.role_id' => new Expr('"role_names"."id"')]);
+
+        $built = $this->grammar->buildSelectQuery($query);
+        self::assertSame(
+            'WITH "active_users" AS ( SELECT "id" FROM "users" ), "role_names" AS ( SELECT "name" FROM "roles" ) SELECT "id", "name" FROM "active_users" INNER JOIN "role_names" ON "active_users"."role_id" = ("role_names"."id")',
+            $built->sql,
+        );
+        self::assertSame([], $built->params);
+    }
+    // endregion METHOD_testBuildSelectWithMultipleCtes
+
     // region METHOD_testGrammarInterfaceCompliance [DOMAIN(9): Testing; CONCEPT(9): Contract; TECH(9): Interface]
     /**
      * @purpose Verify DefaultGrammar implements GrammarInterface correctly.

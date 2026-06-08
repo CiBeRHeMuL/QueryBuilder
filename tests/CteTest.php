@@ -9,6 +9,7 @@ use AndrewGos\QueryBuilder\Expr\Cte\Cycle;
 use AndrewGos\QueryBuilder\Expr\Cte\PgSql\PgSqlWithQuery;
 use AndrewGos\QueryBuilder\Expr\Cte\Search;
 use AndrewGos\QueryBuilder\Expr\Cte\WithQuery;
+use AndrewGos\QueryBuilder\Expr\Expr;
 use AndrewGos\QueryBuilder\Expr\Literal;
 use AndrewGos\QueryBuilder\Grammar\PgSql\PgSqlGrammar;
 use AndrewGos\QueryBuilder\Query\Select\SelectQuery;
@@ -282,5 +283,35 @@ class CteTest extends TestCase
         self::assertCount(2, $built->params);
     }
     // endregion METHOD_testPgSqlWithCycleInGrammar
+
+    // region METHOD_testPgSqlWithMultipleCtesMixedMaterialization [DOMAIN(9): Testing; CONCEPT(9): CTE; TECH(9): MultipleCtes]
+    /**
+     * @purpose Verify PgSqlGrammar builds multiple CTEs with mixed materialized/not-materialized flags.
+     */
+    public function testPgSqlWithMultipleCtesMixedMaterialization(): void
+    {
+        $grammar = new PgSqlGrammar();
+
+        $cte1 = new SelectQuery();
+        $cte1->select(['id'])->from(['users']);
+
+        $cte2 = new SelectQuery();
+        $cte2->select(['name'])->from(['roles']);
+
+        $mainQuery = new SelectQuery();
+        $mainQuery->with(['active_users' => new PgSqlWithQuery($cte1, materialized: true)])
+            ->addWith(['role_names' => new PgSqlWithQuery($cte2, materialized: false)])
+            ->select(['id', 'name'])
+            ->from(['active_users'])
+            ->innerJoin('role_names', ['active_users.role_id' => new Expr('"role_names"."id"')]);
+
+        $built = $grammar->buildSelectQuery($mainQuery);
+        self::assertSame(
+            'WITH "active_users" AS MATERIALIZED ( SELECT "id" FROM "users" ), "role_names" AS NOT MATERIALIZED ( SELECT "name" FROM "roles" ) SELECT "id", "name" FROM "active_users" INNER JOIN "role_names" ON "active_users"."role_id" = ("role_names"."id")',
+            $built->sql,
+        );
+        self::assertSame([], $built->params);
+    }
+    // endregion METHOD_testPgSqlWithMultipleCtesMixedMaterialization
 }
 // endregion CLASS_CteTest

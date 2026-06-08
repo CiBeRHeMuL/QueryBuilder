@@ -348,7 +348,7 @@ abstract class AbstractGrammar implements GrammarInterface
                 $parts[] = $this->buildWithQuery($alias, $withQuery);
             }
 
-            $expr = HExpr::mergeExpressionParts($parts, $this, ' ');
+            $expr = HExpr::mergeExpressionParts($parts, $this, ', ');
 
             return new Expr(
                 'WITH '
