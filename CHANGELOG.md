@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.1.0] - 2026-06-08
+
 ### Added
 
 - Shorthand CTE syntax: `MaybeReturnableQueryInterface` (SelectQuery, ValuesQuery) can now be passed directly to `with()` / `addWith()` without manual `new WithQuery(...)` wrapping. Normalization is handled automatically in `WithTrait`.
@@ -64,6 +66,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Fix test regex patterns to expect single parentheses in VALUES output, matching corrected production code.
 - Remove excessive parentheses around column identifiers in short-syntax WHERE/HAVING conditions (`['column' => value]`). Added `ColumnExpr` marker class to distinguish simple column identifiers from complex expressions.
 
-[Unreleased]: https://github.com/CiBeRHeMuL/QueryBuilder/compare/v1.0.1...HEAD
+[Unreleased]: https://github.com/CiBeRHeMuL/QueryBuilder/compare/v1.1.0...HEAD
+[1.1.0]: https://github.com/CiBeRHeMuL/QueryBuilder/compare/v1.0.1...v1.1.0
 [1.0.1]: https://github.com/CiBeRHeMuL/QueryBuilder/compare/v1.0.0...v1.0.1
 [1.0.0]: https://github.com/CiBeRHeMuL/QueryBuilder/releases/tag/v1.0.0
