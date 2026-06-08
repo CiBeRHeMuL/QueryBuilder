@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- Shorthand CTE syntax: `MaybeReturnableQueryInterface` (SelectQuery, ValuesQuery) can now be passed directly to `with()` / `addWith()` without manual `new WithQuery(...)` wrapping. Normalization is handled automatically in `WithTrait`.
+
 ## [1.0.1] - 2026-06-08
 
 ### Fixed

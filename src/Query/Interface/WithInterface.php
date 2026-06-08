@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace AndrewGos\QueryBuilder\Query\Interface;
 
 use AndrewGos\QueryBuilder\Expr\Cte\WithQuery;
+use AndrewGos\QueryBuilder\Query\Interface\MaybeReturnableQueryInterface;
 
 // region MODULE_CONTRACT [DOMAIN(8): Query; CONCEPT(9): CTE; TECH(8): SQL]
 /**
@@ -42,7 +43,7 @@ interface WithInterface
      * @io array<string, WithQuery> $with, bool $recursive -> static
      * @complexity 2
      *
-     * @param array<string, WithQuery> $with
+     * @param array<string, WithQuery|MaybeReturnableQueryInterface> $with
      * @param bool $recursive
      *
      * @return static
@@ -53,10 +54,10 @@ interface WithInterface
     // region METHOD_addWith [DOMAIN(8): Query; CONCEPT(9): CTE; TECH(8): SQL]
     /**
      * @purpose Merge additional CTE definitions into existing ones.
-     * @io array<string, WithQuery> $with, bool $recursive -> static
+     * @io array<string, WithQuery|MaybeReturnableQueryInterface> $with, bool $recursive -> static
      * @complexity 2
      *
-     * @param array<string, WithQuery> $with
+     * @param array<string, WithQuery|MaybeReturnableQueryInterface> $with
      * @param bool $recursive
      *
      * @return static

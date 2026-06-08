@@ -535,6 +535,25 @@ class SelectQueryTest extends TestCase
     }
     // endregion METHOD_testMySqlPartitionSet
 
+    // region METHOD_testWithShorthand [DOMAIN(9): Testing; CONCEPT(9): Select; TECH(9): CTE]
+    /**
+     * @purpose Verify shorthand form of WITH: passing SelectQuery directly instead of WithQuery wrapper.
+     */
+    public function testWithShorthand(): void
+    {
+        $cteQuery = new SelectQuery();
+        $cteQuery->select(['id', 'name'])->from(['users']);
+
+        $mainQuery = new SelectQuery();
+        $mainQuery->select(['id'])->from(['active_users']);
+        $mainQuery->with(['active_users' => $cteQuery]);
+
+        $built = $this->grammar->buildSelectQuery($mainQuery);
+        self::assertSame('WITH "active_users" AS ( SELECT "id", "name" FROM "users" ) SELECT "id" FROM "active_users"', $built->sql);
+        self::assertSame([], $built->params);
+    }
+    // endregion METHOD_testWithShorthand
+
     // region METHOD_testWithClause [DOMAIN(9): Testing; CONCEPT(9): Select; TECH(9): CTE]
     /**
      * @purpose Verify WITH clause for CTE.

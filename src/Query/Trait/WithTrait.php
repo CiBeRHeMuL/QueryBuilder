@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace AndrewGos\QueryBuilder\Query\Trait;
 
+use AndrewGos\QueryBuilder\Expr\Cte\WithQuery;
+use AndrewGos\QueryBuilder\Query\Interface\MaybeReturnableQueryInterface;
+
 // region MODULE_CONTRACT [DOMAIN(8): Query; CONCEPT(9): Trait; TECH(8): SQL]
 /**
  * @moduleContract
@@ -28,7 +31,7 @@ namespace AndrewGos\QueryBuilder\Query\Trait;
 trait WithTrait
 {
     /**
-     * @inheritDoc
+     * @var array<string, WithQuery>
      */
     protected(set) array $with = [];
     protected(set) bool $withRecursive = false;
@@ -44,7 +47,13 @@ trait WithTrait
     public function with(array $with, bool $recursive = false): static
     {
         $this->withRecursive = $recursive;
-        $this->with = $with;
+        $this->with = array_map(
+            static fn(mixed $value): mixed
+                => (!($value instanceof WithQuery) && $value instanceof MaybeReturnableQueryInterface)
+                    ? new WithQuery($value)
+                    : $value,
+            $with,
+        );
 
         return $this;
     }
@@ -62,7 +71,16 @@ trait WithTrait
     public function addWith(array $with, bool $recursive = false): static
     {
         $this->withRecursive = $recursive;
-        $this->with = array_merge($this->with, $with);
+        $this->with = array_merge(
+            $this->with,
+            array_map(
+                static fn(mixed $value): mixed
+                    => (!($value instanceof WithQuery) && $value instanceof MaybeReturnableQueryInterface)
+                        ? new WithQuery($value)
+                        : $value,
+                $with,
+            ),
+        );
 
         return $this;
     }
