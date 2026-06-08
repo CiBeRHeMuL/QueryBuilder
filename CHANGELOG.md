@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.0.1] - 2026-06-08
+
 ### Fixed
 
 - Fix `AbstractGrammar::buildDistinctClause` passing `bool` instead of `'DISTINCT'` string to `Expr` constructor, causing broken SQL in all non-PgSql dialects.
@@ -19,20 +21,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Fix `PgSqlSelectQuery::addDistinctOn` using assignment instead of `array_merge`, causing column replacement instead of appending.
 - CROSS JOIN больше не требует и не допускает условий соединения (ON clause), согласно стандарту SQL.
 - Remove redundant parentheses around column identifiers in short-syntax JOIN conditions (`['column' => value]`). String values in join condition arrays are now wrapped in `ColumnExpr` instead of `Expr`, preventing unnecessary parenthesization in `OpExpr::doBuild()`.
-- Remove excessive parentheses around column identifiers in short-syntax WHERE/HAVING conditions (`['column' => value]`). Added `ColumnExpr` marker class to distinguish simple column identifiers from complex expressions.
-- Remove redundant double parentheses in VALUES row lists when row values are arrays (`VALUES ((1, 'Bob'))` → `VALUES (1, 'Bob')`).
-- Fix test regex patterns to expect single parentheses in VALUES output, matching corrected production code.
-- Fix `OpExpr` to convert `!=`/`<> NULL/TRUE/FALSE` to `IS NOT NULL/TRUE/FALSE` instead of generating invalid SQL.
 - Fix `buildWithClause` to separate multiple CTEs with a comma (`, `) instead of a space (` `), correcting generated SQL for multi-CTE queries.
 
 ### Added
 
 - Comprehensive DISTINCT/DISTINCT ON tests: 7 new test methods covering AbstractGrammar, PgSqlGrammar, multiple columns, Expr objects, `distinct(false)` clearing invariant, `addDistinctOn` appending, and toggle on/off.
-- Documentation: README, quick-start, dialects, expressions, query-types guides.
-- CI pipeline: GitHub Actions with PHPUnit and PHP-CS-Fixer.
-- `.gitattributes` export-ignore configuration for distribution builds.
-- MERGE query support (in development).
-- Additional SQL dialect implementations (in development).
 
 ## [1.0.0] - 2026-06-04
 
@@ -54,6 +47,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Named parameter binding with automatic parameter ID generation.
 - Fluent trait-based architecture: `WithTrait`, `FromTrait`, `WhereTrait`, `JoinTrait`, `OperationsTrait`, `OrderByTrait`, `LimitTrait`.
 - Support for PHP 8.5+ with property hooks and promoted properties.
+- Documentation: README, quick-start, dialects, expressions, query-types guides.
+- CI pipeline: GitHub Actions with PHPUnit and PHP-CS-Fixer.
+- `.gitattributes` export-ignore configuration for distribution builds.
+- MERGE query support (in development).
+- Additional SQL dialect implementations (in development).
 
-[Unreleased]: https://github.com/CiBeRHeMuL/QueryBuilder/compare/v1.0.0...HEAD
+### Fixed
+
+- Fix `OpExpr` to convert `!=`/`<> NULL/TRUE/FALSE` to `IS NOT NULL/TRUE/FALSE` instead of generating invalid SQL.
+- Remove redundant double parentheses in VALUES row lists when row values are arrays (`VALUES ((1, 'Bob'))` → `VALUES (1, 'Bob')`).
+- Fix test regex patterns to expect single parentheses in VALUES output, matching corrected production code.
+- Remove excessive parentheses around column identifiers in short-syntax WHERE/HAVING conditions (`['column' => value]`). Added `ColumnExpr` marker class to distinguish simple column identifiers from complex expressions.
+
+[Unreleased]: https://github.com/CiBeRHeMuL/QueryBuilder/compare/v1.0.1...HEAD
+[1.0.1]: https://github.com/CiBeRHeMuL/QueryBuilder/compare/v1.0.0...v1.0.1
 [1.0.0]: https://github.com/CiBeRHeMuL/QueryBuilder/releases/tag/v1.0.0
