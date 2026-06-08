@@ -303,11 +303,11 @@ class CteTest extends TestCase
             ->addWith(['role_names' => new PgSqlWithQuery($cte2, materialized: false)])
             ->select(['id', 'name'])
             ->from(['active_users'])
-            ->innerJoin('role_names', ['active_users.role_id' => new Expr('"role_names"."id"')]);
+            ->innerJoin('role_names', ['active_users.role_id' => 'role_names.id']);
 
         $built = $grammar->buildSelectQuery($mainQuery);
         self::assertSame(
-            'WITH "active_users" AS MATERIALIZED ( SELECT "id" FROM "users" ), "role_names" AS NOT MATERIALIZED ( SELECT "name" FROM "roles" ) SELECT "id", "name" FROM "active_users" INNER JOIN "role_names" ON "active_users"."role_id" = ("role_names"."id")',
+            'WITH "active_users" AS MATERIALIZED ( SELECT "id" FROM "users" ), "role_names" AS NOT MATERIALIZED ( SELECT "name" FROM "roles" ) SELECT "id", "name" FROM "active_users" INNER JOIN "role_names" ON "active_users"."role_id" = "role_names"."id"',
             $built->sql,
         );
         self::assertSame([], $built->params);

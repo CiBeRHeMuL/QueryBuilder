@@ -147,10 +147,10 @@ class DefaultGrammarTest extends TestCase
         $query = new SelectQuery();
         $query->select(['u.id', 'p.name'])
             ->from(['users u'])
-            ->innerJoin('profiles p', ['u.id' => new Expr('"p"."user_id"')]);
+            ->innerJoin('profiles p', ['u.id' => 'p.user_id']);
 
         $built = $this->grammar->buildSelectQuery($query);
-        self::assertSame('SELECT "u"."id", "p"."name" FROM "users u" INNER JOIN "profiles p" ON "u"."id" = ("p"."user_id")', $built->sql);
+        self::assertSame('SELECT "u"."id", "p"."name" FROM "users u" INNER JOIN "profiles p" ON "u"."id" = "p"."user_id"', $built->sql);
         self::assertSame([], $built->params);
     }
     // endregion METHOD_testBuildSelectWithJoin
@@ -493,11 +493,11 @@ class DefaultGrammarTest extends TestCase
             ->addWith(['role_names' => new WithQuery($cte2)])
             ->select(['id', 'name'])
             ->from(['active_users'])
-            ->innerJoin('role_names', ['active_users.role_id' => new Expr('"role_names"."id"')]);
+            ->innerJoin('role_names', ['active_users.role_id' => 'role_names.id']);
 
         $built = $this->grammar->buildSelectQuery($query);
         self::assertSame(
-            'WITH "active_users" AS ( SELECT "id" FROM "users" ), "role_names" AS ( SELECT "name" FROM "roles" ) SELECT "id", "name" FROM "active_users" INNER JOIN "role_names" ON "active_users"."role_id" = ("role_names"."id")',
+            'WITH "active_users" AS ( SELECT "id" FROM "users" ), "role_names" AS ( SELECT "name" FROM "roles" ) SELECT "id", "name" FROM "active_users" INNER JOIN "role_names" ON "active_users"."role_id" = "role_names"."id"',
             $built->sql,
         );
         self::assertSame([], $built->params);

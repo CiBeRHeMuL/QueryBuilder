@@ -8,6 +8,7 @@ use AndrewGos\QueryBuilder\Builder\ValueBuilder;
 use AndrewGos\QueryBuilder\Enum\JoinTypeEnum;
 use AndrewGos\QueryBuilder\Exception\QueryBuilderException;
 use AndrewGos\QueryBuilder\Expr\AndExpr;
+use AndrewGos\QueryBuilder\Expr\ColumnExpr;
 use AndrewGos\QueryBuilder\Expr\Cte\Cycle;
 use AndrewGos\QueryBuilder\Expr\Cte\Search;
 use AndrewGos\QueryBuilder\Expr\Cte\WithQuery;
@@ -597,7 +598,7 @@ abstract class AbstractGrammar implements GrammarInterface
                         // If a value is string, then it's a column name, so we MUST escape it before building conditions
                         // because we use a common conditions builder for all conditions
                         if (is_string($value)) {
-                            $value = new Expr($this->escapeIdentifierDotted($value));
+                            $value = new ColumnExpr($this->escapeIdentifierDotted($value));
                         }
                     }
                     $condition = $this->buildConditions($conditions);
