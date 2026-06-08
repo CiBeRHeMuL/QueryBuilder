@@ -524,7 +524,7 @@ abstract class AbstractGrammar implements GrammarInterface
      */
     protected function buildDistinctClause(SelectQueryInterface $query): ?ExprInterface
     {
-        return $query->distinct ? new Expr($query->distinct) : null;
+        return $query->distinct ? new Expr('DISTINCT') : null;
     }
     // endregion METHOD_buildDistinctClause
 

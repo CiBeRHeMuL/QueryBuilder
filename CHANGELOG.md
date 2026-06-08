@@ -9,6 +9,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+- Fix `AbstractGrammar::buildDistinctClause` passing `bool` instead of `'DISTINCT'` string to `Expr` constructor, causing broken SQL in all non-PgSql dialects.
+- Fix `PgSqlSelectQuery::addDistinctOn` using assignment instead of `array_merge`, causing column replacement instead of appending.
 - CROSS JOIN больше не требует и не допускает условий соединения (ON clause), согласно стандарту SQL.
 - Remove redundant parentheses around column identifiers in short-syntax JOIN conditions (`['column' => value]`). String values in join condition arrays are now wrapped in `ColumnExpr` instead of `Expr`, preventing unnecessary parenthesization in `OpExpr::doBuild()`.
 - Remove excessive parentheses around column identifiers in short-syntax WHERE/HAVING conditions (`['column' => value]`). Added `ColumnExpr` marker class to distinguish simple column identifiers from complex expressions.
@@ -19,6 +21,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- Comprehensive DISTINCT/DISTINCT ON tests: 7 new test methods covering AbstractGrammar, PgSqlGrammar, multiple columns, Expr objects, `distinct(false)` clearing invariant, `addDistinctOn` appending, and toggle on/off.
 - Documentation: README, quick-start, dialects, expressions, query-types guides.
 - CI pipeline: GitHub Actions with PHPUnit and PHP-CS-Fixer.
 - `.gitattributes` export-ignore configuration for distribution builds.

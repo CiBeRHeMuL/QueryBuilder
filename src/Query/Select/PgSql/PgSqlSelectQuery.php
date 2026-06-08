@@ -87,7 +87,7 @@ class PgSqlSelectQuery extends SelectQuery
      */
     public function addDistinctOn(array $columns): static
     {
-        $this->distinctOn = $columns;
+        $this->distinctOn = array_merge($this->distinctOn, $columns);
 
         return $this;
     }

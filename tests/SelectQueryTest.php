@@ -745,5 +745,140 @@ class SelectQueryTest extends TestCase
         self::assertSame([], $built->params);
     }
     // endregion METHOD_testMySqlAllHints
+
+    // region METHOD_testDistinctViaAbstractGrammar [DOMAIN(9): Testing; CONCEPT(9): Select; TECH(9): Distinct]
+    /**
+     * @purpose Verify AbstractGrammar builds SELECT DISTINCT with correct SQL string (regression test for Expr(bool) bug).
+     */
+    public function testDistinctViaAbstractGrammar(): void
+    {
+        $query = new SelectQuery();
+        $query->select(['col'])->from(['t'])->distinct();
+
+        $built = $this->grammar->buildSelectQuery($query);
+        self::assertSame('SELECT DISTINCT "col" FROM "t"', $built->sql);
+        self::assertSame([], $built->params);
+    }
+    // endregion METHOD_testDistinctViaAbstractGrammar
+
+    // region METHOD_testDistinctViaPgSqlGrammar [DOMAIN(9): Testing; CONCEPT(9): Select; TECH(9): Distinct]
+    /**
+     * @purpose Verify PgSqlGrammar builds SELECT DISTINCT correctly.
+     */
+    public function testDistinctViaPgSqlGrammar(): void
+    {
+        $grammar = new PgSqlGrammar();
+
+        $query = new PgSqlSelectQuery();
+        $query->select(['col'])->from(['t'])->distinct();
+
+        $built = $grammar->buildSelectQuery($query);
+        self::assertSame('SELECT DISTINCT "col" FROM "t"', $built->sql);
+        self::assertSame([], $built->params);
+    }
+    // endregion METHOD_testDistinctViaPgSqlGrammar
+
+    // region METHOD_testPgSqlDistinctOnMultipleColumns [DOMAIN(9): Testing; CONCEPT(9): Select; TECH(9): PgSqlDistinctOn]
+    /**
+     * @purpose Verify PgSqlGrammar builds DISTINCT ON with multiple columns.
+     */
+    public function testPgSqlDistinctOnMultipleColumns(): void
+    {
+        $grammar = new PgSqlGrammar();
+
+        $query = new PgSqlSelectQuery();
+        $query->select(['id', 'name'])->from(['users'])->distinctOn(['dept_id', 'name']);
+
+        $built = $grammar->buildSelectQuery($query);
+        self::assertSame('SELECT DISTINCT ON ("dept_id", "name") "id", "name" FROM "users"', $built->sql);
+        self::assertSame([], $built->params);
+    }
+    // endregion METHOD_testPgSqlDistinctOnMultipleColumns
+
+    // region METHOD_testPgSqlDistinctOnWithExpr [DOMAIN(9): Testing; CONCEPT(9): Select; TECH(9): PgSqlDistinctOn]
+    /**
+     * @purpose Verify PgSqlGrammar builds DISTINCT ON with Expr objects (raw expressions without escaping).
+     */
+    public function testPgSqlDistinctOnWithExpr(): void
+    {
+        $grammar = new PgSqlGrammar();
+
+        $query = new PgSqlSelectQuery();
+        $query->select(['id', 'name'])->from(['users'])->distinctOn([new Expr('LOWER(name)')]);
+
+        $built = $grammar->buildSelectQuery($query);
+        self::assertSame('SELECT DISTINCT ON (LOWER(name)) "id", "name" FROM "users"', $built->sql);
+        self::assertSame([], $built->params);
+    }
+    // endregion METHOD_testPgSqlDistinctOnWithExpr
+
+    // region METHOD_testDistinctFalseClearsDistinctOn [DOMAIN(9): Testing; CONCEPT(9): Select; TECH(9): DistinctOnClearing]
+    /**
+     * @purpose Verify setting distinct(false) clears distinctOn and removes DISTINCT from SQL.
+     */
+    public function testDistinctFalseClearsDistinctOn(): void
+    {
+        $query = new PgSqlSelectQuery();
+        $query->select(['id', 'name'])->from(['users'])->distinctOn(['name']);
+        self::assertTrue($query->distinct);
+
+        $query->distinct(false);
+        self::assertFalse($query->distinct);
+        self::assertSame([], $query->distinctOn);
+
+        $grammar = new PgSqlGrammar();
+        $built = $grammar->buildSelectQuery($query);
+        self::assertSame('SELECT "id", "name" FROM "users"', $built->sql);
+        self::assertSame([], $built->params);
+    }
+    // endregion METHOD_testDistinctFalseClearsDistinctOn
+
+    // region METHOD_testPgSqlAddDistinctOn [DOMAIN(9): Testing; CONCEPT(9): Select; TECH(9): PgSqlAddDistinctOn]
+    /**
+     * @purpose Verify addDistinctOn appends columns (regression test for assignment-vs-merge bug).
+     */
+    public function testPgSqlAddDistinctOn(): void
+    {
+        $grammar = new PgSqlGrammar();
+
+        $query = new PgSqlSelectQuery();
+        $query->select(['id', 'name', 'dept_id'])->from(['users'])
+            ->distinctOn(['a'])
+            ->addDistinctOn(['b']);
+
+        $built = $grammar->buildSelectQuery($query);
+        self::assertSame('SELECT DISTINCT ON ("a", "b") "id", "name", "dept_id" FROM "users"', $built->sql);
+        self::assertSame([], $built->params);
+    }
+    // endregion METHOD_testPgSqlAddDistinctOn
+
+    // region METHOD_testDistinctToggleOnOff [DOMAIN(9): Testing; CONCEPT(9): Select; TECH(9): DistinctToggle]
+    /**
+     * @purpose Verify toggling distinct flag on/off and the invariant that distinct=false clears distinctOn.
+     */
+    public function testDistinctToggleOnOff(): void
+    {
+        $query = new PgSqlSelectQuery();
+        $query->select(['id'])->from(['users']);
+
+        self::assertFalse($query->distinct);
+
+        $query->distinct();
+        self::assertTrue($query->distinct);
+
+        $query->distinctOn(['col']);
+        self::assertTrue($query->distinct);
+        self::assertSame(['col'], $query->distinctOn);
+
+        $query->distinct(false);
+        self::assertFalse($query->distinct);
+        self::assertSame([], $query->distinctOn);
+
+        $grammar = new PgSqlGrammar();
+        $built = $grammar->buildSelectQuery($query);
+        self::assertSame('SELECT "id" FROM "users"', $built->sql);
+        self::assertSame([], $built->params);
+    }
+    // endregion METHOD_testDistinctToggleOnOff
 }
 // endregion CLASS_SelectQueryTest
