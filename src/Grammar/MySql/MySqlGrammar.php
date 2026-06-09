@@ -18,6 +18,7 @@ use AndrewGos\QueryBuilder\Query\Insert\InsertQueryInterface;
 use AndrewGos\QueryBuilder\Query\Insert\MySql\MySqlInsertQuery;
 use AndrewGos\QueryBuilder\Query\Interface\LimitInterface;
 use AndrewGos\QueryBuilder\Query\Interface\MySql\PartitionInterface;
+use AndrewGos\QueryBuilder\Query\Merge\MergeQueryInterface;
 use AndrewGos\QueryBuilder\Query\Select\MySql\MySqlSelectQuery;
 use AndrewGos\QueryBuilder\Query\Select\SelectQueryInterface;
 use AndrewGos\QueryBuilder\Query\Update\MySql\MySqlUpdateQuery;
@@ -55,6 +56,7 @@ class MySqlGrammar extends AbstractGrammar
             return $identifier;
         }
         $identifier = trim($identifier, " \n\r\t\v\0`");
+
         return '`' . strtr($identifier, ['`' => '``']) . '`';
     }
     // endregion METHOD_escapeIdentifier
@@ -140,10 +142,13 @@ class MySqlGrammar extends AbstractGrammar
     // region METHOD_buildUpdateQuery [DOMAIN(8): Grammar; TECH(8): Update]
     /**
      * @purpose Build MySQL-specific UPDATE query: WITH + UPDATE + [LOW_PRIORITY|IGNORE] + tables (inline, comma-separated, no FROM) + SET + WHERE + ORDER BY + LIMIT + PARTITION.
-     * @param UpdateQueryInterface $query The UPDATE DTO; MySqlUpdateQuery adds LOW_PRIORITY, IGNORE, ORDER BY, LIMIT, PARTITION.
-     * @return BuiltQuery The compiled MySQL SQL string and bound parameters.
+     *
+     * @param UpdateQueryInterface $query the UPDATE DTO; MySqlUpdateQuery adds LOW_PRIORITY, IGNORE, ORDER BY, LIMIT, PARTITION
+     *
+     * @return BuiltQuery the compiled MySQL SQL string and bound parameters
+     *
      * @throws QueryBuilderException if no tables are set.
-     * STRUCTURE: ▶ ┌WITH, 'UPDATE', modifiers, tables, SET, WHERE, ORDER BY, LIMIT, PARTITION┐ → ● HExpr::merge → ∑ BuiltQuery
+     *                               STRUCTURE: ▶ ┌WITH, 'UPDATE', modifiers, tables, SET, WHERE, ORDER BY, LIMIT, PARTITION┐ → ● HExpr::merge → ∑ BuiltQuery
      */
     public function buildUpdateQuery(UpdateQueryInterface $query): BuiltQuery
     {
@@ -200,6 +205,23 @@ class MySqlGrammar extends AbstractGrammar
     }
     // endregion METHOD_buildUpdateQuery
 
+    // region METHOD_buildMergeQuery [DOMAIN(8): Grammar; TECH(8): Merge]
+    /**
+     * @purpose MySQL does not support MERGE query. Throws QueryBuilderException.
+     * @complexity 1
+     *
+     * @param MergeQueryInterface $query the MERGE query DTO
+     *
+     * @return never
+     *
+     * @throws QueryBuilderException always
+     */
+    public function buildMergeQuery(MergeQueryInterface $query): BuiltQuery
+    {
+        throw new QueryBuilderException('MERGE is not supported in MySQL');
+    }
+    // endregion METHOD_buildMergeQuery
+
     // region METHOD_buildSelectClause [DOMAIN(8): Grammar; TECH(8): Select]
     /**
      * @purpose Build MySQL-specific SELECT clause with HIGH_PRIORITY, STRAIGHT_JOIN, SQL_* hints.
@@ -221,9 +243,9 @@ class MySqlGrammar extends AbstractGrammar
             ];
 
             return HExpr::mergeExpressionParts($parts, $this, ' ');
-        } else {
-            return parent::buildSelectClause($query);
         }
+
+        return parent::buildSelectClause($query);
     }
     // endregion METHOD_buildSelectClause
 
@@ -247,6 +269,7 @@ class MySqlGrammar extends AbstractGrammar
                 HExpr::mergeParams($offsetExpr->getParams(), $limitExpr->getParams()),
             );
         }
+
         return null;
     }
     // endregion METHOD_buildLimitClause
@@ -292,6 +315,7 @@ class MySqlGrammar extends AbstractGrammar
                 . ')',
             );
         }
+
         return null;
     }
     // endregion METHOD_buildPartition

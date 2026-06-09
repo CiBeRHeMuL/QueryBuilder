@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-/**
+/*
  * @moduleContract
  * @purpose Define the Query namespace contracts for SQL query building (SELECT, INSERT, UPDATE, DELETE, VALUES).
  * @scope Sub-namespace partitioning: Delete, Insert, Interface, Select, Trait, Update, Values.
@@ -12,6 +12,7 @@ declare(strict_types=1);
  * Delete/ => DELETE query construction
  * Insert/ => INSERT query construction
  *  Interface/ => Clause interfaces (FROM, JOIN, WHERE, ORDER BY, LIMIT, WITH, Operations, Partition, Returning)
+ * Merge/ => MERGE query construction (ANSI + PgSQL)
  * Select/ => SELECT query construction
  * Trait/ => Interface implementations as reusable traits
  * Update/ => UPDATE query construction

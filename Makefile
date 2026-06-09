@@ -11,4 +11,4 @@ cs-fix:
 	$(PHP) $(PWD)/vendor/bin/php-cs-fixer fix --config "$(PWD)/.php-cs-fixer.dist.php"
 
 cs-check:
-	$(PHP) $(PWD)/vendor/bin/php-cs-fixer check --config "$(PWD)/.php-cs-fixer.dist.php"
+	$(PHP) $(PWD)/vendor/bin/php-cs-fixer check --config "$(PWD)/.php-cs-fixer.dist.php" --diff --verbose

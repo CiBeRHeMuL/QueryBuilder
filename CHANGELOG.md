@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- MERGE query support (ANSI SQL:2008 + PostgreSQL extensions: RETURNING, DO NOTHING). New interface: `MergeQueryInterface`. New classes: `MergeQuery`, `PgSqlMergeQuery`, `MergeActionUpdate`, `MergeActionDelete`, `MergeActionInsert`, `PgSqlMergeActionDoNothing`, `MergeWhenMatchedClause`, `MergeWhenNotMatchedClause`, `MergeWhenNotMatchedBySourceClause`.
+
 ## [1.1.0] - 2026-06-08
 
 ### Added

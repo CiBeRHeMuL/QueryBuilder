@@ -46,7 +46,8 @@ print_r($built->params);  // []
 | MySQL: HIGH_PRIORITY, STRAIGHT_JOIN, SQL_* hints, PARTITION | ✅ |
 | PostgreSQL: DISTINCT ON, ONLY modifier, RETURNING, ON CONFLICT | ✅ |
 | Named parameter binding with auto-generated IDs | ✅ |
-| MERGE query | 🚧 In development |
+| MERGE query | ✅ |
+| PostgreSQL: MERGE RETURNING, DO NOTHING | ✅ |
 | Additional SQL dialects | 🚧 In development |
 
 ---
@@ -54,7 +55,7 @@ print_r($built->params);  // []
 ## Documentation
 
 - [Quick Start Guide](docs/quick-start.md) — Installation, first query, architecture overview.
-- [Query Types](docs/query-types.md) — Full reference for SELECT, INSERT, UPDATE, DELETE, VALUES.
+- [Query Types](docs/query-types.md) — Full reference for SELECT, INSERT, UPDATE, DELETE, VALUES, MERGE.
 - [Expressions](docs/expressions.md) — Expression system, ValueBuilder, conditions, windows, CTEs.
 - [Dialects](docs/dialects.md) — Default/ANSI, MySQL, and PostgreSQL grammar specifics.
 
@@ -77,7 +78,6 @@ composer require andrew-gos/query-builder
 
 ## Roadmap
 
-- **v1.1.0** — MERGE query support
 - **v1.2.0** — Additional SQL dialects (SQLite, MariaDB)
 
 ---

@@ -14,8 +14,12 @@ use AndrewGos\QueryBuilder\Expr\Cte\Search;
 use AndrewGos\QueryBuilder\Expr\Cte\WithQuery;
 use AndrewGos\QueryBuilder\Expr\Expr;
 use AndrewGos\QueryBuilder\Expr\ExprInterface;
+use AndrewGos\QueryBuilder\Expr\Merge\MergeWhenMatchedClause;
+use AndrewGos\QueryBuilder\Expr\Merge\MergeWhenNotMatchedBySourceClause;
+use AndrewGos\QueryBuilder\Expr\Merge\MergeWhenNotMatchedClause;
 use AndrewGos\QueryBuilder\Expr\SetOperation\SetOperation;
 use AndrewGos\QueryBuilder\Expr\Table\SelectTable;
+use AndrewGos\QueryBuilder\Expr\Update\SetClause;
 use AndrewGos\QueryBuilder\Helper\HExpr;
 use AndrewGos\QueryBuilder\Query\Delete\DeleteQueryInterface;
 use AndrewGos\QueryBuilder\Query\Insert\InsertQueryInterface;
@@ -27,7 +31,7 @@ use AndrewGos\QueryBuilder\Query\Interface\OperationsInterface;
 use AndrewGos\QueryBuilder\Query\Interface\OrderByInterface;
 use AndrewGos\QueryBuilder\Query\Interface\WhereInterface;
 use AndrewGos\QueryBuilder\Query\Interface\WithInterface;
-use AndrewGos\QueryBuilder\Expr\Update\SetClause;
+use AndrewGos\QueryBuilder\Query\Merge\MergeQueryInterface;
 use AndrewGos\QueryBuilder\Query\Select\SelectQueryInterface;
 use AndrewGos\QueryBuilder\Query\Update\UpdateQueryInterface;
 use AndrewGos\QueryBuilder\Query\Values\ValuesQueryInterface;
@@ -43,11 +47,14 @@ use AndrewGos\QueryBuilder\Query\Values\ValuesQueryInterface;
  * - Each build* method corresponds to exactly one SQL clause or sub-clause.
  * - TODO stub methods (buildInsertQuery, buildUpdateQuery) throw RuntimeException when called.
  * - All escaping methods are public and can be used standalone.
+ *
  * @rationale
  * Q: Why is this abstract rather than an interface with default methods?
  * A: Template Method pattern — concrete grammars override specific clause builders (e.g., buildSelectClause) while reusing the pipeline.
+ *
  * @modulemap
  * AbstractGrammar => Abstract SQL grammar base class
+ *
  * @usecases
  * - [AbstractGrammar]: Grammar implementation → Build SELECT query → BuiltQuery
  */
@@ -62,6 +69,7 @@ abstract class AbstractGrammar implements GrammarInterface
      * @purpose Build a complete SELECT query by assembling all clauses (WITH, SELECT, FROM, JOIN, WHERE, GROUP BY, HAVING, WINDOW, SET ops, ORDER BY, LIMIT, LOCK) in order.
      * @io SelectQueryInterface -> BuiltQuery
      * @complexity 7
+     *
      * @using HExpr::mergeExpressionParts
      * STRUCTURE: ▶ ┌WITH, SELECT, FROM, JOIN, WHERE, GROUP BY, HAVING, WINDOW, OPS, ORDER BY, LIMIT, LOCK┐ → ● HExpr::merge(parts, ' ') → ∑ BuiltQuery(expr, params)
      */
@@ -122,8 +130,9 @@ abstract class AbstractGrammar implements GrammarInterface
      * @purpose Dispatch a MaybeReturnableQueryInterface to the appropriate build method (SELECT or VALUES) or throw if not returnable.
      * @io MaybeReturnableQueryInterface -> BuiltQuery
      * @complexity 4
+     *
      * @throws QueryBuilderException
-     * STRUCTURE: ◇ isReturnable()? → N: ✗ throw | Y: ◇ instanceof Select → buildSelectQuery | ◇ instanceof Values → buildValuesQuery | ✗ throw
+     *                               STRUCTURE: ◇ isReturnable()? → N: ✗ throw | Y: ◇ instanceof Select → buildSelectQuery | ◇ instanceof Values → buildValuesQuery | ✗ throw
      */
     public function buildMaybeReturnableQuery(MaybeReturnableQueryInterface $query): BuiltQuery
     {
@@ -169,6 +178,7 @@ abstract class AbstractGrammar implements GrammarInterface
      * @purpose Build a complete INSERT query: [WITH] INSERT INTO table [(columns)] {VALUES|SELECT|DEFAULT VALUES}.
      * @io InsertQueryInterface -> BuiltQuery
      * @complexity 5
+     *
      * @using HExpr::mergeExpressionParts, buildWithClause, buildInsertSource
      * STRUCTURE: ▶ ┌WITH, 'INSERT INTO', table, alias, columns, source┐ → ● HExpr::merge(parts, ' ') → ∑ BuiltQuery
      */
@@ -213,11 +223,13 @@ abstract class AbstractGrammar implements GrammarInterface
 
         if ($query->source instanceof ValuesQueryInterface) {
             $bq = $this->buildValuesQuery($query->source);
+
             return new Expr($bq->sql, $bq->params);
         }
 
         // SelectQueryInterface
         $bq = $this->buildSelectQuery($query->source);
+
         return new Expr('(' . $bq->sql . ')', $bq->params);
     }
     // endregion METHOD_buildInsertSource
@@ -225,9 +237,11 @@ abstract class AbstractGrammar implements GrammarInterface
     // region METHOD_validateUpdateQuery [DOMAIN(9): Grammar; CONCEPT(9): UPDATE; TECH(9): Validation]
     /**
      * @purpose Validate that the UPDATE query has a table and at least one SET clause.
-     * @param UpdateQueryInterface $query The UPDATE query DTO.
-     * @throws QueryBuilderException if table is empty or no SET clauses.
      * @complexity 2
+     *
+     * @param UpdateQueryInterface $query the UPDATE query DTO
+     *
+     * @throws QueryBuilderException if table is empty or no SET clauses
      */
     protected function validateUpdateQuery(UpdateQueryInterface $query): void
     {
@@ -244,11 +258,14 @@ abstract class AbstractGrammar implements GrammarInterface
     // region METHOD_buildUpdateQuery [DOMAIN(9): Grammar; CONCEPT(9): UPDATE; TECH(9): Pipeline]
     /**
      * @purpose Build a complete UPDATE query (ANSI SQL): WITH + UPDATE + table + SET + WHERE. Validates that table is set.
-     * @param UpdateQueryInterface $query The UPDATE query DTO with table, set, and optional where/with.
-     * @return BuiltQuery The compiled SQL string and bound parameters.
-     * @throws QueryBuilderException if table is empty
      * @complexity 5
      * STRUCTURE: ▶ validateUpdateQuery → ┌WITH, 'UPDATE', table, SET, WHERE┐ → ● HExpr::merge → ∑ BuiltQuery
+     *
+     * @param UpdateQueryInterface $query the UPDATE query DTO with table, set, and optional where/with
+     *
+     * @return BuiltQuery the compiled SQL string and bound parameters
+     *
+     * @throws QueryBuilderException if table is empty
      */
     public function buildUpdateQuery(UpdateQueryInterface $query): BuiltQuery
     {
@@ -274,10 +291,12 @@ abstract class AbstractGrammar implements GrammarInterface
     // region METHOD_buildSetClause [DOMAIN(9): Grammar; CONCEPT(9): SET; TECH(9): ClauseBuilder]
     /**
      * @purpose Build the SET clause from an array of SetClause objects. Delegates rendering to SetClause::getSql(), adds "SET " prefix.
-     * @param SetClause[] $set Array of SetClause objects.
-     * @return ExprInterface The rendered SET clause including "SET " prefix, with merged params.
      * @complexity 4
      * STRUCTURE: ┌set array┐ → ○ foreach $clause->getSql($this) → ⊕ parts, merge params → ∑ 'SET ' + implode(', ')
+     *
+     * @param SetClause[] $set array of SetClause objects
+     *
+     * @return ExprInterface the rendered SET clause including "SET " prefix, with merged params
      */
     public function buildSetClause(array $set): ExprInterface
     {
@@ -294,6 +313,249 @@ abstract class AbstractGrammar implements GrammarInterface
     }
     // endregion METHOD_buildSetClause
 
+    // region METHOD_validateMergeQuery [DOMAIN(9): Grammar; CONCEPT(9): MERGE; TECH(9): Validation]
+    /**
+     * @purpose Validate that the MERGE query has a target table, source, and ON condition.
+     * @complexity 2
+     *
+     * @param MergeQueryInterface $query the MERGE query DTO
+     *
+     * @throws QueryBuilderException if target table, source, or ON condition is missing
+     */
+    protected function validateMergeQuery(MergeQueryInterface $query): void
+    {
+        if ($query->into === '') {
+            throw new QueryBuilderException('MERGE query requires a target table. Call into() before building.');
+        }
+
+        if (!isset($query->using)) {
+            throw new QueryBuilderException('MERGE query requires a source. Call using() before building.');
+        }
+    }
+    // endregion METHOD_validateMergeQuery
+
+    // region METHOD_buildMergeParts [DOMAIN(9): Grammar; CONCEPT(9): MERGE; TECH(9): Parts]
+    /**
+     * @purpose Build all ANSI MERGE parts as an array for composition. Subclasses (e.g., PgSqlGrammar) can extend this array.
+     * @complexity 4
+     *
+     * @param MergeQueryInterface $query the MERGE query DTO
+     *
+     * @return array<string|BuiltQuery|ExprInterface|null>
+     */
+    protected function buildMergeParts(MergeQueryInterface $query): array
+    {
+        return [
+            $this->buildWithClause($query),
+            $this->buildMergeIntoClause($query),
+            $this->buildMergeUsingClause($query),
+            $this->buildMergeOnClause($query),
+            $this->buildMergeWhenMatchedClauses($query),
+            $this->buildMergeWhenNotMatchedClauses($query),
+            $this->buildMergeBySourceClauses($query),
+        ];
+    }
+    // endregion METHOD_buildMergeParts
+
+    // region METHOD_buildMergeQuery [DOMAIN(9): Grammar; CONCEPT(9): MERGE; TECH(9): ANSI_Pipeline]
+    /**
+     * @purpose Build a complete ANSI MERGE (SQL:2008) query: WITH + MERGE INTO + USING + ON + WHEN MATCHED + WHEN NOT MATCHED + WHEN NOT MATCHED BY SOURCE.
+     * @complexity 7
+     * STRUCTURE: ▶ validateMergeQuery → buildMergeParts → ● HExpr::merge → ∑ BuiltQuery
+     *
+     * @param MergeQueryInterface $query the MERGE query DTO
+     *
+     * @return BuiltQuery the compiled SQL string and bound parameters
+     *
+     * @throws QueryBuilderException if required fields are missing
+     */
+    public function buildMergeQuery(MergeQueryInterface $query): BuiltQuery
+    {
+        $this->validateMergeQuery($query);
+
+        $parts = $this->buildMergeParts($query);
+        $expr = HExpr::mergeExpressionParts($parts, $this, ' ');
+
+        return new BuiltQuery(
+            $expr->getExpression($this),
+            $expr->getParams(),
+        );
+    }
+    // endregion METHOD_buildMergeQuery
+
+    // region METHOD_buildMergeIntoClause [DOMAIN(9): Grammar; CONCEPT(9): MERGE; TECH(9): Into]
+    /**
+     * @purpose Build the MERGE INTO clause: "MERGE INTO target [AS alias]".
+     * @complexity 3
+     * STRUCTURE: ┌'MERGE INTO', escapeIdentifierDotted(table), AS alias┐ → ● merge
+     *
+     * @param MergeQueryInterface $query the MERGE query DTO
+     *
+     * @return ExprInterface the rendered clause
+     */
+    protected function buildMergeIntoClause(MergeQueryInterface $query): ExprInterface
+    {
+        $parts = [
+            'MERGE INTO',
+            $this->escapeIdentifierDotted($query->into),
+        ];
+
+        if ($query->alias !== null) {
+            $parts[] = 'AS ' . $this->escapeTableAlias($query->alias);
+        }
+
+        return HExpr::mergeExpressionParts($parts, $this, ' ');
+    }
+    // endregion METHOD_buildMergeIntoClause
+
+    // region METHOD_buildMergeUsingClause [DOMAIN(9): Grammar; CONCEPT(9): MERGE; TECH(9): Using]
+    /**
+     * @purpose Build the USING clause: "USING source [AS alias]". Handles table names, subqueries, and raw expressions.
+     * @complexity 5
+     * STRUCTURE: ┌'USING', ◇ SelectTable → escapeIdentifier | ◇ SelectQuery|ValuesQuery → '(' + build + ')' | ◇ ExprInterface → getExpression┐ + AS alias → ● merge
+     *
+     * @param MergeQueryInterface $query the MERGE query DTO
+     *
+     * @return ExprInterface the rendered clause
+     */
+    protected function buildMergeUsingClause(MergeQueryInterface $query): ExprInterface
+    {
+        $parts = ['USING'];
+        $params = [];
+        $source = $query->using;
+
+        if ($source instanceof SelectTable) {
+            $parts[] = $this->escapeIdentifierDotted($source->name);
+        } elseif ($source instanceof SelectQueryInterface) {
+            $bq = $this->buildSelectQuery($source);
+            $parts[] = '(' . $bq->sql . ')';
+            $params = HExpr::mergeParams($params, $bq->params);
+        } elseif ($source instanceof ValuesQueryInterface) {
+            $bq = $this->buildValuesQuery($source);
+            $parts[] = '(' . $bq->sql . ')';
+            $params = HExpr::mergeParams($params, $bq->params);
+        } else {
+            $parts[] = $source->getExpression($this);
+            $params = HExpr::mergeParams($params, $source->getParams());
+        }
+
+        if ($query->usingAlias !== null) {
+            $parts[] = 'AS ' . $this->escapeTableAlias($query->usingAlias);
+        }
+
+        $expr = HExpr::mergeExpressionParts($parts, $this, ' ');
+
+        return new Expr($expr->getExpression($this), $params);
+    }
+    // endregion METHOD_buildMergeUsingClause
+
+    // region METHOD_buildMergeOnClause [DOMAIN(9): Grammar; CONCEPT(9): MERGE; TECH(9): On]
+    /**
+     * @purpose Build the ON condition clause: "ON condition". String values are treated as column references (same as JOIN conditions).
+     * @complexity 4
+     * STRUCTURE: ┌ON conditions┐ → ○ pre-process string values → ColumnExpr → buildConditions → ∑ 'ON ' + expr
+     *
+     * @param MergeQueryInterface $query the MERGE query DTO
+     *
+     * @return ExprInterface the rendered clause
+     */
+    protected function buildMergeOnClause(MergeQueryInterface $query): ExprInterface
+    {
+        $conditions = $query->on;
+
+        foreach ($conditions as $key => &$value) {
+            if (is_string($value)) {
+                $value = new ColumnExpr($this->escapeIdentifierDotted($value));
+            }
+        }
+
+        $expr = $this->buildConditions($conditions);
+
+        return new Expr(
+            'ON ' . $expr->getExpression($this),
+            $expr->getParams(),
+        );
+    }
+    // endregion METHOD_buildMergeOnClause
+
+    // region METHOD_buildMergeWhenMatchedClauses [DOMAIN(9): Grammar; CONCEPT(9): MERGE; TECH(9): WhenMatched]
+    /**
+     * @purpose Build all WHEN MATCHED THEN clauses by delegating to each clause's getSql().
+     * @complexity 3
+     *
+     * @param MergeQueryInterface $query the MERGE query DTO
+     *
+     * @return ExprInterface|null the rendered clauses or null if none
+     */
+    protected function buildMergeWhenMatchedClauses(MergeQueryInterface $query): ?ExprInterface
+    {
+        if (!$query->whenMatchedClauses) {
+            return null;
+        }
+
+        return HExpr::mergeExpressionParts(
+            array_map(
+                fn(MergeWhenMatchedClause $c) => $c->getSql($this),
+                $query->whenMatchedClauses,
+            ),
+            $this,
+            ' ',
+        );
+    }
+    // endregion METHOD_buildMergeWhenMatchedClauses
+
+    // region METHOD_buildMergeWhenNotMatchedClauses [DOMAIN(9): Grammar; CONCEPT(9): MERGE; TECH(9): WhenNotMatched]
+    /**
+     * @purpose Build all WHEN NOT MATCHED (BY TARGET) THEN clauses by delegating to each clause's getSql().
+     * @complexity 3
+     *
+     * @param MergeQueryInterface $query the MERGE query DTO
+     *
+     * @return ExprInterface|null the rendered clauses or null if none
+     */
+    protected function buildMergeWhenNotMatchedClauses(MergeQueryInterface $query): ?ExprInterface
+    {
+        if (!$query->whenNotMatchedClauses) {
+            return null;
+        }
+
+        return HExpr::mergeExpressionParts(
+            array_map(
+                fn(MergeWhenNotMatchedClause $c) => $c->getSql($this),
+                $query->whenNotMatchedClauses,
+            ),
+            $this,
+            ' ',
+        );
+    }
+    // endregion METHOD_buildMergeWhenNotMatchedClauses
+
+    // region METHOD_buildMergeBySourceClauses [DOMAIN(9): Grammar; CONCEPT(9): MERGE; TECH(9): BySource]
+    /**
+     * @purpose Build all WHEN NOT MATCHED BY SOURCE THEN clauses by delegating to each clause's getSql().
+     * @complexity 3
+     *
+     * @param MergeQueryInterface $query the MERGE query DTO
+     *
+     * @return ExprInterface|null the rendered clauses or null if none
+     */
+    protected function buildMergeBySourceClauses(MergeQueryInterface $query): ?ExprInterface
+    {
+        if (!$query->whenNotMatchedBySourceClauses) {
+            return null;
+        }
+
+        return HExpr::mergeExpressionParts(
+            array_map(
+                fn(MergeWhenNotMatchedBySourceClause $c) => $c->getSql($this),
+                $query->whenNotMatchedBySourceClauses,
+            ),
+            $this,
+            ' ',
+        );
+    }
+    // endregion METHOD_buildMergeBySourceClauses
+
     // region METHOD_escapeIdentifierDotted [DOMAIN(8): Grammar; CONCEPT(8): Escaping; TECH(8): Identifier]
     /**
      * @purpose Escape a dotted identifier (e.g., `table.column`) by splitting on `.` and escaping each part.
@@ -304,6 +566,7 @@ abstract class AbstractGrammar implements GrammarInterface
     public function escapeIdentifierDotted(string $identifier): string
     {
         $parts = explode('.', $identifier);
+
         return implode(
             '.',
             array_map(
@@ -372,6 +635,7 @@ abstract class AbstractGrammar implements GrammarInterface
                 $expr->getParams(),
             );
         }
+
         return null;
     }
     // endregion METHOD_buildWithClause
@@ -551,11 +815,13 @@ abstract class AbstractGrammar implements GrammarInterface
     {
         if ($query->from) {
             $expr = $this->buildTables($query->from);
+
             return new Expr(
                 'FROM ' . $expr->getExpression($this),
                 $expr->getParams(),
             );
         }
+
         return null;
     }
     // endregion METHOD_buildFromClause
@@ -633,6 +899,7 @@ abstract class AbstractGrammar implements GrammarInterface
                 $params,
             );
         }
+
         return null;
     }
     // endregion METHOD_buildJoinClause
@@ -654,6 +921,7 @@ abstract class AbstractGrammar implements GrammarInterface
                 $expr->getParams(),
             );
         }
+
         return null;
     }
     // endregion METHOD_buildWhereClause
@@ -762,6 +1030,7 @@ abstract class AbstractGrammar implements GrammarInterface
                 $params,
             );
         }
+
         return null;
     }
     // endregion METHOD_buildGroupByClause
@@ -782,6 +1051,7 @@ abstract class AbstractGrammar implements GrammarInterface
                 $expr->getParams(),
             );
         }
+
         return null;
     }
     // endregion METHOD_buildHavingClause
@@ -812,6 +1082,7 @@ abstract class AbstractGrammar implements GrammarInterface
                 $params,
             );
         }
+
         return null;
     }
     // endregion METHOD_buildWindowsClause
@@ -835,6 +1106,7 @@ abstract class AbstractGrammar implements GrammarInterface
                 ' ',
             );
         }
+
         return null;
     }
     // endregion METHOD_buildOperationClauses
@@ -896,6 +1168,7 @@ abstract class AbstractGrammar implements GrammarInterface
                 $params,
             );
         }
+
         return null;
     }
     // endregion METHOD_buildOrderByClause
@@ -948,6 +1221,7 @@ abstract class AbstractGrammar implements GrammarInterface
                 $params,
             );
         }
+
         return null;
     }
     // endregion METHOD_buildLimitClause
@@ -965,6 +1239,7 @@ abstract class AbstractGrammar implements GrammarInterface
                 'FOR ' . $query->lockMode->getSql($this),
             );
         }
+
         return null;
     }
     // endregion METHOD_buildLockClause

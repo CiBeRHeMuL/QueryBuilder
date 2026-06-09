@@ -6,13 +6,13 @@ namespace AndrewGos\QueryBuilder\Grammar\PgSql;
 
 use AndrewGos\QueryBuilder\Builder\ValueBuilder;
 use AndrewGos\QueryBuilder\Exception\QueryBuilderException;
+use AndrewGos\QueryBuilder\Expr\Cte\PgSql\PgSqlWithQuery;
+use AndrewGos\QueryBuilder\Expr\Cte\WithQuery;
 use AndrewGos\QueryBuilder\Expr\Expr;
 use AndrewGos\QueryBuilder\Expr\ExprInterface;
 use AndrewGos\QueryBuilder\Expr\Lock\LockModeInterface;
 use AndrewGos\QueryBuilder\Expr\Table\PgSql\PgSqlSelectTable;
 use AndrewGos\QueryBuilder\Expr\Table\SelectTable;
-use AndrewGos\QueryBuilder\Expr\Cte\PgSql\PgSqlWithQuery;
-use AndrewGos\QueryBuilder\Expr\Cte\WithQuery;
 use AndrewGos\QueryBuilder\Grammar\AbstractGrammar;
 use AndrewGos\QueryBuilder\Grammar\BuiltQuery;
 use AndrewGos\QueryBuilder\Helper\HExpr;
@@ -24,6 +24,7 @@ use AndrewGos\QueryBuilder\Query\Interface\FromInterface;
 use AndrewGos\QueryBuilder\Query\Interface\JoinInterface;
 use AndrewGos\QueryBuilder\Query\Interface\MaybeReturnableQueryInterface;
 use AndrewGos\QueryBuilder\Query\Interface\PgSql\ReturningInterface;
+use AndrewGos\QueryBuilder\Query\Merge\MergeQueryInterface;
 use AndrewGos\QueryBuilder\Query\Select\PgSql\PgSqlSelectQuery;
 use AndrewGos\QueryBuilder\Query\Select\SelectQueryInterface;
 use AndrewGos\QueryBuilder\Query\Update\UpdateQueryInterface;
@@ -78,10 +79,13 @@ class PgSqlGrammar extends AbstractGrammar
     // region METHOD_buildUpdateQuery [DOMAIN(8): Grammar; TECH(8): Update]
     /**
      * @purpose Build PostgreSQL-specific UPDATE query: WITH + UPDATE + table + SET + [FROM] + [JOIN] + WHERE + [RETURNING].
-     * @param UpdateQueryInterface $query The UPDATE DTO; PgSqlUpdateQuery adds FROM, JOIN, RETURNING via interfaces.
-     * @return BuiltQuery The compiled PostgreSQL SQL string and bound parameters.
+     *
+     * @param UpdateQueryInterface $query the UPDATE DTO; PgSqlUpdateQuery adds FROM, JOIN, RETURNING via interfaces
+     *
+     * @return BuiltQuery the compiled PostgreSQL SQL string and bound parameters
+     *
      * @throws QueryBuilderException if table is empty.
-     * STRUCTURE: ▶ ┌WITH, 'UPDATE', table, SET, FROM, JOIN, WHERE, RETURNING┐ → ● HExpr::merge → ∑ BuiltQuery
+     *                               STRUCTURE: ▶ ┌WITH, 'UPDATE', table, SET, FROM, JOIN, WHERE, RETURNING┐ → ● HExpr::merge → ∑ BuiltQuery
      */
     public function buildUpdateQuery(UpdateQueryInterface $query): BuiltQuery
     {
@@ -189,6 +193,7 @@ class PgSqlGrammar extends AbstractGrammar
     // region METHOD_buildMaybeReturnableQuery [DOMAIN(8): Grammar; TECH(8): QueryBuilding]
     /**
      * @purpose Route returnable query types (SELECT, VALUES, DELETE) to their respective builder methods.
+     *
      * @throws QueryBuilderException
      */
     public function buildMaybeReturnableQuery(MaybeReturnableQueryInterface $query): BuiltQuery
@@ -217,6 +222,7 @@ class PgSqlGrammar extends AbstractGrammar
             return $identifier;
         }
         $identifier = trim($identifier, " \n\r\t\v\0\"");
+
         return '"' . strtr($identifier, ['"' => '""']) . '"';
     }
     // endregion METHOD_escapeIdentifier
@@ -236,6 +242,7 @@ class PgSqlGrammar extends AbstractGrammar
                 );
             }
         }
+
         return parent::buildWithQueryModifiers($alias, $withQuery);
     }
     // endregion METHOD_buildWithQueryModifiers
@@ -254,6 +261,7 @@ class PgSqlGrammar extends AbstractGrammar
 
             return HExpr::mergeExpressionParts($parts, $this, ' ');
         }
+
         return null;
     }
     // endregion METHOD_buildDistinctClause
@@ -285,6 +293,7 @@ class PgSqlGrammar extends AbstractGrammar
                 $params,
             );
         }
+
         return null;
     }
     // endregion METHOD_buildDistinctOn
@@ -300,6 +309,7 @@ class PgSqlGrammar extends AbstractGrammar
         if ($table instanceof PgSqlSelectTable && $table->only) {
             return new Expr('ONLY');
         }
+
         return parent::buildBeforeTableModifiers($alias, $table);
     }
     // endregion METHOD_buildBeforeTableModifiers
@@ -327,6 +337,37 @@ class PgSqlGrammar extends AbstractGrammar
     }
     // endregion METHOD_buildLockClause
 
+    // region METHOD_buildMergeQuery [DOMAIN(8): Grammar; TECH(8): Merge]
+    /**
+     * @purpose Build a PostgreSQL MERGE query. Extends ANSI MERGE with RETURNING clause.
+     * @complexity 7
+     * STRUCTURE: ▶ buildMergeParts (inherited ANSI pipeline) + buildReturning → ● HExpr::merge → ∑ BuiltQuery
+     *
+     * @param MergeQueryInterface $query the MERGE query DTO
+     *
+     * @return BuiltQuery the compiled SQL string and bound parameters
+     *
+     * @throws QueryBuilderException if required fields are missing
+     */
+    public function buildMergeQuery(MergeQueryInterface $query): BuiltQuery
+    {
+        $this->validateMergeQuery($query);
+
+        $parts = $this->buildMergeParts($query);
+
+        if ($query instanceof ReturningInterface) {
+            $parts[] = $this->buildReturning($query);
+        }
+
+        $expr = HExpr::mergeExpressionParts($parts, $this, ' ');
+
+        return new BuiltQuery(
+            $expr->getExpression($this),
+            $expr->getParams(),
+        );
+    }
+    // endregion METHOD_buildMergeQuery
+
     // region METHOD_buildReturning [DOMAIN(8): Grammar; TECH(8): Returning]
     /**
      * @purpose Build PostgreSQL RETURNING clause with optional OLD AS / NEW AS aliases.
@@ -351,6 +392,7 @@ class PgSqlGrammar extends AbstractGrammar
 
             return HExpr::mergeExpressionParts($parts, $this, ' ');
         }
+
         return null;
     }
     // endregion METHOD_buildReturning
@@ -370,6 +412,7 @@ class PgSqlGrammar extends AbstractGrammar
 
             return HExpr::mergeExpressionParts($parts, $this, ' ');
         }
+
         return null;
     }
     // endregion METHOD_buildUsingClause

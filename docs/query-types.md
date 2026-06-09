@@ -330,6 +330,180 @@ $query->values([[1, 'Alice'], [2, 'Bob']])
 
 ---
 
+## MERGE
+
+**Classes:** `AndrewGos\QueryBuilder\Query\Merge\MergeQuery` (ANSI), `AndrewGos\QueryBuilder\Query\Merge\PgSql\PgSqlMergeQuery` (PostgreSQL)
+
+MERGE (SQL:2008) — upsert-операция. Поддерживается: ANSI (базовый), PostgreSQL (расширения: RETURNING, DO NOTHING). MySQL — используйте `INSERT ... ON DUPLICATE KEY UPDATE`.
+
+**Action-классы:** `MergeActionUpdate`, `MergeActionDelete`, `MergeActionInsert`, `PgSqlMergeActionDoNothing` (PgSQL)
+
+**Clause-классы:** `MergeWhenMatchedClause`, `MergeWhenNotMatchedClause`, `MergeWhenNotMatchedBySourceClause`
+
+**Статические фабрики:** `MergeWhenMatchedClause::update()`, `::delete()`, `MergeWhenNotMatchedClause::insert()`, `MergeWhenNotMatchedBySourceClause::update()`, `::delete()`
+
+### Пример 1: Базовый ANSI MERGE (таблица → таблица)
+
+```php
+use AndrewGos\QueryBuilder\Expr\Merge\MergeWhenMatchedClause;
+use AndrewGos\QueryBuilder\Expr\Merge\MergeWhenNotMatchedClause;
+use AndrewGos\QueryBuilder\Grammar\DefaultGrammar;
+use AndrewGos\QueryBuilder\Query\Merge\MergeQuery;
+
+$grammar = new DefaultGrammar();
+$query = new MergeQuery();
+$query->into('target', 't')
+    ->using('source', 's')
+    ->on(['t.id' => 's.id'])
+    ->whenMatched(
+        MergeWhenMatchedClause::update(['name' => 's.name', 'email' => 's.email']),
+    )
+    ->whenNotMatched(
+        MergeWhenNotMatchedClause::insert(
+            ['id' => 's.id', 'name' => 's.name', 'email' => 's.email'],
+        ),
+    );
+
+$built = $grammar->buildMergeQuery($query);
+// MERGE INTO "target" AS "t"
+// USING "source" AS "s" ON "t"."id" = "s"."id"
+// WHEN MATCHED THEN UPDATE SET "name" = "s"."name", "email" = "s"."email"
+// WHEN NOT MATCHED THEN INSERT ("id", "name", "email") VALUES ("s"."id", "s"."name", "s"."email")
+```
+
+### Пример 2: ANSI MERGE с AND-условием и DELETE
+
+```php
+use AndrewGos\QueryBuilder\Expr\Expr;
+
+$query = new MergeQuery();
+$query->into('target', 't')
+    ->using('source', 's')
+    ->on(['t.id' => 's.id'])
+    ->whenMatched(
+        MergeWhenMatchedClause::update(['name' => 's.name'], ['t.locked' => false]),
+    )
+    ->whenMatched(
+        MergeWhenMatchedClause::delete(['s.status' => new Expr("'deleted'")]),
+    )
+    ->whenNotMatched(
+        MergeWhenNotMatchedClause::insert(['id' => 's.id', 'name' => 's.name']),
+    );
+// WHEN MATCHED AND "t"."locked" IS FALSE THEN UPDATE SET "name" = "s"."name"
+// WHEN MATCHED AND "s"."status" = ('deleted') THEN DELETE
+```
+
+### Пример 3: ANSI MERGE с подзапросом в USING
+
+```php
+use AndrewGos\QueryBuilder\Query\Select\SelectQuery;
+
+$subquery = (new SelectQuery())
+    ->select(['id', 'name'])
+    ->from(['source_table']);
+
+$query = new MergeQuery();
+$query->into('target', 't')
+    ->using($subquery, 's')
+    ->on(['t.id' => 's.id'])
+    ->whenMatched(
+        MergeWhenMatchedClause::update(['name' => 's.name']),
+    );
+
+// USING (SELECT "id", "name" FROM "source_table") AS "s"
+```
+
+### Пример 4: PgSQL MERGE с RETURNING
+
+```php
+use AndrewGos\QueryBuilder\Grammar\PgSql\PgSqlGrammar;
+use AndrewGos\QueryBuilder\Query\Merge\PgSql\PgSqlMergeQuery;
+
+$grammar = new PgSqlGrammar();
+$query = new PgSqlMergeQuery();
+$query->into('users', 't')
+    ->using('staging', 's')
+    ->on(['t.id' => 's.id'])
+    ->whenMatched(
+        MergeWhenMatchedClause::update(['name' => 's.name']),
+    )
+    ->whenNotMatched(
+        MergeWhenNotMatchedClause::insert(['id' => 's.id', 'name' => 's.name']),
+    )
+    ->returning(['t.id', 't.name']);
+
+$built = $grammar->buildMergeQuery($query);
+// MERGE INTO "users" AS "t" USING "staging" AS "s" ON "t"."id" = "s"."id"
+// WHEN MATCHED THEN UPDATE SET "name" = "s"."name"
+// WHEN NOT MATCHED THEN INSERT ("id", "name") VALUES ("s"."id", "s"."name")
+// RETURNING "t"."id", "t"."name"
+```
+
+### Пример 5: PgSQL MERGE полный пайплайн (CTE + BY SOURCE + DO NOTHING + RETURNING)
+
+```php
+use AndrewGos\QueryBuilder\Expr\Cte\WithQuery;
+use AndrewGos\QueryBuilder\Expr\Merge\MergeWhenNotMatchedBySourceClause;
+use AndrewGos\QueryBuilder\Expr\Merge\PgSql\PgSqlMergeActionDoNothing;
+
+$staging = (new SelectQuery())
+    ->select(['id', 'name', 'status'])
+    ->from(['raw_import']);
+
+$query = new PgSqlMergeQuery();
+$query->with(['staging' => new WithQuery($staging)])
+    ->into('users', 't')
+    ->using('staging', 's')
+    ->on(['t.id' => 's.id'])
+    ->whenMatched(
+        MergeWhenMatchedClause::update(
+            ['name' => 's.name', 'email' => 's.email'],
+            ['t.locked' => false],
+        ),
+    )
+    ->whenMatched(
+        MergeWhenMatchedClause::delete(['s.status' => new Expr("'deleted'")]),
+    )
+    ->whenNotMatched(
+        MergeWhenNotMatchedClause::insert(
+            ['id' => 's.id', 'name' => 's.name', 'email' => 's.email', 'status' => new Expr("'active'")],
+        ),
+    )
+    ->whenNotMatched(
+        new MergeWhenNotMatchedClause(
+            new PgSqlMergeActionDoNothing(),
+            ['s.status' => 'skip'],
+        ),
+    )
+    ->whenNotMatchedBySource(
+        MergeWhenNotMatchedBySourceClause::delete(),
+    )
+    ->returning(['t.id', 't.name', 't.status']);
+
+$built = $grammar->buildMergeQuery($query);
+// WITH "staging" AS (
+//     SELECT "id", "name", "status" FROM "raw_import"
+// )
+// MERGE INTO "users" AS "t"
+// USING "staging" AS "s" ON "t"."id" = "s"."id"
+// WHEN MATCHED AND "t"."locked" IS FALSE THEN UPDATE SET "name" = "s"."name", "email" = "s"."email"
+// WHEN MATCHED AND "s"."status" = ('deleted') THEN DELETE
+// WHEN NOT MATCHED THEN INSERT ("id", "name", "email", "status") VALUES ("s"."id", "s"."name", "s"."email", 'active')
+// WHEN NOT MATCHED AND "s"."status" = :v... THEN DO NOTHING
+// WHEN NOT MATCHED BY SOURCE THEN DELETE
+// RETURNING "t"."id", "t"."name", "t"."status"
+```
+
+### Совместимость действий
+
+| Clause | UPDATE | DELETE | INSERT | DO NOTHING |
+|---|---|---|---|---|
+| `WHEN MATCHED` | ✅ | ✅ | ❌ | ✅ (PgSQL) |
+| `WHEN NOT MATCHED` | ❌ | ❌ | ✅ | ✅ (PgSQL) |
+| `WHEN NOT MATCHED BY SOURCE` | ✅ | ✅ | ❌ | ✅ (PgSQL) |
+
+---
+
 ## Fluent Method Reference
 
 All query objects use fluent methods (returning `static`) for method chaining.
