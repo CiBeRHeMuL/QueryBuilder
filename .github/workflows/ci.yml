@@ -20,12 +20,17 @@ jobs:
         with:
           php-version: ${{ matrix.php }}
           tools: composer:v2
-          coverage: none
+          coverage: pcov
 
       - run: composer install --no-interaction --prefer-dist
 
       - name: Run PHPUnit
-        run: vendor/bin/phpunit --no-coverage
+        run: vendor/bin/phpunit --coverage-clover coverage.xml
+
+      - name: Upload coverage reports to Codecov
+        uses: codecov/codecov-action@v5
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
 
   lint:
     name: PHP Coding Standards
