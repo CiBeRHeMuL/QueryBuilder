@@ -11,6 +11,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - MERGE query support (ANSI SQL:2008 + PostgreSQL extensions: RETURNING, DO NOTHING). New interface: `MergeQueryInterface`. New classes: `MergeQuery`, `PgSqlMergeQuery`, `MergeActionUpdate`, `MergeActionDelete`, `MergeActionInsert`, `PgSqlMergeActionDoNothing`, `MergeWhenMatchedClause`, `MergeWhenNotMatchedClause`, `MergeWhenNotMatchedBySourceClause`.
 - Comprehensive MERGE test coverage: INSERT with typed values, UPDATE SET with SelectQuery/ValuesQuery/SetClause[], USING with ValuesQuery/ExprInterface, DefaultGrammar MERGE, MERGE without WHEN clauses, multiple BY SOURCE clauses, ON with ExprInterface, PgSql MERGE without RETURNING.
+- Test coverage gap fill: `QueryEdgeCaseTest` (43 E2E tests for trait add*, join variants, set operations, window frame edges, lock modes, MySQL hints/partition), `ExceptionFactoryTest` (11 exception factory tests), `ExprUnitTest` (6 expression unit tests).
+
+### Fixed
+
+- Fix MySQL lock clause missing `FOR` prefix in single lock mode (`MySqlGrammar::buildLockClause`).
 
 ### Changed
 

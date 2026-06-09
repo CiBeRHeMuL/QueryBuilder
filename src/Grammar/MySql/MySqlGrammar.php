@@ -282,7 +282,8 @@ class MySqlGrammar extends AbstractGrammar
     {
         if ($query instanceof MySqlSelectQuery && $query->lockModes) {
             return new Expr(
-                implode(
+                'FOR '
+                . implode(
                     ' FOR ',
                     array_map(
                         fn(LockModeInterface $e) => $e->getSql($this),
