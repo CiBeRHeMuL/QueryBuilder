@@ -14,7 +14,6 @@ use AndrewGos\QueryBuilder\Query\Interface\MaybeReturnableQueryInterface;
 use AndrewGos\QueryBuilder\Query\Select\SelectQueryInterface;
 use AndrewGos\QueryBuilder\Query\Values\ValuesQueryInterface;
 use RuntimeException;
-use UnitEnum;
 
 // region MODULE_CONTRACT [DOMAIN(9): Exception; CONCEPT(9): ErrorHandling; TECH(9): Exception]
 /**
@@ -34,7 +33,7 @@ use UnitEnum;
 // STRUCTURE: ▶ static named constructors ┌valueIsNotExpr, valueIsNotTable, ... (10 total)┐ → ○ each: ⚡ format message with typed context → ⊕ new self → ∑ return QueryBuilderException
 
 // region CLASS_QueryBuilderException [DOMAIN(9): Exception; CONCEPT(9): ErrorHandling; TECH(9): Exception]
-class QueryBuilderException extends RuntimeException
+class QueryBuilderException extends \RuntimeException
 {
     // region METHOD_valueIsNotExpr [DOMAIN(9): Exception; CONCEPT(8): Validation; TECH(8): TypeCheck]
     /**
@@ -54,7 +53,7 @@ class QueryBuilderException extends RuntimeException
                 ExprInterface::class,
                 SelectQueryInterface::class,
                 ValuesQueryInterface::class,
-                UnitEnum::class,
+                \UnitEnum::class,
             ),
         );
     }
@@ -103,7 +102,7 @@ class QueryBuilderException extends RuntimeException
                 ExprInterface::class,
                 SelectQueryInterface::class,
                 ValuesQueryInterface::class,
-                UnitEnum::class,
+                \UnitEnum::class,
             ),
         );
     }
@@ -125,7 +124,7 @@ class QueryBuilderException extends RuntimeException
                     TEXT,
                 HString::stringifyValue($value),
                 ExprInterface::class,
-                UnitEnum::class,
+                \UnitEnum::class,
             ),
         );
     }
@@ -149,7 +148,7 @@ class QueryBuilderException extends RuntimeException
                 ExprInterface::class,
                 SelectQueryInterface::class,
                 ValuesQueryInterface::class,
-                UnitEnum::class,
+                \UnitEnum::class,
             ),
         );
     }

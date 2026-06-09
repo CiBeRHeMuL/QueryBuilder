@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace AndrewGos\QueryBuilder\Expr;
 
 use AndrewGos\QueryBuilder\Builder\ValueBuilder;
-use AndrewGos\QueryBuilder\Expr\ColumnExpr;
 use AndrewGos\QueryBuilder\Grammar\GrammarInterface;
 use AndrewGos\QueryBuilder\Query\Select\SelectQueryInterface;
 use UnitEnum;
@@ -34,17 +33,19 @@ class OpExpr extends AbstractExpr
     // region METHOD___construct [DOMAIN(7): Expression; CONCEPT(6): Init; TECH(7): Operator]
     /**
      * @purpose Store operands and operator. Auto-converts `= NULL` to `IS NULL`, `!=/<> NULL` → `IS NOT NULL`, and correspondingly for TRUE/FALSE.
+     *
      * @template TValue of bool|int|float|string|UnitEnum|ExprInterface|SelectQueryInterface|null
+     *
      * @phpstan-template TExpression of TValue|array<TExpression>
      *
      * @param TExpression $left
-     * @param string $operator
+     * @param string      $operator
      * @param TExpression $right
      */
     public function __construct(
-        private bool|int|float|string|UnitEnum|ExprInterface|SelectQueryInterface|array|null $left,
+        private bool|int|float|string|\UnitEnum|ExprInterface|SelectQueryInterface|array|null $left,
         private string $operator,
-        private bool|int|float|string|UnitEnum|ExprInterface|SelectQueryInterface|array|null $right,
+        private bool|int|float|string|\UnitEnum|ExprInterface|SelectQueryInterface|array|null $right,
     ) {
         // Change operator to IS/IS NOT if right expr is null, true or false (to prevent a = null / != null expressions).
         // TODO am i need to do it here??
@@ -63,6 +64,7 @@ class OpExpr extends AbstractExpr
      * @purpose Build the binary operator SQL expression with automatic parenthesization of sub-expressions.
      * @io left, operator, right, GrammarInterface -> [string, array]
      * @complexity 6
+     *
      * @using ValueBuilder
      */
     protected function doBuild(GrammarInterface $grammar): array

@@ -23,9 +23,10 @@ use AndrewGos\QueryBuilder\Expr\Order\OrderColumn;
 
 // region INTERFACE_OrderByInterface [DOMAIN(8): Query; CONCEPT(9): Sorting; TECH(8): SQL]
 /**
- * This interface provides methods for working with ORDER BY clause
+ * This interface provides methods for working with ORDER BY clause.
  *
  * @template TOrderBy of array<string, int|string>|array<int, string|ExprInterface|OrderColumn> column => order, expression or OrderColumn
+ *
  * @purpose Define methods for working with ORDER BY clause.
  */
 interface OrderByInterface

@@ -23,9 +23,10 @@ use AndrewGos\QueryBuilder\Expr\ExprInterface;
 
 // region TRAIT_LimitTrait [DOMAIN(8): Query; CONCEPT(9): Trait; TECH(8): SQL]
 /**
- * This trait provides functionality of LimitInterface
+ * This trait provides functionality of LimitInterface.
  *
  * @see \AndrewGos\QueryBuilder\Query\Interface\LimitInterface
+ *
  * @purpose Implement LimitInterface for queries requiring pagination support.
  */
 trait LimitTrait
@@ -40,7 +41,7 @@ trait LimitTrait
      * @io int|ExprInterface $offset -> static
      * @complexity 2
      *
-     * @inheritDoc
+     * {@inheritDoc}
      */
     public function offset(int|ExprInterface $offset): static
     {
@@ -56,7 +57,7 @@ trait LimitTrait
      * @io int|ExprInterface|null $limit, LimitBoundTypeEnum $boundType -> static
      * @complexity 2
      *
-     * @inheritDoc
+     * {@inheritDoc}
      */
     public function limit(int|ExprInterface|null $limit, LimitBoundTypeEnum $boundType = LimitBoundTypeEnum::Only): static
     {

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-/**
+/*
  * @moduleContract
  * @purpose Provide INSERT SQL query construction with WITH, INTO, and source (SELECT/VALUES) support.
  * @scope InsertQueryInterface and its implementation InsertQuery.

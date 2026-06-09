@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-/**
+/*
  * @moduleContract
  * @purpose Provides the set operation value object for compound queries (UNION, INTERSECT, EXCEPT).
  * @scope Single value object linking an operation type with a SELECT query.

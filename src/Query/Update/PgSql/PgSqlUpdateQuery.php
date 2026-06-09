@@ -38,12 +38,10 @@ use UnitEnum;
 /**
  * @template TSetValue of bool|int|float|string|UnitEnum|ExprInterface|SelectQueryInterface|ValuesQueryInterface|array|null
  * @template TSet of array<int, SetClause>|array<string, TSetValue>
+ *
  * @purpose PostgreSQL UPDATE query extending UpdateQuery with FROM (additional tables), JOIN, and RETURNING clause support.
  */
-class PgSqlUpdateQuery extends UpdateQuery implements
-    FromInterface,
-    JoinInterface,
-    ReturningInterface
+class PgSqlUpdateQuery extends UpdateQuery implements FromInterface, JoinInterface, ReturningInterface
 {
     use FromTrait;
     use JoinTrait;

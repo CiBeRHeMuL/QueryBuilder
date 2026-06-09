@@ -17,7 +17,7 @@ use AndrewGos\QueryBuilder\Query\Values\ValuesQueryInterface;
  * @moduleContract
  * @purpose Defines the contract for all SQL grammar implementations (Default/ANSI, MySQL, PostgreSQL).
  * @scope Query building API, identifier escaping.
- * @input Query interfaces (Select, Insert, Update, Delete, Values)
+ * @input Query interfaces (Select, Insert, Update, Delete, Values, Merge)
  * @output BuiltQuery instances
  * @invariants
  * - All implementations must support the same method signatures.

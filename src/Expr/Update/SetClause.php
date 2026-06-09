@@ -11,7 +11,6 @@ use AndrewGos\QueryBuilder\Grammar\GrammarInterface;
 use AndrewGos\QueryBuilder\Query\Interface\MaybeReturnableQueryInterface;
 use AndrewGos\QueryBuilder\Query\Select\SelectQueryInterface;
 use AndrewGos\QueryBuilder\Query\Values\ValuesQueryInterface;
-use UnitEnum;
 
 // region MODULE_CONTRACT [DOMAIN(8): UPDATE; CONCEPT(7): SetClause; TECH(5): ValueObject]
 /**
@@ -33,21 +32,23 @@ use UnitEnum;
 readonly class SetClause
 {
     /**
-     * @param string|string[] $target Column name or array of column names for multi-column assignment.
-     * @param bool|int|float|string|UnitEnum|ExprInterface|SelectQueryInterface|ValuesQueryInterface|array|null $value Value to assign.
+     * @param string|string[]                                                                                    $target column name or array of column names for multi-column assignment
+     * @param bool|int|float|string|\UnitEnum|ExprInterface|SelectQueryInterface|ValuesQueryInterface|array|null $value  value to assign
      */
     public function __construct(
         protected(set) string|array $target,
-        protected(set) bool|int|float|string|UnitEnum|ExprInterface|SelectQueryInterface|ValuesQueryInterface|array|null $value,
+        protected(set) bool|int|float|string|\UnitEnum|ExprInterface|SelectQueryInterface|ValuesQueryInterface|array|null $value,
     ) {}
 
     // region METHOD_getSql [DOMAIN(8): UPDATE; CONCEPT(7): SetClause; TECH(7): Rendering]
     /**
      * @purpose Render this SET clause element to an SQL expression with params. Handles single-column, multi-column, subquery, and array values.
-     * @param GrammarInterface $grammar Grammar for identifier escaping and subquery building.
-     * @return ExprInterface The rendered expression (e.g., ""col" = :param" or "("c1", "c2") = (:v1, :v2)").
      * @complexity 5
      * STRUCTURE: ◇ target is string? → escape + ' = ' + ValueBuilder | ◇ array → '(' + escape each + ') = ' + ◇ MaybeReturnable → buildMaybeReturnableQuery | ◇ array → ValueBuilder.build | else → ValueBuilder.build
+     *
+     * @param GrammarInterface $grammar grammar for identifier escaping and subquery building
+     *
+     * @return ExprInterface The rendered expression (e.g., ""col" = :param" or "("c1", "c2") = (:v1, :v2)").
      */
     public function getSql(GrammarInterface $grammar): ExprInterface
     {

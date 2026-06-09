@@ -17,11 +17,14 @@ use AndrewGos\QueryBuilder\Grammar\AbstractGrammar;
  * - Identifiers are escaped with double quotes per ANSI SQL standard
  * - Wildcard '*' is returned unquoted
  * - No dialect-specific query extensions or modifiers
+ *
  * @rationale
  * Q: Why does DefaultGrammar exist when PgSqlGrammar uses the same double-quote escaping?
  * A: DefaultGrammar is a lightweight, dependency-free grammar with no PostgreSQL-specific features (RETURNING, DISTINCT ON, ONLY, USING, CTE materialization, lock modes). It works with base Query interfaces only and serves as the universal fallback grammar.
+ *
  * @modulemap
  * DefaultGrammar => ANSI SQL default grammar extending AbstractGrammar
+ *
  * @usecases
  * - [DefaultGrammar]: QueryBuilder → Build any query → ANSI SQL-compatible BuiltQuery
  */
@@ -48,6 +51,7 @@ class DefaultGrammar extends AbstractGrammar
         }
 
         $identifier = trim($identifier, " \n\r\t\v\0\"");
+
         return '"' . strtr($identifier, ['"' => '""']) . '"';
     }
     // endregion METHOD_escapeIdentifier

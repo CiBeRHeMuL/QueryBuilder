@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-/**
+/*
  * @moduleContract
  * @purpose Provides GROUP BY grouping set expressions: CUBE, ROLLUP, and GROUPING SETS.
  * @scope Template method hierarchy for OLAP grouping expressions.

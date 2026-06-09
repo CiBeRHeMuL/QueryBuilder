@@ -24,7 +24,8 @@ use AndrewGos\QueryBuilder\Query\Select\SelectQueryInterface;
 
 // region INTERFACE_OperationsInterface [DOMAIN(8): Query; CONCEPT(9): SetOperations; TECH(8): SQL]
 /**
- * This interface provides methods for working with UNION, INTERSECT, EXCEPT clauses
+ * This interface provides methods for working with UNION, INTERSECT, EXCEPT clauses.
+ *
  * @purpose Define methods for working with UNION, INTERSECT, EXCEPT clauses.
  */
 interface OperationsInterface
@@ -42,7 +43,7 @@ interface OperationsInterface
      * @io SetOperationEnum $operation, SelectQueryInterface ...$queries -> static
      * @complexity 3
      *
-     * @param SetOperationEnum $operation
+     * @param SetOperationEnum     $operation
      * @param SelectQueryInterface ...$queries
      *
      * @return static

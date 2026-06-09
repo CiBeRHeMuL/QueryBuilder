@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-/**
+/*
  * @moduleContract
  * @purpose MySQL-specific DELETE query implementation with LOW_PRIORITY, QUICK, IGNORE modifiers, PARTITION clause, ORDER BY, and LIMIT support.
  * @scope MySQL DELETE query building.

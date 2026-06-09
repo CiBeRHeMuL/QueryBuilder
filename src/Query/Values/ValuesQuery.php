@@ -42,7 +42,7 @@ class ValuesQuery implements ValuesQueryInterface
      * @io array $values -> static
      * @complexity 2
      *
-     * @inheritDoc
+     * {@inheritDoc}
      */
     public function values(array $values): static
     {
@@ -58,7 +58,7 @@ class ValuesQuery implements ValuesQueryInterface
      * @io array $values -> static
      * @complexity 2
      *
-     * @inheritDoc
+     * {@inheritDoc}
      */
     public function addValues(array $values): static
     {

@@ -28,8 +28,8 @@ final readonly class Search
 {
     /**
      * @param SearchTypeEnum $type
-     * @param string[] $columns
-     * @param string $searchSeqColumnName
+     * @param string[]       $columns
+     * @param string         $searchSeqColumnName
      */
     public function __construct(
         private(set) SearchTypeEnum $type,

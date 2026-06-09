@@ -26,7 +26,7 @@ final readonly class BuiltQuery
     /**
      * @template TBuiltParam of bool|int|float|string|null
      *
-     * @param string $sql
+     * @param string                         $sql
      * @param array<string|int, TBuiltParam> $params
      */
     public function __construct(

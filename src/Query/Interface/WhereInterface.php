@@ -24,13 +24,13 @@ use UnitEnum;
 
 // region INTERFACE_WhereInterface [DOMAIN(8): Query; CONCEPT(9): Filtering; TECH(8): SQL]
 /**
- * This interface provides methods for working with WHERE clause
+ * This interface provides methods for working with WHERE clause.
  *
  * @template TValue of bool|int|float|string|UnitEnum|ExprInterface|SelectQueryInterface|null
- *
  * @template TCondition of TValue|array<TCondition>
  * @template TStandaloneCondition of bool|ExprInterface
  * @template TConditions of array<string, TCondition>|array<int, TStandaloneCondition>
+ *
  * @purpose Define methods for working with WHERE clause.
  */
 interface WhereInterface

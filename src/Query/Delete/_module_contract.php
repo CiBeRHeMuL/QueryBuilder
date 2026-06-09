@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-/**
+/*
  * @moduleContract
  * @purpose Provide DELETE SQL query construction with WITH, FROM, and WHERE support.
  * @scope DeleteQueryInterface and its implementation DeleteQuery.

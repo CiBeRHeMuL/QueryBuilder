@@ -7,7 +7,7 @@ namespace AndrewGos\QueryBuilder\Expr\Join;
 use AndrewGos\QueryBuilder\Enum\JoinTypeEnum;
 use AndrewGos\QueryBuilder\Expr\ExprInterface;
 use AndrewGos\QueryBuilder\Expr\Table\SelectTable;
-use AndrewGos\QueryBuilder\Query\Select\SelectQueryInterface as SelectQueryInterface;
+use AndrewGos\QueryBuilder\Query\Select\SelectQueryInterface;
 use AndrewGos\QueryBuilder\Query\Values\ValuesQueryInterface;
 
 // region MODULE_CONTRACT [DOMAIN(8): JOIN; CONCEPT(9): TableJoin; TECH(5): ValueObject]
@@ -31,10 +31,10 @@ use AndrewGos\QueryBuilder\Query\Values\ValuesQueryInterface;
 final readonly class JoinTable
 {
     /**
-     * @param JoinTypeEnum $type
+     * @param JoinTypeEnum                                                        $type
      * @param SelectTable|ExprInterface|SelectQueryInterface|ValuesQueryInterface $table
-     * @param ExprInterface[] $conditions
-     * @param bool $naturalJoin
+     * @param ExprInterface[]                                                     $conditions
+     * @param bool                                                                $naturalJoin
      */
     public function __construct(
         private(set) JoinTypeEnum $type,

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-/**
+/*
  * @moduleContract
  * @purpose MySQL-specific SELECT query implementation with HIGH_PRIORITY, STRAIGHT_JOIN, SQL_* hints, PARTITION clause, and FOR UPDATE/FOR SHARE lock modes.
  * @scope MySQL SELECT query building.

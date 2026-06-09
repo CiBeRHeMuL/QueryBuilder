@@ -15,10 +15,10 @@ use AndrewGos\QueryBuilder\Query\Interface\MaybeReturnableQueryInterface;
  * @scope Building CTE definitions with optional SEARCH and CYCLE clauses.
  * @input Query, optional Search, optional Cycle.
  * @output Configured WithQuery instance for CTE rendering.
- * @modulemap
- * WithQuery => Fluent CTE builder with search/cycle support
  * @invariants
  * - Search and Cycle can be set independently
+ * @modulemap
+ * WithQuery => Fluent CTE builder with search/cycle support
  */
 // endregion MODULE_CONTRACT
 // GREP_SUMMARY: CTE, with clause, recursive query, search, cycle, PostgreSQL, Oracle, SQL Server
@@ -46,13 +46,14 @@ class WithQuery
     // region METHOD_search [DOMAIN(7): CTE; CONCEPT(8): SearchClause; TECH(5): FluentAPI]
     /**
      * @purpose Configures a SEARCH clause on this CTE for BFS/DFS traversal ordering.
-     * @param SearchTypeEnum $type
-     * @param string[] $columns
-     * @param string $searchSeqColumnName
-     *
-     * @return WithQuery
      * @io SearchTypeEnum, array, string -> static
      * @complexity 2
+     *
+     * @param SearchTypeEnum $type
+     * @param string[]       $columns
+     * @param string         $searchSeqColumnName
+     *
+     * @return WithQuery
      */
     public function search(
         SearchTypeEnum $type,
@@ -68,15 +69,16 @@ class WithQuery
     // region METHOD_cycle [DOMAIN(7): CTE; CONCEPT(8): CycleClause; TECH(5): FluentAPI]
     /**
      * @purpose Configures a CYCLE clause on this CTE for cycle detection.
-     * @param string[] $columns
-     * @param string $cycleMarkColumnName
-     * @param string $cyclePathColumnName
+     * @io array, string, string, Literal|scalar|null, Literal|scalar|null -> static
+     * @complexity 3
+     *
+     * @param string[]                           $columns
+     * @param string                             $cycleMarkColumnName
+     * @param string                             $cyclePathColumnName
      * @param bool|int|float|string|Literal|null $cycleMarkValue
      * @param bool|int|float|string|Literal|null $cycleMarkDefault
      *
      * @return WithQuery
-     * @io array, string, string, Literal|scalar|null, Literal|scalar|null -> static
-     * @complexity 3
      */
     public function cycle(
         array $columns,

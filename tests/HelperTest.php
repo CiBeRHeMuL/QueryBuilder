@@ -330,7 +330,7 @@ class HelperTest extends TestCase
      */
     public function testNormalizeConditionsWithSelectQuery(): void
     {
-        $subQuery = new \AndrewGos\QueryBuilder\Query\Select\SelectQuery();
+        $subQuery = new SelectQuery();
         $subQuery->select(['id'])->from(['users']);
 
         $conditions = ['id' => $subQuery];

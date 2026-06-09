@@ -37,20 +37,23 @@ final readonly class ValueBuilder
     // region METHOD_build [DOMAIN(8): Builder; CONCEPT(8): EntryPoint; TECH(8): Validation]
     /**
      * @template TValue of bool|int|float|string|UnitEnum|ExprInterface|SelectQueryInterface|null
+     *
      * @phpstan-template TExpression of TValue|array<TExpression>
      *
-     * @param TExpression $value
-     * @param GrammarInterface $grammar
-     * @param bool $stringAsIdentifier
-     *
-     * @return ExprInterface
      * @purpose Validate and dispatch a value to the appropriate expression builder.
      * @io mixed value + GrammarInterface -> ExprInterface
      * @complexity 3
+     *
+     * @param TExpression      $value
+     * @param GrammarInterface $grammar
+     * @param bool             $stringAsIdentifier
+     *
+     * @return ExprInterface
+     *
      * @using HExpr::testExpr
      */
     public function build(
-        bool|int|float|string|UnitEnum|ExprInterface|SelectQueryInterface|ValuesQueryInterface|array|null $value,
+        bool|int|float|string|\UnitEnum|ExprInterface|SelectQueryInterface|ValuesQueryInterface|array|null $value,
         GrammarInterface $grammar,
         bool $stringAsIdentifier = false,
     ): ExprInterface {
@@ -67,7 +70,7 @@ final readonly class ValueBuilder
      * @complexity 7
      */
     private function doBuild(
-        bool|int|float|string|UnitEnum|ExprInterface|SelectQueryInterface|ValuesQueryInterface|array|null $value,
+        bool|int|float|string|\UnitEnum|ExprInterface|SelectQueryInterface|ValuesQueryInterface|array|null $value,
         GrammarInterface $grammar,
         bool $stringAsIdentifier = false,
     ): ExprInterface {
@@ -75,7 +78,7 @@ final readonly class ValueBuilder
             $value instanceof SelectQueryInterface => $this->buildSelectQuery($value, $grammar),
             $value instanceof ValuesQueryInterface => $this->buildValuesQuery($value, $grammar),
             $value instanceof ExprInterface => $value,
-            $value instanceof UnitEnum => $this->buildEnum($value),
+            $value instanceof \UnitEnum => $this->buildEnum($value),
             is_null($value) => new Expr('NULL'),
             is_bool($value) => new Expr($value ? 'TRUE' : 'FALSE'),
             is_array($value) => $this->buildArray($value, $grammar, $stringAsIdentifier),
@@ -94,6 +97,7 @@ final readonly class ValueBuilder
     private function buildSelectQuery(SelectQueryInterface $query, GrammarInterface $grammar): ExprInterface
     {
         $bq = $grammar->buildSelectQuery($query);
+
         return new Expr(
             "($bq->sql)",
             $bq->params,
@@ -110,6 +114,7 @@ final readonly class ValueBuilder
     private function buildValuesQuery(ValuesQueryInterface $query, GrammarInterface $grammar): ExprInterface
     {
         $bq = $grammar->buildValuesQuery($query);
+
         return new Expr(
             "($bq->sql)",
             $bq->params,
@@ -161,13 +166,13 @@ final readonly class ValueBuilder
      * @io UnitEnum -> ExprInterface
      * @complexity 3
      */
-    private function buildEnum(UnitEnum $value): ExprInterface
+    private function buildEnum(\UnitEnum $value): ExprInterface
     {
         $paramId = $this->generateParamId();
 
         return new Expr(
             sprintf(':%s', $paramId),
-            [$paramId => $value instanceof BackedEnum ? $value->value : $value->name],
+            [$paramId => $value instanceof \BackedEnum ? $value->value : $value->name],
         );
     }
     // endregion METHOD_buildEnum

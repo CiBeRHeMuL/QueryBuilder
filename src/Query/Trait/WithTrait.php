@@ -23,9 +23,10 @@ use AndrewGos\QueryBuilder\Query\Interface\MaybeReturnableQueryInterface;
 
 // region TRAIT_WithTrait [DOMAIN(8): Query; CONCEPT(9): Trait; TECH(8): SQL]
 /**
- * This trait provides functionality of WithInterface
+ * This trait provides functionality of WithInterface.
  *
  * @see \AndrewGos\QueryBuilder\Query\Interface\WithInterface
+ *
  * @purpose Implement WithInterface for queries requiring CTE support.
  */
 trait WithTrait
@@ -42,14 +43,13 @@ trait WithTrait
      * @io array $with, bool $recursive -> static
      * @complexity 2
      *
-     * @inheritDoc
+     * {@inheritDoc}
      */
     public function with(array $with, bool $recursive = false): static
     {
         $this->withRecursive = $recursive;
         $this->with = array_map(
-            static fn(mixed $value): mixed
-                => (!($value instanceof WithQuery) && $value instanceof MaybeReturnableQueryInterface)
+            static fn(mixed $value): mixed => (!($value instanceof WithQuery) && $value instanceof MaybeReturnableQueryInterface)
                     ? new WithQuery($value)
                     : $value,
             $with,
@@ -62,11 +62,13 @@ trait WithTrait
     // region METHOD_addWith [DOMAIN(8): Query; CONCEPT(9): Trait; TECH(8): SQL]
     /**
      * @purpose Merge additional CTE definitions into existing ones.
+     *
      * @warning При совпадении алиаса с существующим CTE происходит перезапись.
+     *
      * @io array $with, bool $recursive -> static
      * @complexity 2
      *
-     * @inheritDoc
+     * {@inheritDoc}
      */
     public function addWith(array $with, bool $recursive = false): static
     {
@@ -74,8 +76,7 @@ trait WithTrait
         $this->with = array_merge(
             $this->with,
             array_map(
-                static fn(mixed $value): mixed
-                    => (!($value instanceof WithQuery) && $value instanceof MaybeReturnableQueryInterface)
+                static fn(mixed $value): mixed => (!($value instanceof WithQuery) && $value instanceof MaybeReturnableQueryInterface)
                         ? new WithQuery($value)
                         : $value,
                 $with,

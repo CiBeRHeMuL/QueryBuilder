@@ -9,7 +9,6 @@ use AndrewGos\QueryBuilder\Expr\Cte\Cycle;
 use AndrewGos\QueryBuilder\Expr\Cte\PgSql\PgSqlWithQuery;
 use AndrewGos\QueryBuilder\Expr\Cte\Search;
 use AndrewGos\QueryBuilder\Expr\Cte\WithQuery;
-use AndrewGos\QueryBuilder\Expr\Expr;
 use AndrewGos\QueryBuilder\Expr\Literal;
 use AndrewGos\QueryBuilder\Grammar\PgSql\PgSqlGrammar;
 use AndrewGos\QueryBuilder\Query\Select\SelectQuery;

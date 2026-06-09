@@ -68,6 +68,7 @@ The most feature-rich dialect with PostgreSQL-specific extensions:
 | ON CONFLICT | `PgSqlInsertQuery` | Upsert: `ON CONFLICT (columns) DO NOTHING / DO UPDATE` |
 | USING clause | `PgSqlDeleteQuery` | `DELETE FROM ... USING ...` |
 | FROM + JOIN in UPDATE | `PgSqlUpdateQuery` | `UPDATE ... FROM ... JOIN ... SET ...` |
+| MERGE | `PgSqlMergeQuery` | `MERGE INTO ... USING ... ON ... WHEN MATCHED ... WHEN NOT MATCHED ... WHEN NOT MATCHED BY SOURCE ...` with RETURNING / BY SOURCE |
 | SEARCH / CYCLE | `PgSqlWithQuery` | CTE cycle detection: `SEARCH BREADTH|DEPTH FIRST BY cols SET seq_col` / `CYCLE cols SET mark_col TO value` |
 
 **Identifier escaping:** double quotes (`"`), same as DefaultGrammar.

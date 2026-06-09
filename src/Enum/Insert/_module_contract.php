@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-/**
+/*
  * @moduleContract
  * @purpose Provide enum types for INSERT query building.
  * @scope Sub-namespace for dialect-specific INSERT enums (PgSql).

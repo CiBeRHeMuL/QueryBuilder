@@ -24,15 +24,16 @@ use AndrewGos\QueryBuilder\Query\Select\SelectQueryInterface;
 
 // region TRAIT_OperationsTrait [DOMAIN(8): Query; CONCEPT(9): Trait; TECH(8): SQL]
 /**
- * This trait provides functionality of OperationsInterface
+ * This trait provides functionality of OperationsInterface.
  *
  * @see \AndrewGos\QueryBuilder\Query\Interface\OperationsInterface
+ *
  * @purpose Implement OperationsInterface for queries requiring set operation support.
  */
 trait OperationsTrait
 {
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      */
     protected(set) array $operations = [];
 
@@ -42,7 +43,7 @@ trait OperationsTrait
      * @io SetOperationEnum $operation, SelectQueryInterface ...$queries -> static
      * @complexity 3
      *
-     * @inheritDoc
+     * {@inheritDoc}
      */
     public function operateWith(SetOperationEnum $operation, SelectQueryInterface ...$queries): static
     {
@@ -60,7 +61,7 @@ trait OperationsTrait
      * @io SelectQueryInterface ...$queries -> static
      * @complexity 2
      *
-     * @inheritDoc
+     * {@inheritDoc}
      */
     public function unionAll(SelectQueryInterface ...$queries): static
     {
@@ -77,7 +78,7 @@ trait OperationsTrait
      * @io SelectQueryInterface ...$queries -> static
      * @complexity 2
      *
-     * @inheritDoc
+     * {@inheritDoc}
      */
     public function intersectAll(SelectQueryInterface ...$queries): static
     {
@@ -94,7 +95,7 @@ trait OperationsTrait
      * @io SelectQueryInterface ...$queries -> static
      * @complexity 2
      *
-     * @inheritDoc
+     * {@inheritDoc}
      */
     public function exceptAll(SelectQueryInterface ...$queries): static
     {
@@ -111,7 +112,7 @@ trait OperationsTrait
      * @io SelectQueryInterface ...$queries -> static
      * @complexity 2
      *
-     * @inheritDoc
+     * {@inheritDoc}
      */
     public function unionDistinct(SelectQueryInterface ...$queries): static
     {
@@ -128,7 +129,7 @@ trait OperationsTrait
      * @io SelectQueryInterface ...$queries -> static
      * @complexity 2
      *
-     * @inheritDoc
+     * {@inheritDoc}
      */
     public function intersectDistinct(SelectQueryInterface ...$queries): static
     {
@@ -145,7 +146,7 @@ trait OperationsTrait
      * @io SelectQueryInterface ...$queries -> static
      * @complexity 2
      *
-     * @inheritDoc
+     * {@inheritDoc}
      */
     public function exceptDistinct(SelectQueryInterface ...$queries): static
     {

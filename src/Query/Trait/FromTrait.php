@@ -28,12 +28,13 @@ use AndrewGos\QueryBuilder\Helper\HExpr;
  * for queries which allow using not only single table.
  *
  * @see \AndrewGos\QueryBuilder\Query\Interface\FromInterface
+ *
  * @purpose Implement FromInterface for queries allowing multiple FROM tables.
  */
 trait FromTrait
 {
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      */
     protected(set) array $from = [];
 
@@ -43,7 +44,7 @@ trait FromTrait
      * @io array $tables -> static
      * @complexity 2
      *
-     * @inheritDoc
+     * {@inheritDoc}
      */
     public function from(array $tables): static
     {
@@ -59,7 +60,7 @@ trait FromTrait
      * @io array $tables -> static
      * @complexity 2
      *
-     * @inheritDoc
+     * {@inheritDoc}
      */
     public function addFrom(array $tables): static
     {
@@ -67,6 +68,7 @@ trait FromTrait
             $this->from,
             array_map(HExpr::normalizeTable(...), $tables),
         );
+
         return $this;
     }
     // endregion METHOD_addFrom

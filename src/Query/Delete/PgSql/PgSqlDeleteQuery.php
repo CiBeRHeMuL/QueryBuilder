@@ -36,20 +36,16 @@ use UnitEnum;
 /**
  * @template TValue of bool|int|float|string|UnitEnum|ExprInterface|SelectQueryInterface|null
  * @template TExpression of ExprInterface|SelectQueryInterface
- *
  * @template TSelectExpression of SelectQueryInterface
- *
  * @template TGroupValue of bool|int|float|string|UnitEnum|ExprInterface|null
  * @template TGroupExpression of ExprInterface|UnitEnum
- *
  * @template TTable of string|ExprInterface|SelectQueryInterface|SelectTable
  * @template TNormalizedTable of ExprInterface|SelectQueryInterface|SelectTable
- *
  * @template TCondition of ExprInterface|ExprInterface
  * @template TStandaloneCondition of bool|ExprInterface
  * @template TConditions of ExprInterface|array<int, bool|ExprInterface>
- *
  * @template TOrderBy of array<string, int|string>|array<int, string|ExprInterface|OrderColumn> column => order, expression or OrderColumn
+ *
  * @purpose PostgreSQL DELETE query extending DeleteQuery with USING, JOIN, RETURNING clauses and MaybeReturnableQueryInterface implementation.
  */
 class PgSqlDeleteQuery extends DeleteQuery implements JoinInterface, ReturningInterface
@@ -64,10 +60,11 @@ class PgSqlDeleteQuery extends DeleteQuery implements JoinInterface, ReturningIn
 
     // region METHOD_using [DOMAIN(8): Delete; TECH(8): Using]
     /**
+     * @purpose Set USING tables for PostgreSQL DELETE.
+     *
      * @param array<int|string, TTable> $tables
      *
      * @return static
-     * @purpose Set USING tables for PostgreSQL DELETE.
      */
     public function using(array $tables): static
     {
@@ -79,10 +76,11 @@ class PgSqlDeleteQuery extends DeleteQuery implements JoinInterface, ReturningIn
 
     // region METHOD_addUsing [DOMAIN(8): Delete; TECH(8): Using]
     /**
+     * @purpose Add additional USING tables for PostgreSQL DELETE.
+     *
      * @param array<int|string, TTable> $tables
      *
      * @return static
-     * @purpose Add additional USING tables for PostgreSQL DELETE.
      */
     public function addUsing(array $tables): static
     {
@@ -90,6 +88,7 @@ class PgSqlDeleteQuery extends DeleteQuery implements JoinInterface, ReturningIn
             $this->using,
             array_map(HExpr::normalizeTable(...), $tables),
         );
+
         return $this;
     }
     // endregion METHOD_addUsing

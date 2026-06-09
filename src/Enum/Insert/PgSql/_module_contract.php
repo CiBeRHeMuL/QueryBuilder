@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-/**
+/*
  * @moduleContract
  * @purpose Provide PostgreSQL-specific INSERT enum types.
  * @scope OVERRIDING SYSTEM/USER VALUE method enum for PostgreSQL INSERT.

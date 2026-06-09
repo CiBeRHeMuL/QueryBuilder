@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-/**
+/*
  * @moduleContract
  * @purpose Provides the ORDER BY column value object for sort specification.
  * @scope Single value object holding column expression and sort direction.

@@ -38,7 +38,7 @@ final class PgSqlConflictActionDoUpdate implements ConflictActionInterface
 
     /**
      * @param array<string, bool|int|float|string|ExprInterface|null> $set
-     * @param array $where
+     * @param array                                                   $where
      */
     public function __construct(
         private(set) array $set,
@@ -55,7 +55,7 @@ final class PgSqlConflictActionDoUpdate implements ConflictActionInterface
         $params = [];
 
         foreach ($this->set as $column => $value) {
-            $expr = (new SetClause($column, $value))->getSql($grammar);
+            $expr = new SetClause($column, $value)->getSql($grammar);
             $setParts[] = $expr->getExpression($grammar);
             $params = HExpr::mergeParams($params, $expr->getParams());
         }
@@ -69,6 +69,7 @@ final class PgSqlConflictActionDoUpdate implements ConflictActionInterface
         }
 
         $this->builtParams = $params;
+
         return $sql;
     }
     // endregion METHOD_getSql

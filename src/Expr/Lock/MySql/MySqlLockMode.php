@@ -32,8 +32,8 @@ use AndrewGos\QueryBuilder\Grammar\GrammarInterface;
 final readonly class MySqlLockMode implements LockModeInterface
 {
     /**
-     * @param MySqlLockModeEnum $mode
-     * @param string[] $tables
+     * @param MySqlLockModeEnum     $mode
+     * @param string[]              $tables
      * @param MySqlLockWaitModeEnum $waitMode
      */
     public function __construct(

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-/**
+/*
  * @moduleContract
  * @purpose Helper namespace — static utility methods for validation, normalization, and merging of SQL expression nodes.
  * @scope Type validation, condition/order-by normalization, parameter merging, expression part merging.

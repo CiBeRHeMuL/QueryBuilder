@@ -193,7 +193,7 @@ class GrammarTest extends TestCase
             }
         };
 
-        $query = new \AndrewGos\QueryBuilder\Query\Delete\PgSql\PgSqlDeleteQuery();
+        $query = new PgSqlDeleteQuery();
         $query->from(['users']);
 
         $this->expectException(QueryBuilderException::class);

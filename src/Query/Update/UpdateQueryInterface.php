@@ -30,6 +30,7 @@ use UnitEnum;
 /**
  * @template TSetValue of bool|int|float|string|UnitEnum|ExprInterface|SelectQueryInterface|ValuesQueryInterface|array|null
  * @template TSet of array<int, SetClause>|array<string, TSetValue>
+ *
  * @purpose Contract composing WITH and WHERE interfaces for UPDATE queries, plus table() and set() methods.
  */
 interface UpdateQueryInterface extends WithInterface, WhereInterface
@@ -46,13 +47,15 @@ interface UpdateQueryInterface extends WithInterface, WhereInterface
     }
 
     /**
-     * @param string $table Target table name for the UPDATE (single table, ANSI SQL).
+     * @param string $table target table name for the UPDATE (single table, ANSI SQL)
+     *
      * @return static
      */
     public function table(string $table): static;
 
     /**
-     * @param TSet $set Short syntax: array<string, TSetValue> (column => value), or pre-built array<int, SetClause>.
+     * @param TSet $set short syntax: array<string, TSetValue> (column => value), or pre-built array<int, SetClause>
+     *
      * @return static
      */
     public function set(array $set): static;

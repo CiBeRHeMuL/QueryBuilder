@@ -28,8 +28,7 @@ use AndrewGos\QueryBuilder\Query\Trait\WithTrait;
 /**
  * @purpose Concrete DELETE query object composing WithTrait, SingleFromTrait, and WhereTrait.
  */
-class DeleteQuery implements
-    DeleteQueryInterface
+class DeleteQuery implements DeleteQueryInterface
     // endregion CLASS_DeleteQuery
 {
     use WithTrait;

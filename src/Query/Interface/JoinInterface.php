@@ -28,15 +28,14 @@ use UnitEnum;
 
 // region INTERFACE_JoinInterface [DOMAIN(8): Query; CONCEPT(9): Join; TECH(8): SQL]
 /**
- * This interface provides methods for working with JOIN clause
+ * This interface provides methods for working with JOIN clause.
  *
  * @template TValue of bool|int|float|string|UnitEnum|ExprInterface|SelectQueryInterface|ValuesQueryInterface|null
- *
  * @template TTable of string|ExprInterface|SelectQueryInterface|ValuesQueryInterface|SelectTable
- *
  * @template TCondition of TValue|array<TCondition>
  * @template TStandaloneCondition of bool|ExprInterface
  * @template TConditions of array<string, TCondition>|array<int, TStandaloneCondition>
+ *
  * @purpose Define methods for working with JOIN clause.
  */
 interface JoinInterface
@@ -55,9 +54,9 @@ interface JoinInterface
      * @complexity 3
      *
      * @param JoinTypeEnum $type
-     * @param TTable $table
-     * @param TConditions $conditions
-     * @param string|null $alias
+     * @param TTable       $table
+     * @param TConditions  $conditions
+     * @param string|null  $alias
      *
      * @return static
      */
@@ -75,7 +74,7 @@ interface JoinInterface
      * @io TTable $table, TConditions $conditions, ?string $alias -> static
      * @complexity 2
      *
-     * @param TTable $table
+     * @param TTable      $table
      * @param TConditions $conditions
      * @param string|null $alias
      *
@@ -94,7 +93,7 @@ interface JoinInterface
      * @io TTable $table, TConditions $conditions, ?string $alias -> static
      * @complexity 2
      *
-     * @param TTable $table
+     * @param TTable      $table
      * @param TConditions $conditions
      * @param string|null $alias
      *
@@ -113,7 +112,7 @@ interface JoinInterface
      * @io TTable $table, TConditions $conditions, ?string $alias -> static
      * @complexity 2
      *
-     * @param TTable $table
+     * @param TTable      $table
      * @param TConditions $conditions
      * @param string|null $alias
      *
@@ -132,7 +131,7 @@ interface JoinInterface
      * @io TTable $table, ?string $alias -> static
      * @complexity 2
      *
-     * @param TTable $table
+     * @param TTable      $table
      * @param string|null $alias
      *
      * @return static
@@ -149,7 +148,7 @@ interface JoinInterface
      * @io TTable $table, TConditions $conditions, ?string $alias -> static
      * @complexity 2
      *
-     * @param TTable $table
+     * @param TTable      $table
      * @param TConditions $conditions
      * @param string|null $alias
      *
@@ -169,8 +168,8 @@ interface JoinInterface
      * @complexity 2
      *
      * @param JoinTypeEnum $type
-     * @param TTable $table
-     * @param string|null $alias
+     * @param TTable       $table
+     * @param string|null  $alias
      *
      * @return static
      */
@@ -187,7 +186,7 @@ interface JoinInterface
      * @io TTable $table, ?string $alias -> static
      * @complexity 2
      *
-     * @param TTable $table
+     * @param TTable      $table
      * @param string|null $alias
      *
      * @return static
@@ -204,7 +203,7 @@ interface JoinInterface
      * @io TTable $table, ?string $alias -> static
      * @complexity 2
      *
-     * @param TTable $table
+     * @param TTable      $table
      * @param string|null $alias
      *
      * @return static
@@ -221,7 +220,7 @@ interface JoinInterface
      * @io TTable $table, ?string $alias -> static
      * @complexity 2
      *
-     * @param TTable $table
+     * @param TTable      $table
      * @param string|null $alias
      *
      * @return static
@@ -238,7 +237,7 @@ interface JoinInterface
      * @io TTable $table, ?string $alias -> static
      * @complexity 2
      *
-     * @param TTable $table
+     * @param TTable      $table
      * @param string|null $alias
      *
      * @return static

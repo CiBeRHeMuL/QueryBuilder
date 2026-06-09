@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-/**
+/*
  * @moduleContract
  * @purpose PostgreSQL-specific DELETE query implementation with USING, JOIN, RETURNING clauses and MaybeReturnableQueryInterface support.
  * @scope PostgreSQL DELETE query building with advanced DML features.

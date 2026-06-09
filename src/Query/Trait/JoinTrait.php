@@ -29,15 +29,16 @@ use AndrewGos\QueryBuilder\Query\Values\ValuesQueryInterface;
 
 // region TRAIT_JoinTrait [DOMAIN(8): Query; CONCEPT(9): Trait; TECH(8): SQL]
 /**
- * This trait provides functionality of JoinInterface
+ * This trait provides functionality of JoinInterface.
  *
  * @see \AndrewGos\QueryBuilder\Query\Interface\JoinInterface
+ *
  * @purpose Implement JoinInterface for queries requiring JOIN support.
  */
 trait JoinTrait
 {
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      */
     protected(set) array $joinTables = [];
 
@@ -47,7 +48,7 @@ trait JoinTrait
      * @io JoinTypeEnum $type, TTable $table, array $conditions, ?string $alias -> static
      * @complexity 3
      *
-     * @inheritDoc
+     * {@inheritDoc}
      */
     public function join(
         JoinTypeEnum $type,
@@ -79,7 +80,7 @@ trait JoinTrait
      * @io TTable $table, array $conditions, ?string $alias -> static
      * @complexity 2
      *
-     * @inheritDoc
+     * {@inheritDoc}
      */
     public function innerJoin(
         string|ExprInterface|SelectQueryInterface|ValuesQueryInterface|SelectTable $table,
@@ -101,7 +102,7 @@ trait JoinTrait
      * @io TTable $table, array $conditions, ?string $alias -> static
      * @complexity 2
      *
-     * @inheritDoc
+     * {@inheritDoc}
      */
     public function leftJoin(
         string|ExprInterface|SelectQueryInterface|ValuesQueryInterface|SelectTable $table,
@@ -123,7 +124,7 @@ trait JoinTrait
      * @io TTable $table, array $conditions, ?string $alias -> static
      * @complexity 2
      *
-     * @inheritDoc
+     * {@inheritDoc}
      */
     public function rightJoin(
         string|ExprInterface|SelectQueryInterface|ValuesQueryInterface|SelectTable $table,
@@ -145,7 +146,7 @@ trait JoinTrait
      * @io TTable $table, ?string $alias -> static
      * @complexity 2
      *
-     * @inheritDoc
+     * {@inheritDoc}
      */
     public function crossJoin(
         string|ExprInterface|SelectQueryInterface|ValuesQueryInterface|SelectTable $table,
@@ -166,7 +167,7 @@ trait JoinTrait
      * @io TTable $table, array $conditions, ?string $alias -> static
      * @complexity 2
      *
-     * @inheritDoc
+     * {@inheritDoc}
      */
     public function fullJoin(
         string|ExprInterface|SelectQueryInterface|ValuesQueryInterface|SelectTable $table,
@@ -187,9 +188,10 @@ trait JoinTrait
      * @purpose Create a NATURAL JOIN, validating that cross join is not used with natural.
      * @io JoinTypeEnum $type, TTable $table, ?string $alias -> static
      * @complexity 3
+     *
      * @throws QueryBuilderException
      *
-     * @inheritDoc
+     * {@inheritDoc}
      */
     public function naturalJoin(
         JoinTypeEnum $type,
@@ -222,7 +224,7 @@ trait JoinTrait
      * @io TTable $table, ?string $alias -> static
      * @complexity 2
      *
-     * @inheritDoc
+     * {@inheritDoc}
      */
     public function naturalInnerJoin(
         string|ExprInterface|SelectQueryInterface|ValuesQueryInterface|SelectTable $table,
@@ -242,7 +244,7 @@ trait JoinTrait
      * @io TTable $table, ?string $alias -> static
      * @complexity 2
      *
-     * @inheritDoc
+     * {@inheritDoc}
      */
     public function naturalLeftJoin(
         string|ExprInterface|SelectQueryInterface|ValuesQueryInterface|SelectTable $table,
@@ -262,7 +264,7 @@ trait JoinTrait
      * @io TTable $table, ?string $alias -> static
      * @complexity 2
      *
-     * @inheritDoc
+     * {@inheritDoc}
      */
     public function naturalRightJoin(
         string|ExprInterface|SelectQueryInterface|ValuesQueryInterface|SelectTable $table,
@@ -282,7 +284,7 @@ trait JoinTrait
      * @io TTable $table, ?string $alias -> static
      * @complexity 2
      *
-     * @inheritDoc
+     * {@inheritDoc}
      */
     public function naturalFullJoin(
         string|ExprInterface|SelectQueryInterface|ValuesQueryInterface|SelectTable $table,

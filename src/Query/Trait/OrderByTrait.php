@@ -22,15 +22,16 @@ use AndrewGos\QueryBuilder\Helper\HExpr;
 
 // region TRAIT_OrderByTrait [DOMAIN(8): Query; CONCEPT(9): Trait; TECH(8): SQL]
 /**
- * This trait provides functionality of OrderByInterface
+ * This trait provides functionality of OrderByInterface.
  *
  * @see \AndrewGos\QueryBuilder\Query\Interface\OrderByInterface
+ *
  * @purpose Implement OrderByInterface for queries requiring result sorting.
  */
 trait OrderByTrait
 {
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      */
     protected(set) array $orderBy = [];
 
@@ -40,7 +41,7 @@ trait OrderByTrait
      * @io array $columns -> static
      * @complexity 2
      *
-     * @inheritDoc
+     * {@inheritDoc}
      */
     public function orderBy(array $columns): static
     {
@@ -56,7 +57,7 @@ trait OrderByTrait
      * @io array $columns -> static
      * @complexity 2
      *
-     * @inheritDoc
+     * {@inheritDoc}
      */
     public function addOrderBy(array $columns): static
     {

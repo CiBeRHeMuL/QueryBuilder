@@ -49,21 +49,21 @@ class SelectQuery implements SelectQueryInterface
     use LimitTrait;
 
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      */
     protected(set) array $selectColumns = [];
     protected(set) bool $distinct = false;
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      */
     protected(set) array $groupBy = [];
     protected(set) bool $groupDistinct = false;
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      */
     protected(set) array $having = [];
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      */
     protected(set) array $windows = [];
     protected(set) ?LockModeInterface $lockMode = null;
@@ -74,11 +74,12 @@ class SelectQuery implements SelectQueryInterface
      * @io array $columns -> static
      * @complexity 2
      *
-     * @inheritDoc
+     * {@inheritDoc}
      */
     public function select(array $columns): static
     {
         $this->selectColumns = $columns;
+
         return $this;
     }
     // endregion METHOD_select
@@ -89,7 +90,7 @@ class SelectQuery implements SelectQueryInterface
      * @io array $columns -> static
      * @complexity 2
      *
-     * @inheritDoc
+     * {@inheritDoc}
      */
     public function addSelect(array $columns): static
     {
@@ -97,6 +98,7 @@ class SelectQuery implements SelectQueryInterface
             $this->selectColumns,
             $columns,
         );
+
         return $this;
     }
     // endregion METHOD_addSelect
@@ -121,7 +123,7 @@ class SelectQuery implements SelectQueryInterface
      * @io array $columns, bool $distinct -> static
      * @complexity 2
      *
-     * @inheritDoc
+     * {@inheritDoc}
      */
     public function groupBy(array $columns, bool $distinct = false): static
     {
@@ -138,7 +140,7 @@ class SelectQuery implements SelectQueryInterface
      * @io array $columns, bool $distinct -> static
      * @complexity 2
      *
-     * @inheritDoc
+     * {@inheritDoc}
      */
     public function addGroupBy(array $columns, bool $distinct = false): static
     {
@@ -155,7 +157,7 @@ class SelectQuery implements SelectQueryInterface
      * @io array|ExprInterface $conditions -> static
      * @complexity 2
      *
-     * @inheritDoc
+     * {@inheritDoc}
      */
     public function having(array|ExprInterface $conditions): static
     {
@@ -171,7 +173,7 @@ class SelectQuery implements SelectQueryInterface
      * @io array|ExprInterface $conditions -> static
      * @complexity 2
      *
-     * @inheritDoc
+     * {@inheritDoc}
      */
     public function andHaving(array|ExprInterface $conditions): static
     {
@@ -190,7 +192,7 @@ class SelectQuery implements SelectQueryInterface
      * @io array|ExprInterface $conditions -> static
      * @complexity 3
      *
-     * @inheritDoc
+     * {@inheritDoc}
      */
     public function orHaving(array|ExprInterface $conditions): static
     {
@@ -211,7 +213,7 @@ class SelectQuery implements SelectQueryInterface
      * @io string $name, Window $windowDefinition -> static
      * @complexity 2
      *
-     * @inheritDoc
+     * {@inheritDoc}
      */
     public function window(string $name, Window $windowDefinition): static
     {
@@ -227,7 +229,7 @@ class SelectQuery implements SelectQueryInterface
      * @io LockModeInterface|null $lockMode -> static
      * @complexity 2
      *
-     * @inheritDoc
+     * {@inheritDoc}
      */
     public function lock(?LockModeInterface $lockMode): static
     {

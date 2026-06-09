@@ -53,12 +53,12 @@ class DeleteQueryTest extends TestCase
      */
     public function testAbstractGrammarDeleteWithCTE(): void
     {
-        $cteQuery = new \AndrewGos\QueryBuilder\Query\Select\SelectQuery();
+        $cteQuery = new SelectQuery();
         $cteQuery->select(['id'])->from(['inactive_users']);
 
         $query = new DeleteQuery();
         $query->from(['users'])->where(['id' => new \AndrewGos\QueryBuilder\Expr\Expr('> 100')]);
-        $query->with(['inactive' => new \AndrewGos\QueryBuilder\Expr\Cte\WithQuery($cteQuery)]);
+        $query->with(['inactive' => new WithQuery($cteQuery)]);
 
         $built = $this->grammar->buildDeleteQuery($query);
         self::assertSame('WITH "inactive" AS ( SELECT "id" FROM "inactive_users" ) DELETE FROM "users" WHERE "id" = (> 100)', $built->sql);

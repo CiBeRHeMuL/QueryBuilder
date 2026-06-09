@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-/**
+/*
  * @moduleContract
  * @purpose Expression namespace — provides SQL expression nodes for the query builder.
  * @scope SQL fragments, boolean operations, comparisons, literals, default values.

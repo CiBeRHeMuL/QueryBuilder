@@ -48,7 +48,7 @@ class BugFixTest extends TestCase
         $query = new MySqlSelectQuery();
         $query->select(['id'])->from(['users']);
         $query->offset(new Expr(':custom_offset', ['custom_offset' => 5]))
-              ->limit(new Expr(':custom_limit', ['custom_limit' => 10]));
+            ->limit(new Expr(':custom_limit', ['custom_limit' => 10]));
 
         $built = $grammar->buildSelectQuery($query);
         self::assertStringContainsString('LIMIT :custom_offset, :custom_limit', $built->sql);

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-/**
+/*
  * @moduleContract
  * @purpose PostgreSQL-specific INSERT query implementation with OVERRIDING USER/SYSTEM VALUE method and RETURNING clause support.
  * @scope PostgreSQL INSERT query building.

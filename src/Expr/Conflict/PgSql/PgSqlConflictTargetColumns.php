@@ -35,7 +35,7 @@ final class PgSqlConflictTargetColumns implements ConflictTargetInterface
 
     /**
      * @param array<int, string|ExprInterface|array{column: string, collate?: string, opclass?: string}> $columns
-     * @param array $where
+     * @param array                                                                                      $where
      */
     public function __construct(
         private(set) array $columns = [],

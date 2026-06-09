@@ -29,12 +29,13 @@ use AndrewGos\QueryBuilder\Helper\HExpr;
  * for queries which allow using only single table.
  *
  * @see \AndrewGos\QueryBuilder\Query\Interface\FromInterface
+ *
  * @purpose Implement FromInterface for queries restricted to a single FROM table.
  */
 trait SingleFromTrait
 {
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      */
     protected(set) array $from = [];
 
@@ -44,7 +45,7 @@ trait SingleFromTrait
      * @io array $tables -> static
      * @complexity 2
      *
-     * @inheritDoc
+     * {@inheritDoc}
      */
     public function from(array $tables): static
     {
@@ -67,7 +68,7 @@ trait SingleFromTrait
      * @io array $tables -> static
      * @complexity 1
      *
-     * @inheritDoc
+     * {@inheritDoc}
      */
     public function addFrom(array $tables): static
     {

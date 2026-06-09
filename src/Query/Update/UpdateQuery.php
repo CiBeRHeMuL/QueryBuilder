@@ -33,6 +33,7 @@ use UnitEnum;
 /**
  * @template TSetValue of bool|int|float|string|UnitEnum|ExprInterface|SelectQueryInterface|ValuesQueryInterface|array|null
  * @template TSet of array<int, SetClause>|array<string, TSetValue>
+ *
  * @purpose Concrete UPDATE query object composing WithTrait, WhereTrait, and SET support.
  */
 class UpdateQuery implements UpdateQueryInterface
@@ -47,9 +48,11 @@ class UpdateQuery implements UpdateQueryInterface
     // region METHOD_table [DOMAIN(8): Query; CONCEPT(9): Update; TECH(8): SQL]
     /**
      * @purpose Set the target table for the UPDATE statement.
-     * @param string $table Target table name (single table, ANSI SQL).
-     * @return static
      * @complexity 1
+     *
+     * @param string $table target table name (single table, ANSI SQL)
+     *
+     * @return static
      */
     public function table(string $table): static
     {
@@ -62,9 +65,11 @@ class UpdateQuery implements UpdateQueryInterface
     // region METHOD_set [DOMAIN(8): Query; CONCEPT(9): Update; TECH(8): SQL]
     /**
      * @purpose Set the SET columns and values, normalizing short syntax (string key => value) into SetClause objects.
-     * @param TSet $set Short syntax: array<string, TSetValue> (column => value), or pre-built array<int, SetClause>.
-     * @return static
      * @complexity 3
+     *
+     * @param TSet $set short syntax: array<string, TSetValue> (column => value), or pre-built array<int, SetClause>
+     *
+     * @return static
      */
     public function set(array $set): static
     {

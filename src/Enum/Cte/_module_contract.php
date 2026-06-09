@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-/**
+/*
  * @moduleContract
  * @purpose Provide enum types for CTE (Common Table Expression) query building.
  * @scope CTE search type (BREADTH / DEPTH) for recursive CTEs.

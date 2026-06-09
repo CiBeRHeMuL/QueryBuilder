@@ -29,7 +29,7 @@ class Expr implements ExprInterface
     /**
      * @template TParam of null|bool|int|float|string|UnitEnum
      *
-     * @param string $expression
+     * @param string   $expression
      * @param TParam[] $params
      */
     public function __construct(
@@ -38,7 +38,7 @@ class Expr implements ExprInterface
     ) {}
 
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      */
     public function getExpression(GrammarInterface $grammar): string
     {
@@ -46,7 +46,7 @@ class Expr implements ExprInterface
     }
 
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      */
     public function getParams(): array
     {

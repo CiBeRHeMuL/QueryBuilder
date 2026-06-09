@@ -35,11 +35,11 @@ class InsertQuery implements InsertQueryInterface
     protected(set) string $into;
     protected(set) ?string $alias = null;
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      */
     protected(set) array $columnNames = [];
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      */
     protected(set) SelectQueryInterface|ValuesQueryInterface|null $source = null;
 
@@ -49,7 +49,7 @@ class InsertQuery implements InsertQueryInterface
      * @io string $table, array $columnNames, ?string $alias -> static
      * @complexity 2
      *
-     * @inheritDoc
+     * {@inheritDoc}
      */
     public function into(string $table, array $columnNames = [], ?string $alias = null): static
     {

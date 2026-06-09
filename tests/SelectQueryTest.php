@@ -38,6 +38,7 @@ class SelectQueryTest extends TestCase
                 if ($identifier === '*') {
                     return $identifier;
                 }
+
                 return '"' . $identifier . '"';
             }
         };

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-/**
+/*
  * @moduleContract
  * @purpose Grammar namespace — provides SQL dialect grammar abstraction for query building.
  * @scope SELECT, VALUES, DELETE, INSERT, UPDATE building; CTE/WITH, JOIN, WHERE, GROUP BY, HAVING, WINDOW, SET operations, ORDER BY, LIMIT, LOCK; identifier escaping.

@@ -33,9 +33,9 @@ class PgSqlWithQuery extends WithQuery
 {
     /**
      * @param MaybeReturnableQueryInterface $query
-     * @param bool|null $materialized NULL by default to prevent materialization
-     * @param Search|null $search
-     * @param Cycle|null $cycle
+     * @param bool|null                     $materialized NULL by default to prevent materialization
+     * @param Search|null                   $search
+     * @param Cycle|null                    $cycle
      */
     public function __construct(
         MaybeReturnableQueryInterface $query,

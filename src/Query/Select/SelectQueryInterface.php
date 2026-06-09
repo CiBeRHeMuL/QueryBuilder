@@ -35,26 +35,16 @@ use UnitEnum;
 /**
  * @template TValue of bool|int|float|string|UnitEnum|ExprInterface|SelectQueryInterface|null
  * @template TExpression of TValue|array<TExpression>
- *
  * @template TSelectExpression of TExpression
- *
  * @template TGroupValue of bool|int|float|string|UnitEnum|ExprInterface|null
  * @template TGroupExpression of TGroupValue|array<TGroupExpression>
- *
  * @template TCondition of TValue|array<TCondition>
  * @template TStandaloneCondition of bool|ExprInterface
  * @template TConditions of array<string, TCondition>|array<int, TStandaloneCondition>
+ *
  * @purpose Define the contract for SELECT SQL queries.
  */
-interface SelectQueryInterface extends
-    WithInterface,
-    WhereInterface,
-    FromInterface,
-    JoinInterface,
-    OperationsInterface,
-    OrderByInterface,
-    LimitInterface,
-    MaybeReturnableQueryInterface
+interface SelectQueryInterface extends WithInterface, WhereInterface, FromInterface, JoinInterface, OperationsInterface, OrderByInterface, LimitInterface, MaybeReturnableQueryInterface
 {
     /**
      * @var array<int|string, TSelectExpression>
@@ -136,7 +126,7 @@ interface SelectQueryInterface extends
      * @complexity 2
      *
      * @param TGroupExpression[] $columns
-     * @param bool $distinct
+     * @param bool               $distinct
      *
      * @return static
      */
@@ -150,7 +140,7 @@ interface SelectQueryInterface extends
      * @complexity 2
      *
      * @param TGroupExpression[] $columns
-     * @param bool $distinct
+     * @param bool               $distinct
      *
      * @return static
      */

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-/**
+/*
  * @moduleContract
  * @purpose PostgreSQL-specific table expressions with ONLY modifier for table inheritance hierarchies.
  * @scope PostgreSQL SELECT table references.

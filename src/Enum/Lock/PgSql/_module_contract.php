@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-/**
+/*
  * @moduleContract
  * @purpose Provide PostgreSQL-specific lock mode enum types.
  * @scope PostgreSQL lock modes (FOR UPDATE, FOR NO KEY UPDATE, FOR SHARE, FOR KEY SHARE) and lock wait modes (NOWAIT, SKIP LOCKED).

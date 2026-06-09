@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-/**
+/*
  * @moduleContract
  * @purpose Provide interfaces for ON CONFLICT clause building — conflict action and conflict target (polymorphic, like LockModeInterface).
  * @scope ConflictActionInterface and ConflictTargetInterface contracts.

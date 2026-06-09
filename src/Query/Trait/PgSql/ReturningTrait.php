@@ -29,13 +29,14 @@ trait ReturningTrait
     protected(set) ?string $returningOldAlias = null;
     protected(set) ?string $returningNewAlias = null;
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      */
     protected(set) ?array $returningColumns = null;
 
     // region METHOD_returning [DOMAIN(8): Trait; TECH(8): Returning]
     /**
-     * @inheritDoc
+     * {@inheritDoc}
+     *
      * @purpose Set RETURNING columns with optional OLD/NEW aliases.
      */
     public function returning(array $columns, ?string $oldAlias = null, ?string $newAlias = null): static
@@ -50,7 +51,8 @@ trait ReturningTrait
 
     // region METHOD_addReturning [DOMAIN(8): Trait; TECH(8): Returning]
     /**
-     * @inheritDoc
+     * {@inheritDoc}
+     *
      * @purpose Add RETURNING columns with optional OLD/NEW aliases.
      */
     public function addReturning(array $columns, ?string $oldAlias = null, ?string $newAlias = null): static
@@ -65,7 +67,8 @@ trait ReturningTrait
 
     // region METHOD_isReturnable [DOMAIN(8): Returning; TECH(8): Compatibility]
     /**
-     * @inheritDoc
+     * {@inheritDoc}
+     *
      * @purpose Determine if this query type produces result rows (true if RETURNING clause is specified).
      */
     public function isReturnable(): bool

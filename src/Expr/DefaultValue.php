@@ -27,7 +27,7 @@ use AndrewGos\QueryBuilder\Grammar\GrammarInterface;
 class DefaultValue implements ExprInterface
 {
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      */
     public function getExpression(GrammarInterface $grammar): string
     {
@@ -35,7 +35,7 @@ class DefaultValue implements ExprInterface
     }
 
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      */
     public function getParams(): array
     {

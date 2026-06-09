@@ -18,10 +18,10 @@ use UnitEnum;
  * @scope Template method pattern: prefix + column list generation for SQL grouping expressions.
  * @input SQL prefix string and array of groupable expressions.
  * @output Rendered SQL fragment with params for CUBE/ROLLUP/GROUPING SETS.
- * @modulemap
- * AbstractGroupingSets => Abstract base for grouping set expressions
  * @invariants
  * - Columns are validated via HExpr::testGroupByExpr
+ * @modulemap
+ * AbstractGroupingSets => Abstract base for grouping set expressions
  */
 // endregion MODULE_CONTRACT
 // GREP_SUMMARY: GROUP BY, CUBE, ROLLUP, GROUPING SETS, aggregate, SQL standard, OLAP
@@ -31,6 +31,7 @@ use UnitEnum;
 /**
  * @template TValue of bool|int|float|string|UnitEnum|ExprInterface|null
  * @template TGroupExpression of ExprInterface|array<TGroupExpression>
+ *
  * @purpose Abstract base for CUBE, ROLLUP, and GROUPING SETS expressions.
  */
 abstract class AbstractGroupingSets extends AbstractExpr

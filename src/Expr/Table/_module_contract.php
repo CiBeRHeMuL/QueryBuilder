@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-/**
+/*
  * @moduleContract
  * @purpose Provides the table reference value object for SELECT, FROM, and JOIN clauses.
  * @scope Simple value object holding a table name reference.

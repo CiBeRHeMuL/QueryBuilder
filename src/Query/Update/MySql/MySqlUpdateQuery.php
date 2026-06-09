@@ -6,9 +6,9 @@ namespace AndrewGos\QueryBuilder\Query\Update\MySql;
 
 use AndrewGos\QueryBuilder\Expr\ExprInterface;
 use AndrewGos\QueryBuilder\Expr\Update\SetClause;
+use AndrewGos\QueryBuilder\Query\Interface\LimitInterface;
 use AndrewGos\QueryBuilder\Query\Interface\MySql\PartitionInterface;
 use AndrewGos\QueryBuilder\Query\Interface\OrderByInterface;
-use AndrewGos\QueryBuilder\Query\Interface\LimitInterface;
 use AndrewGos\QueryBuilder\Query\Select\SelectQueryInterface;
 use AndrewGos\QueryBuilder\Query\Trait\LimitTrait;
 use AndrewGos\QueryBuilder\Query\Trait\MySql\PartitionTrait;
@@ -40,12 +40,10 @@ use UnitEnum;
 /**
  * @template TSetValue of bool|int|float|string|UnitEnum|ExprInterface|SelectQueryInterface|ValuesQueryInterface|array|null
  * @template TSet of array<int, SetClause>|array<string, TSetValue>
+ *
  * @purpose MySQL UPDATE query extending UpdateQuery with multi-table support, PARTITION, ORDER BY, LIMIT, LOW_PRIORITY, and IGNORE flags.
  */
-class MySqlUpdateQuery extends UpdateQuery implements
-    OrderByInterface,
-    LimitInterface,
-    PartitionInterface
+class MySqlUpdateQuery extends UpdateQuery implements OrderByInterface, LimitInterface, PartitionInterface
 {
     use OrderByTrait;
     use LimitTrait;
@@ -71,9 +69,11 @@ class MySqlUpdateQuery extends UpdateQuery implements
     // region METHOD_addTable [DOMAIN(8): Update; TECH(8): MultiTable]
     /**
      * @purpose Add an additional table to the MySQL UPDATE (multi-table syntax without FROM).
-     * @param string $table Additional table name appended to $tables.
-     * @return static
      * @complexity 1
+     *
+     * @param string $table additional table name appended to $tables
+     *
+     * @return static
      */
     public function addTable(string $table): static
     {
@@ -86,9 +86,11 @@ class MySqlUpdateQuery extends UpdateQuery implements
     // region METHOD_lowPriority [DOMAIN(8): Update; TECH(8): MySQLModifiers]
     /**
      * @purpose Set MySQL LOW_PRIORITY modifier for UPDATE.
-     * @param bool $lowPriority When true, emits LOW_PRIORITY after UPDATE.
-     * @return static
      * @complexity 1
+     *
+     * @param bool $lowPriority when true, emits LOW_PRIORITY after UPDATE
+     *
+     * @return static
      */
     public function lowPriority(bool $lowPriority = true): static
     {
@@ -101,9 +103,11 @@ class MySqlUpdateQuery extends UpdateQuery implements
     // region METHOD_ignore [DOMAIN(8): Update; TECH(8): MySQLModifiers]
     /**
      * @purpose Set MySQL IGNORE modifier for UPDATE.
-     * @param bool $ignore When true, emits IGNORE after UPDATE.
-     * @return static
      * @complexity 1
+     *
+     * @param bool $ignore when true, emits IGNORE after UPDATE
+     *
+     * @return static
      */
     public function ignore(bool $ignore = true): static
     {

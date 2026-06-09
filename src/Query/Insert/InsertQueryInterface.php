@@ -41,7 +41,7 @@ interface InsertQueryInterface extends WithInterface
         get;
     }
     /**
-     * Source for insertion. NULL means "DEFAULT VALUES"
+     * Source for insertion. NULL means "DEFAULT VALUES".
      *
      * @var SelectQueryInterface|ValuesQueryInterface|null $source
      */
@@ -55,8 +55,8 @@ interface InsertQueryInterface extends WithInterface
      * @io string $table, string[] $columnNames, ?string $alias -> static
      * @complexity 2
      *
-     * @param string $table
-     * @param string[] $columnNames
+     * @param string      $table
+     * @param string[]    $columnNames
      * @param string|null $alias
      *
      * @return $this

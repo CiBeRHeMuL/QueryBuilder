@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-/**
+/*
  * @moduleContract
  * @purpose Provide UPDATE SQL query contract and implementations for all dialects.
  * @scope UpdateQueryInterface, base UpdateQuery, MySqlUpdateQuery, PgSqlUpdateQuery.

@@ -31,7 +31,6 @@ use UnitEnum;
 /**
  * @template TValue of bool|int|float|string|UnitEnum|ExprInterface|SelectQueryInterface|ValuesQueryInterface|null
  * @template TExpression of TValue|array<TExpression>
- *
  * @template TSelectExpression of TExpression
  *
  * @purpose Contract for queries supporting PostgreSQL RETURNING clause with column selection and OLD/NEW alias support.
@@ -53,8 +52,8 @@ interface ReturningInterface extends MaybeReturnableQueryInterface
 
     /**
      * @param array<int|string, TSelectExpression> $columns
-     * @param string|null $oldAlias
-     * @param string|null $newAlias
+     * @param string|null                          $oldAlias
+     * @param string|null                          $newAlias
      *
      * @return static
      */
@@ -62,8 +61,8 @@ interface ReturningInterface extends MaybeReturnableQueryInterface
 
     /**
      * @param array<int|string, TSelectExpression> $columns
-     * @param string|null $oldAlias
-     * @param string|null $newAlias
+     * @param string|null                          $oldAlias
+     * @param string|null                          $newAlias
      *
      * @return static
      */

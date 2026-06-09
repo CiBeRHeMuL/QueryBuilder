@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-/**
+/*
  * @moduleContract
  * @purpose PostgreSQL-specific query traits including ReturningTrait for RETURNING clause implementation shared across INSERT/UPDATE/DELETE query types.
  * @scope PostgreSQL trait definitions.

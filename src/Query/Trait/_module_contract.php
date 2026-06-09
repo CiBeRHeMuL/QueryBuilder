@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-/**
+/*
  * @moduleContract
  * @purpose Provide reusable trait implementations of Query clause interfaces.
  * @scope Each trait maps 1:1 to an Interface contract, enabling DRY composition in query classes.

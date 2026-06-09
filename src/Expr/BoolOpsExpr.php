@@ -30,7 +30,9 @@ use UnitEnum;
 // region CLASS_BoolOpsExpr [DOMAIN(7): Expression; CONCEPT(7): Boolean; TECH(7): Abstract]
 /**
  * @template TValue of bool|int|float|string|UnitEnum|ExprInterface|SelectQueryInterface|null
+ *
  * @phpstan-template TCondition of TValue|array<TCondition>
+ *
  * @template TStandaloneCondition of bool|ExprInterface
  * @template TConditions of array<string, TCondition>|array<int, bool|ExprInterface>
  */
@@ -39,8 +41,9 @@ class BoolOpsExpr extends AbstractExpr
     // region METHOD___construct [DOMAIN(7): Expression; CONCEPT(6): Init; TECH(6): Constructor]
     /**
      * @purpose Store conditions and operator for later building.
+     *
      * @param TConditions $conditions
-     * @param string $operator
+     * @param string      $operator
      */
     public function __construct(
         private array $conditions,

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-/**
+/*
  * @moduleContract
  * @purpose Builder namespace — provides value-to-expression dispatch for the query builder.
  * @scope Type-based value normalization, sub-query wrapping, array and enum handling.

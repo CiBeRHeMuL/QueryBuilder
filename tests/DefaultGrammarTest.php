@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace AndrewGos\QueryBuilder\Tests;
 
+use AndrewGos\QueryBuilder\Exception\QueryBuilderException;
 use AndrewGos\QueryBuilder\Expr\Cte\WithQuery;
 use AndrewGos\QueryBuilder\Expr\Expr;
-use AndrewGos\QueryBuilder\Exception\QueryBuilderException;
 use AndrewGos\QueryBuilder\Grammar\Default\DefaultGrammar;
 use AndrewGos\QueryBuilder\Grammar\GrammarInterface;
 use AndrewGos\QueryBuilder\Query\Delete\DeleteQuery;

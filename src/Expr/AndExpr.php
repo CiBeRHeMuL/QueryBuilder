@@ -24,7 +24,9 @@ use UnitEnum;
 // region CLASS_AndExpr [DOMAIN(7): Expression; CONCEPT(6): Boolean; TECH(7): AND]
 /**
  * @template TValue of bool|int|float|string|UnitEnum|ExprInterface|SelectQueryInterface|null
+ *
  * @phpstan-template TCondition of SelectQueryInterface|UnitEnum
+ *
  * @template TStandaloneCondition of bool|ExprInterface
  * @template TConditions of UnitEnum|array<int, bool|ExprInterface>
  */
@@ -33,6 +35,7 @@ class AndExpr extends BoolOpsExpr
     // region METHOD___construct [DOMAIN(7): Expression; CONCEPT(6): Init; TECH(6): Constructor]
     /**
      * @purpose Create an AND expression with the given conditions.
+     *
      * @param TConditions $conditions
      */
     public function __construct(

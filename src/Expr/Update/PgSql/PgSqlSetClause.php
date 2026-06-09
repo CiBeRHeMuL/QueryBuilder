@@ -35,9 +35,9 @@ readonly class PgSqlSetClause extends SetClause
     protected(set) bool $isRow;
 
     /**
-     * @param string|string[] $target
+     * @param string|string[]                                                                     $target
      * @param bool|int|float|string|ExprInterface|SelectQueryInterface|ValuesQueryInterface|array $value
-     * @param bool $isRow Enable PostgreSQL ROW() syntax for multi-column assignments.
+     * @param bool                                                                                $isRow  enable PostgreSQL ROW() syntax for multi-column assignments
      */
     public function __construct(
         string|array $target,
@@ -51,8 +51,10 @@ readonly class PgSqlSetClause extends SetClause
     // region METHOD_getSql [DOMAIN(8): UPDATE; CONCEPT(8): PgSqlSetClause; TECH(7): Rendering]
     /**
      * @purpose Render this PgSQL SET clause element. For isRow=true multi-column, produces ROW(val1, val2) syntax.
-     * @param GrammarInterface $grammar Grammar for identifier escaping.
-     * @return ExprInterface The rendered expression with ROW syntax when applicable.
+     *
+     * @param GrammarInterface $grammar grammar for identifier escaping
+     *
+     * @return ExprInterface the rendered expression with ROW syntax when applicable
      */
     public function getSql(GrammarInterface $grammar): ExprInterface
     {

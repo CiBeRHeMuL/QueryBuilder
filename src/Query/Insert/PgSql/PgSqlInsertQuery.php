@@ -45,7 +45,9 @@ class PgSqlInsertQuery extends InsertQuery implements ReturningInterface
     // region METHOD_overrideValue [DOMAIN(8): Insert; CONCEPT(8): OverrideValue; TECH(8): Dialect]
     /**
      * @purpose Set OVERRIDING USER VALUE or OVERRIDING SYSTEM VALUE for PostgreSQL INSERT.
+     *
      * @param PgSqlOverrideValueMethodEnum|null $method
+     *
      * @return $this
      */
     public function overrideValue(?PgSqlOverrideValueMethodEnum $method): static
@@ -59,8 +61,10 @@ class PgSqlInsertQuery extends InsertQuery implements ReturningInterface
     // region METHOD_onConflict [DOMAIN(8): Insert; CONCEPT(8): OnConflict; TECH(8): Dialect]
     /**
      * @purpose Set ON CONFLICT action and optional target for PostgreSQL INSERT.
-     * @param ConflictActionInterface $action Required conflict action (DO NOTHING or DO UPDATE SET).
-     * @param ConflictTargetInterface|null $target Optional conflict target (columns or ON CONSTRAINT).
+     *
+     * @param ConflictActionInterface      $action required conflict action (DO NOTHING or DO UPDATE SET)
+     * @param ConflictTargetInterface|null $target optional conflict target (columns or ON CONSTRAINT)
+     *
      * @return $this
      */
     public function onConflict(ConflictActionInterface $action, ?ConflictTargetInterface $target = null): static

@@ -28,10 +28,10 @@ final readonly class Cycle
 {
     /**
      * @param string[] $columns
-     * @param string $cycleMarkColumnName
-     * @param string $cyclePathColumnName
-     * @param Literal $cycleMarkValue
-     * @param Literal $cycleMarkDefault
+     * @param string   $cycleMarkColumnName
+     * @param string   $cyclePathColumnName
+     * @param Literal  $cycleMarkValue
+     * @param Literal  $cycleMarkDefault
      */
     public function __construct(
         private(set) array $columns,

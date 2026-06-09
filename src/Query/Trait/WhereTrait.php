@@ -24,15 +24,16 @@ use AndrewGos\QueryBuilder\Expr\OrExpr;
 
 // region TRAIT_WhereTrait [DOMAIN(8): Query; CONCEPT(9): Trait; TECH(8): SQL]
 /**
- * This trait provides functionality of WhereInterface
+ * This trait provides functionality of WhereInterface.
  *
  * @see \AndrewGos\QueryBuilder\Query\Interface\WhereInterface
+ *
  * @purpose Implement WhereInterface for queries requiring WHERE clause support.
  */
 trait WhereTrait
 {
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      */
     protected(set) array $where = [];
 
@@ -42,7 +43,7 @@ trait WhereTrait
      * @io array|ExprInterface $conditions -> static
      * @complexity 2
      *
-     * @inheritDoc
+     * {@inheritDoc}
      */
     public function where(array|ExprInterface $conditions): static
     {
@@ -58,7 +59,7 @@ trait WhereTrait
      * @io array|ExprInterface $conditions -> static
      * @complexity 2
      *
-     * @inheritDoc
+     * {@inheritDoc}
      */
     public function andWhere(array|ExprInterface $conditions): static
     {
@@ -77,7 +78,7 @@ trait WhereTrait
      * @io array|ExprInterface $conditions -> static
      * @complexity 3
      *
-     * @inheritDoc
+     * {@inheritDoc}
      */
     public function orWhere(array|ExprInterface $conditions): static
     {

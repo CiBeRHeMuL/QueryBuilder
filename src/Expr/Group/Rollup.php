@@ -25,6 +25,7 @@ use UnitEnum;
 /**
  * @template TValue of bool|int|float|string|UnitEnum|ExprInterface|null
  * @template TGroupExpression of ExprInterface|array<TGroupExpression>
+ *
  * @purpose Represents a ROLLUP grouping expression for GROUP BY clauses.
  */
 class Rollup extends AbstractGroupingSets

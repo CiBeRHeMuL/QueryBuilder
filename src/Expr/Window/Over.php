@@ -31,10 +31,11 @@ final class Over implements ExprInterface
     // region METHOD___construct [DOMAIN(8): Window; CONCEPT(5): Ctor; TECH(5): DI]
     /**
      * @purpose Initializes the OVER clause with a function expression and window reference.
-     * @param ExprInterface $expr
-     * @param Window|string $over window definition or window name
      * @io ExprInterface, Window|string -> void
      * @complexity 1
+     *
+     * @param ExprInterface $expr
+     * @param Window|string $over window definition or window name
      */
     public function __construct(
         private ExprInterface $expr,
@@ -45,7 +46,7 @@ final class Over implements ExprInterface
     // region METHOD_getExpression [DOMAIN(8): Window; CONCEPT(8): SQLRender; TECH(6): GrammarInterface]
     /**
      * @purpose Renders the OVER clause SQL, resolving named window or inline window definition.
-     * @inheritDoc
+     * {@inheritDoc}
      * @io GrammarInterface -> string
      * @complexity 3
      */
@@ -53,16 +54,16 @@ final class Over implements ExprInterface
     {
         if (is_string($this->over)) {
             return "{$this->expr->getExpression($grammar)} OVER {$grammar->escapeIdentifier($this->over)}";
-        } else {
-            return "{$this->expr->getExpression($grammar)} OVER {$this->over->getExpression($grammar)}";
         }
+
+        return "{$this->expr->getExpression($grammar)} OVER {$this->over->getExpression($grammar)}";
     }
     // endregion METHOD_getExpression
 
     // region METHOD_getParams [DOMAIN(8): Window; CONCEPT(6): Params; TECH(5): Merge]
     /**
      * @purpose Merges parameters from both the function expression and window definition.
-     * @inheritDoc
+     * {@inheritDoc}
      * @io void -> array
      * @complexity 2
      */

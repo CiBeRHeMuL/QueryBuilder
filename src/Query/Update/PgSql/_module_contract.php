@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-/**
+/*
  * @moduleContract
  * @purpose Provides PostgreSQL-specific UPDATE query with FROM, JOIN, and RETURNING support.
  * @scope PgSqlUpdateQuery extending UpdateQuery.

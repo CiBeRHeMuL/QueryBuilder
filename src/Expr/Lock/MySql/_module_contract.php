@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-/**
+/*
  * @moduleContract
  * @purpose MySQL-specific lock mode expressions for SELECT ... FOR UPDATE / FOR SHARE with table lists and NOWAIT/SKIP LOCKED options.
  * @scope MySQL locking syntax generation.

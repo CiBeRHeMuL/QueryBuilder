@@ -36,7 +36,7 @@ abstract class AbstractExpr implements ExprInterface
     // region METHOD_getExpression [DOMAIN(7): Expression; CONCEPT(7): LazyBuild; TECH(7): Caching]
     /**
      * @purpose Lazy-build and cache the SQL expression string for a given grammar.
-     * @inheritDoc
+     * {@inheritDoc}
      */
     public function getExpression(GrammarInterface $grammar): string
     {
@@ -53,14 +53,16 @@ abstract class AbstractExpr implements ExprInterface
     // region METHOD_getParams [DOMAIN(7): Expression; CONCEPT(6): Params; TECH(7): Accessor]
     /**
      * @purpose Return the bound parameters, ensuring the expression was built first.
+     *
      * @throws QueryBuilderException
-     * @inheritDoc
+     *                               {@inheritDoc}
      */
     public function getParams(): array
     {
         if (!isset($this->params)) {
             throw QueryBuilderException::exprNotBuilt($this);
         }
+
         return $this->params;
     }
     // endregion METHOD_getParams
@@ -87,6 +89,7 @@ abstract class AbstractExpr implements ExprInterface
         static $id = 0;
 
         $oid = spl_object_id($this);
+
         return sprintf('v%s_%s', $oid, ++$id);
     }
     // endregion METHOD_generateParamId

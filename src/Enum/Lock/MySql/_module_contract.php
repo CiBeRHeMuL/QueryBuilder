@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-/**
+/*
  * @moduleContract
  * @purpose Provide MySQL-specific lock mode enum types.
  * @scope MySQL lock modes (FOR UPDATE / FOR SHARE) and lock wait modes (NOWAIT / SKIP LOCKED).

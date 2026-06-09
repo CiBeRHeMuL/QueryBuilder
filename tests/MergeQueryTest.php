@@ -7,17 +7,21 @@ namespace AndrewGos\QueryBuilder\Tests;
 use AndrewGos\QueryBuilder\Exception\QueryBuilderException;
 use AndrewGos\QueryBuilder\Expr\Cte\WithQuery;
 use AndrewGos\QueryBuilder\Expr\Expr;
+use AndrewGos\QueryBuilder\Expr\Merge\MergeActionUpdate;
 use AndrewGos\QueryBuilder\Expr\Merge\MergeWhenMatchedClause;
 use AndrewGos\QueryBuilder\Expr\Merge\MergeWhenNotMatchedBySourceClause;
 use AndrewGos\QueryBuilder\Expr\Merge\MergeWhenNotMatchedClause;
 use AndrewGos\QueryBuilder\Expr\Merge\PgSql\PgSqlMergeActionDoNothing;
+use AndrewGos\QueryBuilder\Expr\Update\SetClause;
 use AndrewGos\QueryBuilder\Grammar\AbstractGrammar;
+use AndrewGos\QueryBuilder\Grammar\Default\DefaultGrammar;
 use AndrewGos\QueryBuilder\Grammar\MySql\MySqlGrammar;
 use AndrewGos\QueryBuilder\Grammar\PgSql\PgSqlGrammar;
 use AndrewGos\QueryBuilder\Query\Interface\MaybeReturnableQueryInterface;
 use AndrewGos\QueryBuilder\Query\Merge\MergeQuery;
 use AndrewGos\QueryBuilder\Query\Merge\PgSql\PgSqlMergeQuery;
 use AndrewGos\QueryBuilder\Query\Select\SelectQuery;
+use AndrewGos\QueryBuilder\Query\Values\ValuesQuery;
 use PHPUnit\Framework\TestCase;
 
 // region CLASS_MergeQueryTest [DOMAIN(9): Testing; CONCEPT(9): Merge; TECH(9): SQLGeneration]
@@ -399,5 +403,352 @@ class MergeQueryTest extends TestCase
         self::assertTrue($query->isReturnable());
     }
     // endregion METHOD_testPgSqlMergeIsReturnable
+
+    // region METHOD_testInsertWithTypedValues [DOMAIN(9): Testing; CONCEPT(9): Merge; TECH(9): ValueTypes]
+    /**
+     * @purpose Verify MergeActionInsert handles int, float, bool, null values correctly — scalars become bound params, bool/null are SQL literals.
+     */
+    public function testInsertWithTypedValues(): void
+    {
+        $grammar = new class extends AbstractGrammar {
+            public function escapeIdentifier(string $identifier): string
+            {
+                return '"' . $identifier . '"';
+            }
+        };
+
+        $query = new MergeQuery();
+        $query->into('target', 't')
+            ->using('source', 's')
+            ->on(['t.id' => 's.id'])
+            ->whenMatched(
+                MergeWhenMatchedClause::update(['name' => 's.name']),
+            )
+            ->whenNotMatched(
+                MergeWhenNotMatchedClause::insert([
+                    'id' => 's.id',
+                    'count' => 42,
+                    'ratio' => 3.14,
+                    'active' => true,
+                    'notes' => null,
+                ]),
+            );
+
+        $built = $grammar->buildMergeQuery($query);
+
+        self::assertStringContainsString(
+            'WHEN NOT MATCHED THEN INSERT ("id", "count", "ratio", "active", "notes") VALUES ("s"."id", ',
+            $built->sql,
+        );
+        self::assertStringContainsString('TRUE', $built->sql);
+        self::assertStringContainsString('NULL', $built->sql);
+        self::assertCount(2, $built->params);
+    }
+    // endregion METHOD_testInsertWithTypedValues
+
+    // region METHOD_testUpdateSetWithSelectQuery [DOMAIN(9): Testing; CONCEPT(9): Merge; TECH(9): SubqueryValue]
+    /**
+     * @purpose Verify MergeActionUpdate accepts SelectQueryInterface as a SET value, rendering it as a subquery.
+     */
+    public function testUpdateSetWithSelectQuery(): void
+    {
+        $grammar = new class extends AbstractGrammar {
+            public function escapeIdentifier(string $identifier): string
+            {
+                return '"' . $identifier . '"';
+            }
+        };
+
+        $subquery = new SelectQuery()->select(['name'])->from(['source'])->where(['id' => 1]);
+
+        $query = new MergeQuery();
+        $query->into('target', 't')
+            ->using('source', 's')
+            ->on(['t.id' => 's.id'])
+            ->whenMatched(
+                MergeWhenMatchedClause::update(['name' => $subquery]),
+            );
+
+        $built = $grammar->buildMergeQuery($query);
+
+        self::assertStringContainsString(
+            'WHEN MATCHED THEN UPDATE SET "name" = (SELECT "name" FROM "source" WHERE "id" = :',
+            $built->sql,
+        );
+        self::assertCount(1, $built->params);
+    }
+    // endregion METHOD_testUpdateSetWithSelectQuery
+
+    // region METHOD_testUpdateSetWithValuesQuery [DOMAIN(9): Testing; CONCEPT(9): Merge; TECH(9): ValuesQueryValue]
+    /**
+     * @purpose Verify MergeActionUpdate accepts ValuesQueryInterface as a SET value, rendering it as a subquery.
+     */
+    public function testUpdateSetWithValuesQuery(): void
+    {
+        $grammar = new class extends AbstractGrammar {
+            public function escapeIdentifier(string $identifier): string
+            {
+                return '"' . $identifier . '"';
+            }
+        };
+
+        $values = new ValuesQuery()->values([['new_name']]);
+
+        $query = new MergeQuery();
+        $query->into('target', 't')
+            ->using('source', 's')
+            ->on(['t.id' => 's.id'])
+            ->whenMatched(
+                MergeWhenMatchedClause::update(['name' => $values]),
+            );
+
+        $built = $grammar->buildMergeQuery($query);
+
+        self::assertStringContainsString(
+            'WHEN MATCHED THEN UPDATE SET "name" = (VALUES (:',
+            $built->sql,
+        );
+        self::assertCount(1, $built->params);
+    }
+    // endregion METHOD_testUpdateSetWithValuesQuery
+
+    // region METHOD_testUpdateSetWithPrebuiltSetClause [DOMAIN(9): Testing; CONCEPT(9): Merge; TECH(9): SetClause]
+    /**
+     * @purpose Verify MergeActionUpdate accepts a pre-built array of SetClause objects.
+     */
+    public function testUpdateSetWithPrebuiltSetClause(): void
+    {
+        $grammar = new class extends AbstractGrammar {
+            public function escapeIdentifier(string $identifier): string
+            {
+                return '"' . $identifier . '"';
+            }
+        };
+
+        $query = new MergeQuery();
+        $query->into('target', 't')
+            ->using('source', 's')
+            ->on(['t.id' => 's.id'])
+            ->whenMatched(
+                new MergeWhenMatchedClause(
+                    new MergeActionUpdate([new SetClause('name', 's.name')]),
+                ),
+            );
+
+        $built = $grammar->buildMergeQuery($query);
+
+        self::assertSame(
+            'MERGE INTO "target" AS "t" USING "source" AS "s" ON "t"."id" = "s"."id" WHEN MATCHED THEN UPDATE SET "name" = "s"."name"',
+            $built->sql,
+        );
+        self::assertEmpty($built->params);
+    }
+    // endregion METHOD_testUpdateSetWithPrebuiltSetClause
+
+    // region METHOD_testUsingWithValuesQuery [DOMAIN(9): Testing; CONCEPT(9): Merge; TECH(9): UsingValues]
+    /**
+     * @purpose Verify USING clause accepts a ValuesQuery as source.
+     */
+    public function testUsingWithValuesQuery(): void
+    {
+        $grammar = new class extends AbstractGrammar {
+            public function escapeIdentifier(string $identifier): string
+            {
+                return '"' . $identifier . '"';
+            }
+        };
+
+        $values = new ValuesQuery()->values([[1, 'Alice']]);
+
+        $query = new MergeQuery();
+        $query->into('target', 't')
+            ->using($values, 's')
+            ->on(['t.id' => 's.id'])
+            ->whenMatched(
+                MergeWhenMatchedClause::update(['name' => 's.name']),
+            );
+
+        $built = $grammar->buildMergeQuery($query);
+
+        self::assertStringContainsString('USING (VALUES (', $built->sql);
+        self::assertStringContainsString('AS "s"', $built->sql);
+    }
+    // endregion METHOD_testUsingWithValuesQuery
+
+    // region METHOD_testUsingWithExpr [DOMAIN(9): Testing; CONCEPT(9): Merge; TECH(9): UsingExpr]
+    /**
+     * @purpose Verify USING clause accepts an ExprInterface (raw expression) as source.
+     */
+    public function testUsingWithExpr(): void
+    {
+        $grammar = new class extends AbstractGrammar {
+            public function escapeIdentifier(string $identifier): string
+            {
+                return '"' . $identifier . '"';
+            }
+        };
+
+        $query = new MergeQuery();
+        $query->into('target', 't')
+            ->using(new Expr('raw_source'), 's')
+            ->on(['t.id' => 's.id'])
+            ->whenMatched(
+                MergeWhenMatchedClause::update(['name' => 's.name']),
+            );
+
+        $built = $grammar->buildMergeQuery($query);
+
+        self::assertSame(
+            'MERGE INTO "target" AS "t" USING raw_source AS "s" ON "t"."id" = "s"."id" WHEN MATCHED THEN UPDATE SET "name" = "s"."name"',
+            $built->sql,
+        );
+        self::assertEmpty($built->params);
+    }
+    // endregion METHOD_testUsingWithExpr
+
+    // region METHOD_testDefaultGrammarMerge [DOMAIN(9): Testing; CONCEPT(9): Merge; TECH(9): DefaultGrammar]
+    /**
+     * @purpose Verify that DefaultGrammar (concrete ANSI class) builds a basic MERGE query correctly.
+     */
+    public function testDefaultGrammarMerge(): void
+    {
+        $grammar = new DefaultGrammar();
+
+        $query = new MergeQuery();
+        $query->into('target', 't')
+            ->using('source', 's')
+            ->on(['t.id' => 's.id'])
+            ->whenMatched(
+                MergeWhenMatchedClause::update(['name' => 's.name']),
+            )
+            ->whenNotMatched(
+                MergeWhenNotMatchedClause::insert(['id' => 's.id', 'name' => 's.name']),
+            );
+
+        $built = $grammar->buildMergeQuery($query);
+
+        self::assertSame(
+            'MERGE INTO "target" AS "t" USING "source" AS "s" ON "t"."id" = "s"."id" WHEN MATCHED THEN UPDATE SET "name" = "s"."name" WHEN NOT MATCHED THEN INSERT ("id", "name") VALUES ("s"."id", "s"."name")',
+            $built->sql,
+        );
+        self::assertEmpty($built->params);
+    }
+    // endregion METHOD_testDefaultGrammarMerge
+
+    // region METHOD_testMergeWithoutWhenClauses [DOMAIN(9): Testing; CONCEPT(9): Merge; TECH(9): EdgeCase]
+    /**
+     * @purpose Verify that MERGE without any WHEN clauses produces only MERGE INTO ... USING ... ON (no action clauses).
+     */
+    public function testMergeWithoutWhenClauses(): void
+    {
+        $grammar = new class extends AbstractGrammar {
+            public function escapeIdentifier(string $identifier): string
+            {
+                return '"' . $identifier . '"';
+            }
+        };
+
+        $query = new MergeQuery();
+        $query->into('target', 't')
+            ->using('source', 's')
+            ->on(['t.id' => 's.id']);
+
+        $built = $grammar->buildMergeQuery($query);
+
+        self::assertSame(
+            'MERGE INTO "target" AS "t" USING "source" AS "s" ON "t"."id" = "s"."id"',
+            $built->sql,
+        );
+        self::assertEmpty($built->params);
+    }
+    // endregion METHOD_testMergeWithoutWhenClauses
+
+    // region METHOD_testMultipleBySourceClauses [DOMAIN(9): Testing; CONCEPT(9): Merge; TECH(9): BySource]
+    /**
+     * @purpose Verify multiple WHEN NOT MATCHED BY SOURCE clauses are rendered in order.
+     */
+    public function testMultipleBySourceClauses(): void
+    {
+        $grammar = new PgSqlGrammar();
+
+        $query = new PgSqlMergeQuery();
+        $query->into('target', 't')
+            ->using('source', 's')
+            ->on(['t.id' => 's.id'])
+            ->whenNotMatchedBySource(
+                MergeWhenNotMatchedBySourceClause::update(
+                    ['status' => new Expr("'archived'")],
+                    ['t.active' => true],
+                ),
+            )
+            ->whenNotMatchedBySource(
+                MergeWhenNotMatchedBySourceClause::delete(),
+            );
+
+        $built = $grammar->buildMergeQuery($query);
+
+        self::assertSame(
+            'MERGE INTO "target" AS "t" USING "source" AS "s" ON "t"."id" = "s"."id" WHEN NOT MATCHED BY SOURCE AND "t"."active" IS TRUE THEN UPDATE SET "status" = \'archived\' WHEN NOT MATCHED BY SOURCE THEN DELETE',
+            $built->sql,
+        );
+        self::assertEmpty($built->params);
+    }
+    // endregion METHOD_testMultipleBySourceClauses
+
+    // region METHOD_testOnWithExpr [DOMAIN(9): Testing; CONCEPT(9): Merge; TECH(9): OnExpr]
+    /**
+     * @purpose Verify ON clause accepts ExprInterface values (raw expressions) alongside string column references.
+     */
+    public function testOnWithExpr(): void
+    {
+        $grammar = new class extends AbstractGrammar {
+            public function escapeIdentifier(string $identifier): string
+            {
+                return '"' . $identifier . '"';
+            }
+        };
+
+        $query = new MergeQuery();
+        $query->into('target', 't')
+            ->using('source', 's')
+            ->on(['t.id' => new Expr('s.id')])
+            ->whenMatched(
+                MergeWhenMatchedClause::update(['name' => 's.name']),
+            );
+
+        $built = $grammar->buildMergeQuery($query);
+
+        // Justification: Expr values in OpExpr are parenthesized (ExprInterface not instanceof ColumnExpr), so we verify structural content.
+        self::assertStringContainsString('"t"."id" = (s.id)', $built->sql);
+        self::assertEmpty($built->params);
+    }
+    // endregion METHOD_testOnWithExpr
+
+    // region METHOD_testPgSqlMergeWithoutReturning [DOMAIN(9): Testing; CONCEPT(9): Merge; TECH(9): PgSqlNoReturning]
+    /**
+     * @purpose Verify PgSql MERGE without RETURNING clause still produces valid SQL and isReturnable() returns false.
+     */
+    public function testPgSqlMergeWithoutReturning(): void
+    {
+        $grammar = new PgSqlGrammar();
+
+        $query = new PgSqlMergeQuery();
+        $query->into('users', 't')
+            ->using('staging', 's')
+            ->on(['t.id' => 's.id'])
+            ->whenMatched(
+                MergeWhenMatchedClause::update(['name' => 's.name']),
+            );
+
+        $built = $grammar->buildMergeQuery($query);
+
+        self::assertSame(
+            'MERGE INTO "users" AS "t" USING "staging" AS "s" ON "t"."id" = "s"."id" WHEN MATCHED THEN UPDATE SET "name" = "s"."name"',
+            $built->sql,
+        );
+        self::assertEmpty($built->params);
+        self::assertFalse($query->isReturnable());
+    }
+    // endregion METHOD_testPgSqlMergeWithoutReturning
 }
 // endregion CLASS_MergeQueryTest

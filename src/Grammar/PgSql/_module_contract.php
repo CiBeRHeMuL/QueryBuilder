@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-/**
+/*
  * @moduleContract
  * @purpose PostgreSQL SQL dialect grammar implementation with double-quote identifier escaping, DISTINCT ON, ONLY table modifier, CTE MATERIALIZED/NOT MATERIALIZED, RETURNING clause, USING clause, and FOR UPDATE/SHARE lock modes.
  * @scope PostgreSQL SQL query building and grammar.

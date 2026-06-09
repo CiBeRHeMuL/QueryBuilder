@@ -502,6 +502,8 @@ $built = $grammar->buildMergeQuery($query);
 | `WHEN NOT MATCHED` | ❌ | ❌ | ✅ | ✅ (PgSQL) |
 | `WHEN NOT MATCHED BY SOURCE` | ✅ | ✅ | ❌ | ✅ (PgSQL) |
 
+> **Важно:** В методах `MergeActionUpdate::set()` и `MergeActionInsert::insert()` строковые значения интерпретируются как **ссылки на колонки** (например, `"s"."name"`), а не как связанные параметры. Это отличается от `UpdateQuery::set()` и `InsertQuery::source()`, где строки становятся bound-параметрами. Для литералов используйте `new Expr("'значение'")`.
+
 ---
 
 ## Fluent Method Reference

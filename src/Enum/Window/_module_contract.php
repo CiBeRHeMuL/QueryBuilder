@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-/**
+/*
  * @moduleContract
  * @purpose Provide enum types for SQL window function frame clause building.
  * @scope Window frame type, bound, and exclusion enums.

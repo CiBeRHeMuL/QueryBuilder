@@ -29,7 +29,7 @@ echo $built->sql;
 
 Every query flows through a consistent pipeline:
 
-1. **Build a Query object** — use one of the 5 query classes: `SelectQuery`, `InsertQuery`, `UpdateQuery`, `DeleteQuery`, `ValuesQuery`.
+1. **Build a Query object** — use one of the 6 query classes: `SelectQuery`, `InsertQuery`, `UpdateQuery`, `DeleteQuery`, `ValuesQuery`, `MergeQuery`.
 2. **Configure clauses** — call fluent methods like `->select()`, `->from()`, `->where()`, `->join()`, etc.
 3. **Build with a Grammar** — pass the query to a grammar's `buildXxxQuery()` method. The grammar returns a `BuiltQuery` DTO.
 4. **Execute** — use the `BuiltQuery->sql` string and `BuiltQuery->params` array with your database driver (PDO, etc.).

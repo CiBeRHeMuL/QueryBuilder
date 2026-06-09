@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace AndrewGos\QueryBuilder\Query\Interface;
 
 use AndrewGos\QueryBuilder\Expr\Cte\WithQuery;
-use AndrewGos\QueryBuilder\Query\Interface\MaybeReturnableQueryInterface;
 
 // region MODULE_CONTRACT [DOMAIN(8): Query; CONCEPT(9): CTE; TECH(8): SQL]
 /**
@@ -44,7 +43,7 @@ interface WithInterface
      * @complexity 2
      *
      * @param array<string, WithQuery|MaybeReturnableQueryInterface> $with
-     * @param bool $recursive
+     * @param bool                                                   $recursive
      *
      * @return static
      */
@@ -58,7 +57,7 @@ interface WithInterface
      * @complexity 2
      *
      * @param array<string, WithQuery|MaybeReturnableQueryInterface> $with
-     * @param bool $recursive
+     * @param bool                                                   $recursive
      *
      * @return static
      */

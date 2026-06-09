@@ -41,7 +41,7 @@ class MySqlSelectQuery extends SelectQuery implements PartitionInterface
     protected(set) bool $sqlNoCache = false;
     protected(set) bool $sqlCalcFoundRows = false;
     /**
-     * @var LockModeInterface[] $lockModes
+     * @var LockModeInterface[]
      */
     protected(set) array $lockModes = [];
     protected(set) ?LockModeInterface $lockMode = null {

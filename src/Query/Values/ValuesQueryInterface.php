@@ -29,6 +29,7 @@ use UnitEnum;
 /**
  * @template TSimpleValue of bool|int|float|string|UnitEnum|ExprInterface|null
  * @template TValues of TSimpleValue|TValues[]
+ *
  * @purpose Define the contract for VALUES SQL queries.
  */
 interface ValuesQueryInterface extends OperationsInterface, OrderByInterface, LimitInterface, MaybeReturnableQueryInterface

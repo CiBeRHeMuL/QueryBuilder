@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-/**
+/*
  * @moduleContract
  * @purpose Provide enum types for SQL lock mode clause building.
  * @scope Standard lock mode and sub-namespaces for MySQL and PostgreSQL dialect-specific lock modes.

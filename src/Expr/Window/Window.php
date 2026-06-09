@@ -24,10 +24,10 @@ use UnitEnum;
  * @scope Full window definition: named window reference, PARTITION BY, ORDER BY, frame (RANGE/ROWS/GROUPS), and frame exclusion.
  * @input Partition columns, order columns, frame type/bounds/exclusion.
  * @output Rendered window definition SQL with bound parameters.
- * @modulemap
- * Window => Fluent window definition builder
  * @invariants
  * - Frame start/end offsets are null when bound is CurrentRow
+ * @modulemap
+ * Window => Fluent window definition builder
  */
 // endregion MODULE_CONTRACT
 // GREP_SUMMARY: window function, OVER, PARTITION BY, ORDER BY, frame, RANGE, ROWS, GROUPS, analytics, SQL
@@ -36,13 +36,14 @@ use UnitEnum;
 // region CLASS_Window [DOMAIN(9): Window; CONCEPT(9): WindowFunction; TECH(8): SQLAnalytics]
 /**
  * @template TValue of bool|int|float|string|UnitEnum|ExprInterface|SelectQueryInterface|null
- * @phpstan-template TExpression of TValue|array<TExpression>
  *
+ * @phpstan-template TExpression of TValue|array<TExpression>
  * @phpstan-template TCondition of TValue|array<TCondition>
+ *
  * @template TStandaloneCondition of bool|ExprInterface
  * @template TConditions of array<string, TCondition>|array<int, bool|ExprInterface>
- *
  * @template TOrderBy of array<string, int|string>|array<int, string|ExprInterface|OrderColumn> column => order, expression or OrderColumn
+ *
  * @purpose Fluent builder for SQL window definitions (OVER clause).
  */
 final class Window extends AbstractExpr
@@ -80,11 +81,12 @@ final class Window extends AbstractExpr
     // region METHOD_partitionBy [DOMAIN(9): Window; CONCEPT(8): PartitionBy; TECH(5): FluentAPI]
     /**
      * @purpose Sets the PARTITION BY columns, replacing any existing partitions.
+     * @io array -> Window
+     * @complexity 1
+     *
      * @param array<int|string, TExpression> $partitions
      *
      * @return Window
-     * @io array -> Window
-     * @complexity 1
      */
     public function partitionBy(array $partitions): Window
     {
@@ -97,11 +99,12 @@ final class Window extends AbstractExpr
     // region METHOD_addPartitionBy [DOMAIN(9): Window; CONCEPT(8): PartitionBy; TECH(5): FluentAPI]
     /**
      * @purpose Appends PARTITION BY columns to existing partitions.
+     * @io array -> Window
+     * @complexity 2
+     *
      * @param array<int|string, TExpression> $partitions
      *
      * @return Window
-     * @io array -> Window
-     * @complexity 2
      */
     public function addPartitionBy(array $partitions): Window
     {
@@ -114,11 +117,12 @@ final class Window extends AbstractExpr
     // region METHOD_orderBy [DOMAIN(9): Window; CONCEPT(8): OrderBy; TECH(5): FluentAPI]
     /**
      * @purpose Sets the ORDER BY columns for the window, replacing any existing order.
+     * @io array -> Window
+     * @complexity 2
+     *
      * @param TOrderBy $columns
      *
      * @return Window
-     * @io array -> Window
-     * @complexity 2
      */
     public function orderBy(array $columns): Window
     {
@@ -131,11 +135,12 @@ final class Window extends AbstractExpr
     // region METHOD_addOrderBy [DOMAIN(9): Window; CONCEPT(8): OrderBy; TECH(5): FluentAPI]
     /**
      * @purpose Appends ORDER BY columns to existing window ordering.
+     * @io array -> Window
+     * @complexity 2
+     *
      * @param TOrderBy $columns
      *
      * @return Window
-     * @io array -> Window
-     * @complexity 2
      */
     public function addOrderBy(array $columns): Window
     {
@@ -157,17 +162,17 @@ final class Window extends AbstractExpr
      *
      * Default frame options are RANGE UNBOUNDED PRECEDING,
      * which is the same as RANGE BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW
+     * @io FrameTypeEnum, FrameBoundEnum, FrameBoundEnum, int|ExprInterface|null, int|ExprInterface|null, FrameExclusionEnum|null -> Window
+     * @complexity 3
      *
-     * @param FrameTypeEnum $type
-     * @param FrameBoundEnum $start
-     * @param FrameBoundEnum $end
-     * @param int|ExprInterface|null $startOffset
-     * @param int|ExprInterface|null $endOffset
+     * @param FrameTypeEnum           $type
+     * @param FrameBoundEnum          $start
+     * @param FrameBoundEnum          $end
+     * @param int|ExprInterface|null  $startOffset
+     * @param int|ExprInterface|null  $endOffset
      * @param FrameExclusionEnum|null $exclusion
      *
      * @return Window
-     * @io FrameTypeEnum, FrameBoundEnum, FrameBoundEnum, int|ExprInterface|null, int|ExprInterface|null, FrameExclusionEnum|null -> Window
-     * @complexity 3
      */
     public function frame(
         FrameTypeEnum $type = FrameTypeEnum::Range,
@@ -191,16 +196,19 @@ final class Window extends AbstractExpr
     // region METHOD_range [DOMAIN(9): Window; CONCEPT(8): FrameSpec; TECH(5): FluentAPI]
     /**
      * @purpose Convenience method to set a RANGE-based frame (delegates to frame()).
-     * @param FrameBoundEnum $start
-     * @param FrameBoundEnum $end
-     * @param int|ExprInterface|null $startOffset
-     * @param int|ExprInterface|null $endOffset
+     *
+     * @see Window::frame()
+     *
+     * @io -> Window
+     * @complexity 1
+     *
+     * @param FrameBoundEnum          $start
+     * @param FrameBoundEnum          $end
+     * @param int|ExprInterface|null  $startOffset
+     * @param int|ExprInterface|null  $endOffset
      * @param FrameExclusionEnum|null $exclusion
      *
      * @return Window
-     * @see Window::frame()
-     * @io -> Window
-     * @complexity 1
      */
     public function range(
         FrameBoundEnum $start = FrameBoundEnum::Preceding,
@@ -223,16 +231,19 @@ final class Window extends AbstractExpr
     // region METHOD_rows [DOMAIN(9): Window; CONCEPT(8): FrameSpec; TECH(5): FluentAPI]
     /**
      * @purpose Convenience method to set a ROWS-based frame (delegates to frame()).
-     * @param FrameBoundEnum $start
-     * @param FrameBoundEnum $end
-     * @param int|ExprInterface|null $startOffset
-     * @param int|ExprInterface|null $endOffset
+     *
+     * @see Window::frame()
+     *
+     * @io -> Window
+     * @complexity 1
+     *
+     * @param FrameBoundEnum          $start
+     * @param FrameBoundEnum          $end
+     * @param int|ExprInterface|null  $startOffset
+     * @param int|ExprInterface|null  $endOffset
      * @param FrameExclusionEnum|null $exclusion
      *
      * @return Window
-     * @see Window::frame()
-     * @io -> Window
-     * @complexity 1
      */
     public function rows(
         FrameBoundEnum $start = FrameBoundEnum::Preceding,
@@ -255,16 +266,19 @@ final class Window extends AbstractExpr
     // region METHOD_groups [DOMAIN(9): Window; CONCEPT(8): FrameSpec; TECH(5): FluentAPI]
     /**
      * @purpose Convenience method to set a GROUPS-based frame (delegates to frame()).
-     * @param FrameBoundEnum $start
-     * @param FrameBoundEnum $end
-     * @param int|ExprInterface|null $startOffset
-     * @param int|ExprInterface|null $endOffset
+     *
+     * @see Window::frame()
+     *
+     * @io -> Window
+     * @complexity 1
+     *
+     * @param FrameBoundEnum          $start
+     * @param FrameBoundEnum          $end
+     * @param int|ExprInterface|null  $startOffset
+     * @param int|ExprInterface|null  $endOffset
      * @param FrameExclusionEnum|null $exclusion
      *
      * @return Window
-     * @see Window::frame()
-     * @io -> Window
-     * @complexity 1
      */
     public function groups(
         FrameBoundEnum $start = FrameBoundEnum::Preceding,
@@ -357,12 +371,13 @@ final class Window extends AbstractExpr
     // region METHOD_buildOrderBy [DOMAIN(9): Window; CONCEPT(8): OrderBy; TECH(6): SQLBuild]
     /**
      * @purpose Builds the ORDER BY clause SQL from OrderColumn definitions.
-     * @param OrderColumn[] $columns
-     * @param GrammarInterface $grammar
-     *
-     * @return ExprInterface
      * @io GrammarInterface -> ExprInterface
      * @complexity 4
+     *
+     * @param GrammarInterface $grammar
+     * @param OrderColumn[]    $columns
+     *
+     * @return ExprInterface
      */
     private function buildOrderBy(GrammarInterface $grammar): ExprInterface
     {

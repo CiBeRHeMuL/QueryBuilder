@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-/**
+/*
  * @moduleContract
  * @purpose PostgreSQL conflict target and action implementations.
  * @scope ConflictTargetColumns, ConflictTargetConstraint, ConflictActionDoNothing, ConflictActionDoUpdate.

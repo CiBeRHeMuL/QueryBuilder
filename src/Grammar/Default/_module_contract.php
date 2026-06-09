@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-/**
+/*
  * @moduleContract
  * @purpose Universal ANSI SQL grammar implementation with double-quote identifier escaping. Lightweight default grammar with no dialect-specific extensions.
  * @scope SQL query building with standard ANSI SQL identifier quoting.

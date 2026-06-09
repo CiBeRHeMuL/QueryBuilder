@@ -32,8 +32,8 @@ use AndrewGos\QueryBuilder\Grammar\GrammarInterface;
 final readonly class PgSqlLockMode implements LockModeInterface
 {
     /**
-     * @param PgSqlLockModeEnum $mode
-     * @param string[] $tables
+     * @param PgSqlLockModeEnum     $mode
+     * @param string[]              $tables
      * @param PgSqlLockWaitModeEnum $waitMode
      */
     public function __construct(

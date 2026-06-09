@@ -12,12 +12,15 @@ namespace AndrewGos\QueryBuilder\Expr;
  * @scope Column identifier expressions generated via short syntax (['column' => value]).
  * @input Escaped identifier string
  * @output Same as Expr — SQL fragment with params
+ *
  * @rationale
  * Q: Why a separate class instead of a flag?
  * A: A dedicated type is semantically explicit, requires no BC breaks in OpExpr constructor, and prevents
  *    parenthesization of simple column identifiers while keeping full Expr behavior for other cases.
+ *
  * @changes
  * LAST_CHANGE: [v1.0.0 – Initial creation for column identifier marker.]
+ *
  * @modulemap
  * CLASS 10[Column identifier marker] => ColumnExpr
  */

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-/**
+/*
  * @moduleContract
  * @purpose Provides value objects and builders for Common Table Expression (CTE) clauses, including WITH, SEARCH, and CYCLE.
  * @scope Fluent CTE definition with optional recursive traversal control (SEARCH) and cycle detection (CYCLE).

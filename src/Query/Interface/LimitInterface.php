@@ -23,7 +23,8 @@ use AndrewGos\QueryBuilder\Expr\ExprInterface;
 
 // region INTERFACE_LimitInterface [DOMAIN(8): Query; CONCEPT(9): Pagination; TECH(8): SQL]
 /**
- * This interface provides methods for working with OFFSET, LIMIT, FETCH clause
+ * This interface provides methods for working with OFFSET, LIMIT, FETCH clause.
+ *
  * @purpose Define methods for working with OFFSET, LIMIT, FETCH clause.
  */
 interface LimitInterface
@@ -58,7 +59,7 @@ interface LimitInterface
      * @complexity 2
      *
      * @param int|ExprInterface|null $limit
-     * @param LimitBoundTypeEnum $boundType
+     * @param LimitBoundTypeEnum     $boundType
      *
      * @return static
      */
